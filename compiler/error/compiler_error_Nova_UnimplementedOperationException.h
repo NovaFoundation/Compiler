@@ -1,8 +1,8 @@
 #pragma once
-#ifndef FILE_compiler_Nova_Compiler_NOVA
-#define FILE_compiler_Nova_Compiler_NOVA
+#ifndef FILE_compiler_error_Nova_UnimplementedOperationException_NOVA
+#define FILE_compiler_error_Nova_UnimplementedOperationException_NOVA
 
-typedef struct compiler_Nova_Compiler compiler_Nova_Compiler;
+typedef struct compiler_error_Nova_UnimplementedOperationException compiler_error_Nova_UnimplementedOperationException;
 
 
 #include <Nova.h>
@@ -35,11 +35,10 @@ typedef struct compiler_Nova_Compiler compiler_Nova_Compiler;
 #include <nova/nova_Nova_String.h>
 #include <nova/nova_Nova_System.h>
 #include <nova/nova_Nova_Class.h>
-#include <compiler/util/compiler_util_Nova_FileUtils.h>
 
 
-typedef struct compiler_Extension_VTable_Compiler compiler_Extension_VTable_Compiler;
-struct compiler_Extension_VTable_Compiler
+typedef struct compiler_error_Extension_VTable_UnimplementedOperationException compiler_error_Extension_VTable_UnimplementedOperationException;
+struct compiler_error_Extension_VTable_UnimplementedOperationException
 {
 	nova_Interface_VTable itable;
 	nova_Nova_String* (*nova_Nova_Object_virtual1_Nova_toString)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
@@ -47,23 +46,21 @@ struct compiler_Extension_VTable_Compiler
 	long_long (*nova_Nova_Object_virtual_Accessor_Nova_hashCodeLong)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
 };
 
-extern compiler_Extension_VTable_Compiler compiler_Extension_VTable_Compiler_val;
+extern compiler_error_Extension_VTable_UnimplementedOperationException compiler_error_Extension_VTable_UnimplementedOperationException_val;
 
 
 CCLASS_CLASS
 (
-	compiler_Nova_Compiler, 
+	compiler_error_Nova_UnimplementedOperationException, 
 	
-	compiler_Extension_VTable_Compiler* vtable;
+	compiler_error_Extension_VTable_UnimplementedOperationException* vtable;
+	nova_Nova_String* nova_exception_Nova_Exception_Nova_message;
 )
-extern char compiler_Nova_Compiler_Nova_DEBUG;
 
-void compiler_Nova_Compiler_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
-compiler_Nova_Compiler* compiler_Nova_Compiler_Nova_construct(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_Nova_Compiler_Nova_destroy(compiler_Nova_Compiler** this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_Nova_Compiler_Nova_main(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData, nova_datastruct_list_Nova_Array* compiler_Nova_Compiler_Nova_args);
-void compiler_Nova_Compiler_0_Nova_this(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_Nova_Compiler_Nova_compile(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData, nova_datastruct_list_Nova_Array* compiler_Nova_Compiler_Nova_args);
-void compiler_Nova_Compiler_Nova_super(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_error_Nova_UnimplementedOperationException_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
+compiler_error_Nova_UnimplementedOperationException* compiler_error_Nova_UnimplementedOperationException_Nova_construct(compiler_error_Nova_UnimplementedOperationException* this, nova_exception_Nova_ExceptionData* exceptionData, nova_Nova_String* compiler_error_Nova_UnimplementedOperationException_Nova_message);
+void compiler_error_Nova_UnimplementedOperationException_Nova_destroy(compiler_error_Nova_UnimplementedOperationException** this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_error_Nova_UnimplementedOperationException_4_Nova_this(compiler_error_Nova_UnimplementedOperationException* this, nova_exception_Nova_ExceptionData* exceptionData, nova_Nova_String* compiler_error_Nova_UnimplementedOperationException_Nova_message);
+void compiler_error_Nova_UnimplementedOperationException_0_Nova_super(compiler_error_Nova_UnimplementedOperationException* this, nova_exception_Nova_ExceptionData* exceptionData);
 
 #endif

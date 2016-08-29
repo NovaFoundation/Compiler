@@ -1,8 +1,8 @@
 #pragma once
-#ifndef FILE_compiler_Nova_Compiler_NOVA
-#define FILE_compiler_Nova_Compiler_NOVA
+#ifndef FILE_compiler_tree_node_exceptionhandling_Nova_Try_NOVA
+#define FILE_compiler_tree_node_exceptionhandling_Nova_Try_NOVA
 
-typedef struct compiler_Nova_Compiler compiler_Nova_Compiler;
+typedef struct compiler_tree_node_exceptionhandling_Nova_Try compiler_tree_node_exceptionhandling_Nova_Try;
 
 
 #include <Nova.h>
@@ -35,11 +35,10 @@ typedef struct compiler_Nova_Compiler compiler_Nova_Compiler;
 #include <nova/nova_Nova_String.h>
 #include <nova/nova_Nova_System.h>
 #include <nova/nova_Nova_Class.h>
-#include <compiler/util/compiler_util_Nova_FileUtils.h>
 
 
-typedef struct compiler_Extension_VTable_Compiler compiler_Extension_VTable_Compiler;
-struct compiler_Extension_VTable_Compiler
+typedef struct compiler_tree_node_exceptionhandling_Extension_VTable_Try compiler_tree_node_exceptionhandling_Extension_VTable_Try;
+struct compiler_tree_node_exceptionhandling_Extension_VTable_Try
 {
 	nova_Interface_VTable itable;
 	nova_Nova_String* (*nova_Nova_Object_virtual1_Nova_toString)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
@@ -47,23 +46,22 @@ struct compiler_Extension_VTable_Compiler
 	long_long (*nova_Nova_Object_virtual_Accessor_Nova_hashCodeLong)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
 };
 
-extern compiler_Extension_VTable_Compiler compiler_Extension_VTable_Compiler_val;
+extern compiler_tree_node_exceptionhandling_Extension_VTable_Try compiler_tree_node_exceptionhandling_Extension_VTable_Try_val;
 
 
 CCLASS_CLASS
 (
-	compiler_Nova_Compiler, 
+	compiler_tree_node_exceptionhandling_Nova_Try, 
 	
-	compiler_Extension_VTable_Compiler* vtable;
+	compiler_tree_node_exceptionhandling_Extension_VTable_Try* vtable;
+	struct Private* prv;
 )
-extern char compiler_Nova_Compiler_Nova_DEBUG;
+extern nova_Nova_String* compiler_tree_node_exceptionhandling_Nova_Try_Nova_IDENTIFIER;
 
-void compiler_Nova_Compiler_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
-compiler_Nova_Compiler* compiler_Nova_Compiler_Nova_construct(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_Nova_Compiler_Nova_destroy(compiler_Nova_Compiler** this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_Nova_Compiler_Nova_main(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData, nova_datastruct_list_Nova_Array* compiler_Nova_Compiler_Nova_args);
-void compiler_Nova_Compiler_0_Nova_this(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_Nova_Compiler_Nova_compile(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData, nova_datastruct_list_Nova_Array* compiler_Nova_Compiler_Nova_args);
-void compiler_Nova_Compiler_Nova_super(compiler_Nova_Compiler* this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_exceptionhandling_Nova_Try_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
+compiler_tree_node_exceptionhandling_Nova_Try* compiler_tree_node_exceptionhandling_Nova_Try_Nova_construct(compiler_tree_node_exceptionhandling_Nova_Try* this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_exceptionhandling_Nova_Try_Nova_destroy(compiler_tree_node_exceptionhandling_Nova_Try** this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_exceptionhandling_Nova_Try_0_Nova_this(compiler_tree_node_exceptionhandling_Nova_Try* this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_exceptionhandling_Nova_Try_Nova_super(compiler_tree_node_exceptionhandling_Nova_Try* this, nova_exception_Nova_ExceptionData* exceptionData);
 
 #endif

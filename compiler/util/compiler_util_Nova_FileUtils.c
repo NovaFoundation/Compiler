@@ -29,6 +29,8 @@ compiler_util_Extension_VTable_FileUtils compiler_util_Extension_VTable_FileUtil
 		0,
 		0,
 		0,
+		0,
+		0,
 	},
 	nova_Nova_Object_0_Nova_toString,
 	nova_Nova_Object_0_Nova_equals,

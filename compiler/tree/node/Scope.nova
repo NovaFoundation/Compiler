@@ -1,0 +1,40 @@
+package "compiler/tree/node"
+
+import "nova/datastruct/Pair"
+import "compiler/util/Location"
+
+/**
+ * Node extension that represents a scope of code. In essence, a
+ * collection of statements within a pair of curly braces.<br>
+ * <br>
+ * For example:
+ * <blockquote><pre>
+ * {
+ * 	...
+ * 
+ * 	// Statements within here...
+ * 
+ * 	...
+ * }</pre></blockquote>
+ * 
+ * @author	Braden Steffaniak
+ * @since	v0.1 Apr 5, 2014 at 10:54:20 PM
+ * @version	v0.2.41 Dec 17, 2014 at 7:48:17 PM
+ */
+public class Scope extends Node
+{
+	private Int	id, localVariableID
+	
+	private Listener[] listeners
+	
+	//private Pair<LocalDeclaration, Value>[] assignedImplicitVariables
+	
+	/**
+	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, Bool)
+	 */
+	[Override]
+	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren) -> Scope
+	{
+		return null
+	}
+}

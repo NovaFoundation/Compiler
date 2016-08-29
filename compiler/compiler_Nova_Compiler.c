@@ -29,6 +29,8 @@ compiler_Extension_VTable_Compiler compiler_Extension_VTable_Compiler_val =
 				0,
 				0,
 				0,
+				0,
+				0,
 		},
 		nova_Nova_Object_0_Nova_toString,
 		nova_Nova_Object_0_Nova_equals,
@@ -159,6 +161,9 @@ int main(int argc, char** argvs)
 		novaEnv.nova_thread_UncaughtExceptionHandler.uncaughtException__nova_thread_Thread__nova_exception_Exception = nova_thread_Extension_VTable_UncaughtExceptionHandler_val.nova_thread_Nova_UncaughtExceptionHandler_virtual1_Nova_uncaughtException;
 		novaEnv.nova_web_svg_SvgComponent.generateOutput__nova_io_File = nova_web_svg_Extension_VTable_SvgComponent_val.nova_web_svg_Nova_SvgComponent_virtual0_Nova_generateOutput;
 		novaEnv.nova_web_svg_no3_No3Node.toJs = nova_web_svg_no3_Extension_VTable_No3Node_val.nova_web_svg_no3_Nova_No3Node_virtual1_Nova_toJs;
+		novaEnv.compiler_tree_node_Listenable.onAdded__compiler_tree_node_Node = compiler_tree_node_Extension_VTable_Listenable_val.itable.compiler_tree_node_Nova_Listenable_virtual1_Nova_onAdded;
+		novaEnv.compiler_tree_node_Node.clone__compiler_tree_node_Node__compiler_util_Location__nova_primitive_Bool = compiler_tree_node_Extension_VTable_Node_val.compiler_tree_node_Nova_Node_virtual1_Nova_clone;
+		novaEnv.compiler_tree_node_annotation_Annotatable.addAnnotation__compiler_tree_node_annotation_Annotation = compiler_tree_node_annotation_Extension_VTable_Annotatable_val.itable.compiler_tree_node_annotation_Nova_Annotatable_virtual0_Nova_addAnnotation;
 		novaEnv.example_Animal.getNumLegs = example_Extension_VTable_Animal_val.example_Nova_Animal_virtual1_Nova_getNumLegs;
 		novaEnv.example_Animal.getNumEyes = example_Extension_VTable_Animal_val.example_Nova_Animal_virtual1_Nova_getNumEyes;
 		novaEnv.example_Animal.getDescription = example_Extension_VTable_Animal_val.example_Nova_Animal_virtual1_Nova_getDescription;
@@ -299,11 +304,22 @@ int main(int argc, char** argvs)
 		nova_web_svg_no3_Nova_No3Select_Nova_init_static(exceptionData);
 		nova_web_svg_no3_Nova_No3SelectAll_Nova_init_static(exceptionData);
 		compiler_Nova_Compiler_Nova_init_static(exceptionData);
+		compiler_error_Nova_UnimplementedOperationException_Nova_init_static(exceptionData);
 		compiler_tree_Nova_SyntaxTree_Nova_init_static(exceptionData);
+		compiler_tree_node_Nova_Listenable_Nova_init_static(exceptionData);
+		compiler_tree_node_Nova_Listener_Nova_init_static(exceptionData);
+		compiler_tree_node_Nova_Node_Nova_init_static(exceptionData);
+		compiler_tree_node_Nova_Scope_Nova_init_static(exceptionData);
+		compiler_tree_node_annotation_Nova_Annotatable_Nova_init_static(exceptionData);
+		compiler_tree_node_annotation_Nova_Annotation_Nova_init_static(exceptionData);
+		compiler_tree_node_exceptionhandling_Nova_ExceptionHandler_Nova_init_static(exceptionData);
+		compiler_tree_node_exceptionhandling_Nova_Try_Nova_init_static(exceptionData);
 		compiler_util_Nova_FileUtils_Nova_init_static(exceptionData);
+		compiler_util_Nova_Location_Nova_init_static(exceptionData);
 		compiler_util_Nova_OS_Nova_init_static(exceptionData);
 		compiler_util_Nova_OS_Nova_init_static(exceptionData);
 		compiler_util_Nova_StringUtils_Nova_init_static(exceptionData);
+		compiler_util_Nova_SyntaxUtils_Nova_init_static(exceptionData);
 		example_Nova_Animal_Nova_init_static(exceptionData);
 		example_Nova_ArrayDemo_Nova_init_static(exceptionData);
 		example_Nova_BodyBuilder_Nova_init_static(exceptionData);

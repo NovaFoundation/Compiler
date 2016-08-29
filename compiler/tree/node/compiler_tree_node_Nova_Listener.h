@@ -1,8 +1,8 @@
 #pragma once
-#ifndef FILE_compiler_tree_Nova_SyntaxTree_NOVA
-#define FILE_compiler_tree_Nova_SyntaxTree_NOVA
+#ifndef FILE_compiler_tree_node_Nova_Listener_NOVA
+#define FILE_compiler_tree_node_Nova_Listener_NOVA
 
-typedef struct compiler_tree_Nova_SyntaxTree compiler_tree_Nova_SyntaxTree;
+typedef struct compiler_tree_node_Nova_Listener compiler_tree_node_Nova_Listener;
 
 
 #include <Nova.h>
@@ -37,29 +37,11 @@ typedef struct compiler_tree_Nova_SyntaxTree compiler_tree_Nova_SyntaxTree;
 #include <nova/nova_Nova_Class.h>
 
 
-typedef struct compiler_tree_Extension_VTable_SyntaxTree compiler_tree_Extension_VTable_SyntaxTree;
-struct compiler_tree_Extension_VTable_SyntaxTree
-{
-	nova_Interface_VTable itable;
-	nova_Nova_String* (*nova_Nova_Object_virtual1_Nova_toString)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
-	char (*nova_operators_Nova_Equals_virtual0_Nova_equals)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*, nova_Nova_Object*);
-	long_long (*nova_Nova_Object_virtual_Accessor_Nova_hashCodeLong)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
-};
-
-extern compiler_tree_Extension_VTable_SyntaxTree compiler_tree_Extension_VTable_SyntaxTree_val;
+typedef struct compiler_tree_node_Extension_VTable_Listener compiler_tree_node_Extension_VTable_Listener;
+extern compiler_tree_node_Extension_VTable_Listener compiler_tree_node_Extension_VTable_Listener_val;
 
 
-CCLASS_CLASS
-(
-	compiler_tree_Nova_SyntaxTree, 
-	
-	compiler_tree_Extension_VTable_SyntaxTree* vtable;
-)
 
-void compiler_tree_Nova_SyntaxTree_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
-compiler_tree_Nova_SyntaxTree* compiler_tree_Nova_SyntaxTree_Nova_construct(compiler_tree_Nova_SyntaxTree* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_tree_Nova_SyntaxTree_Nova_destroy(compiler_tree_Nova_SyntaxTree** this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_tree_Nova_SyntaxTree_0_Nova_this(compiler_tree_Nova_SyntaxTree* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_tree_Nova_SyntaxTree_Nova_super(compiler_tree_Nova_SyntaxTree* this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_Nova_Listener_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
 
 #endif

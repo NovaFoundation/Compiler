@@ -1,8 +1,8 @@
 #pragma once
-#ifndef FILE_compiler_tree_Nova_SyntaxTree_NOVA
-#define FILE_compiler_tree_Nova_SyntaxTree_NOVA
+#ifndef FILE_compiler_tree_node_Nova_Listenable_NOVA
+#define FILE_compiler_tree_node_Nova_Listenable_NOVA
 
-typedef struct compiler_tree_Nova_SyntaxTree compiler_tree_Nova_SyntaxTree;
+typedef struct compiler_tree_node_Nova_Listenable compiler_tree_node_Nova_Listenable;
 
 
 #include <Nova.h>
@@ -35,31 +35,29 @@ typedef struct compiler_tree_Nova_SyntaxTree compiler_tree_Nova_SyntaxTree;
 #include <nova/nova_Nova_String.h>
 #include <nova/nova_Nova_System.h>
 #include <nova/nova_Nova_Class.h>
+#include <compiler/tree/node/compiler_tree_node_Nova_Listener.h>
+#include <compiler/tree/node/compiler_tree_node_Nova_Node.h>
 
 
-typedef struct compiler_tree_Extension_VTable_SyntaxTree compiler_tree_Extension_VTable_SyntaxTree;
-struct compiler_tree_Extension_VTable_SyntaxTree
+typedef struct compiler_tree_node_Extension_VTable_Listenable compiler_tree_node_Extension_VTable_Listenable;
+struct compiler_tree_node_Extension_VTable_Listenable
 {
 	nova_Interface_VTable itable;
-	nova_Nova_String* (*nova_Nova_Object_virtual1_Nova_toString)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
-	char (*nova_operators_Nova_Equals_virtual0_Nova_equals)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*, nova_Nova_Object*);
-	long_long (*nova_Nova_Object_virtual_Accessor_Nova_hashCodeLong)(nova_Nova_Object*, nova_exception_Nova_ExceptionData*);
+	void (*compiler_tree_node_Nova_Listenable_virtual1_Nova_onAdded)(compiler_tree_node_Nova_Listenable*, nova_exception_Nova_ExceptionData*, compiler_tree_node_Nova_Node*);
 };
 
-extern compiler_tree_Extension_VTable_SyntaxTree compiler_tree_Extension_VTable_SyntaxTree_val;
+extern compiler_tree_node_Extension_VTable_Listenable compiler_tree_node_Extension_VTable_Listenable_val;
 
 
 CCLASS_CLASS
 (
-	compiler_tree_Nova_SyntaxTree, 
+	compiler_tree_node_Nova_Listenable, 
 	
-	compiler_tree_Extension_VTable_SyntaxTree* vtable;
+	compiler_tree_node_Extension_VTable_Listenable* vtable;
+	struct Private* prv;
 )
 
-void compiler_tree_Nova_SyntaxTree_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
-compiler_tree_Nova_SyntaxTree* compiler_tree_Nova_SyntaxTree_Nova_construct(compiler_tree_Nova_SyntaxTree* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_tree_Nova_SyntaxTree_Nova_destroy(compiler_tree_Nova_SyntaxTree** this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_tree_Nova_SyntaxTree_0_Nova_this(compiler_tree_Nova_SyntaxTree* this, nova_exception_Nova_ExceptionData* exceptionData);
-void compiler_tree_Nova_SyntaxTree_Nova_super(compiler_tree_Nova_SyntaxTree* this, nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_Nova_Listenable_Nova_init_static(nova_exception_Nova_ExceptionData* exceptionData);
+void compiler_tree_node_Nova_Listenable_0_Nova_onAdded(compiler_tree_node_Nova_Listenable* this, nova_exception_Nova_ExceptionData* exceptionData, compiler_tree_node_Nova_Node* compiler_tree_node_Nova_Listenable_Nova_parent);void compiler_tree_node_Nova_Listenable_virtual1_Nova_onAdded(compiler_tree_node_Nova_Listenable* this, nova_exception_Nova_ExceptionData* exceptionData, compiler_tree_node_Nova_Node* compiler_tree_node_Nova_Listenable_Nova_parent);
 
 #endif
