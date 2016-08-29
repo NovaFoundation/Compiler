@@ -1,0 +1,89 @@
+package "compiler/util"
+
+public class FileUtils
+{
+	/**
+	 * Format a path according to how the specified OS needs it.
+	 * 
+	 * @param path The path to format for the OS standards.
+	 * @return The formatted path.
+	 */
+	public static formatPath(String path) -> String
+	{
+		path = path.replace("\\", "/")
+		
+		path = formAbsolutePath(path)
+		
+		if (OS.isWindows)
+		{
+			path = StringUtils.removeSurroundingQuotes(path)
+			
+			return '"' + path + '"'
+		}
+		else
+		{
+			return escapeSpaces(path)
+		}
+	}
+	
+	/**
+	 * Remove all of the relative syntax from the given path.<br>
+	 * <br>
+	 * For example: Passing a path of "C:/folder/../dir1/dir2" would
+	 * return a path of "C:/dir1/dir2"
+	 * 
+	 * @param path The path to remove the relative syntax from.
+	 * @return The newly formatted path.
+	 */
+	public static formAbsolutePath(String path) -> String
+	{
+		/*StringBuilder absolute = new StringBuilder(path)
+		
+		int index = absolute.indexOf("..")
+		
+		while (index >= 0)
+		{
+			int index2 = absolute.lastIndexOf("/", index - 2)
+			
+			absolute.delete(index2, index + 2)
+			
+			index = absolute.indexOf("..")
+		}
+		
+		return absolute.toString()*/
+		
+		return path
+	}
+	
+	/**
+	 * Escape the spaces in an input String.<br>
+	 * <br>
+	 * For example: An input of "this is a test" would return
+	 * "this\ is\ a\ test"
+	 * 
+	 * @param input The String to escape the spaces from.
+	 * @return The input String with escaped spaces.
+	 */
+	public static escapeSpaces(String input) -> String
+	{
+		/*StringBuilder output = new StringBuilder(input)
+		
+		int index = output.indexOf(" ")
+		
+		while (index >= 0)
+		{
+			output.insert(index, "\\")
+			
+			index = output.indexOf(" ", index + 2)
+		}
+		
+		return output.toString()*/
+		
+		return input
+	}
+	
+	public static getWorkingDirectoryPath() -> String
+	{
+		return ""
+	}
+}

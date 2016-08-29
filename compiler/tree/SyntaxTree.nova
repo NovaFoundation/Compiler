@@ -1,0 +1,9 @@
+package "compiler/tree"
+
+public class SyntaxTree
+{
+	public construct()
+	{
+		
+	}
+}

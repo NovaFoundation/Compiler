@@ -1,0 +1,31 @@
+package "compiler/util"
+
+public class StringUtils
+{
+	public static isSurroundedByQuotes(String input) -> Bool
+	{
+		return input.count >= 2 && input.charAt(0) == '"' && input.charAt(input.count - 1) == '"'
+	}
+	
+	/**
+	 * Remove the surrounding double quotes from the given input String.<br>
+	 * For example:
+	 * <blockquote><pre>
+	 * String s = "\"C:/myfile/test\"";
+	 * String out = removeSurroundingQuotes(s);</pre></blockquote>
+	 * The out String would contain the data "C:/myfile/test" without
+	 * the surrounding quotes.
+	 * 
+	 * @param input The String to remove the surrounding quotes from.
+	 * @return The String without the surrounding quotes.
+	 */
+	public static removeSurroundingQuotes(String input) -> String
+	{
+		while (isSurroundedByQuotes(input))
+		{
+			input = input.substring(1, input.count - 1)
+		}
+		
+		return input
+	}
+}

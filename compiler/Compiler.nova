@@ -1,0 +1,71 @@
+package "compiler"
+
+import "compiler/util/OS"
+import "compiler/util/FileUtils"
+
+public class Compiler
+{
+	visible static Bool DEBUG
+	
+	public static main(String[] args)
+	{
+		Console.writeLine("In compiler")
+		
+		Console.waitForEnter()
+	}
+	
+	public construct()
+	{
+		
+	}
+	
+	public compile(String[] args)
+	{
+		String directory = FileUtils.getWorkingDirectoryPath() + "/"
+		
+		if (DEBUG)
+		{
+			testClasses();
+			
+			/*args =
+			[
+				"../Compiler",
+				"example",
+				"stabilitytest",
+				//"-o",   FileUtils.formatPath(directory + "bin/Executable" + OS.OUTPUT_EXTENSION),
+//				"-dir", FileUtils.formatPath(directory + "../example"),
+//				"-dir", FileUtils.formatPath(directory + "../stabilitytest"),
+//				"-run",
+//				"-csource",
+				"-formatc",
+				testClasses ? "-v" : "",
+//				"-gcc",
+//				"-tcc",
+//				"-small",
+//				"-cargs",
+				"-keepc",
+				"-single-thread",
+				"-main",
+//				"example/Lab",
+//				"stabilitytest/StabilityTest",
+//				"example/SvgChart",
+//				"example/HashMapDemo",
+//				"example/HashSetDemo",
+				"compiler/Compiler",
+//				"-nogc",
+//				"-no-c-output",
+//				"-dry",
+//				"-no-notes",
+//				"-no-warnings",
+//				"-no-errors",
+				"-no-optimize"
+//				"-library"
+			]*/
+		}
+	}
+	
+	testClasses()
+	{
+		
+	}
+}
