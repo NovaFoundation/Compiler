@@ -11,8 +11,8 @@ public class StringUtils
 	 * Remove the surrounding double quotes from the given input String.<br>
 	 * For example:
 	 * <blockquote><pre>
-	 * String s = "\"C:/myfile/test\"";
-	 * String out = removeSurroundingQuotes(s);</pre></blockquote>
+	 * String s = "\"C:/myfile/test\""
+	 * String out = removeSurroundingQuotes(s)</pre></blockquote>
 	 * The out String would contain the data "C:/myfile/test" without
 	 * the surrounding quotes.
 	 * 

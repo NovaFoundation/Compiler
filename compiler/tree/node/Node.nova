@@ -51,7 +51,7 @@ public abstract class Node implements Listenable, Annotatable
 	 */
 	public containsScope() -> Bool
 	{
-		return getScope() != null;
+		return getScope() != null
 	}
 	
 	[Override]
@@ -93,7 +93,7 @@ public abstract class Node implements Listenable, Annotatable
 	 */
 	public isDecoding() -> Bool
 	{
-		return parent == null || !parent.containsChild(this);
+		return parent == null || !parent.containsChild(this)
 	}
 	
 	/**

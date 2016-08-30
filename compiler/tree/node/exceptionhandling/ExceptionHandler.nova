@@ -15,14 +15,14 @@ import "compiler/util/Location"
 public class ExceptionHandler extends Node
 {
 	/**
-	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, Bool)
+	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, boolean)
 	 */
 	[Override]
 	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren) -> ExceptionHandler
 	{
 		//ExceptionHandler node = new ExceptionHandler(temporaryParent, locationIn)
 		
-		//return cloneTo(node, cloneChildren);
+		//return cloneTo(node, cloneChildren)
 		
 		return null
 	}
