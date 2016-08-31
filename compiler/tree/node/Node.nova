@@ -1,14 +1,13 @@
 package "compiler/tree/node"
 
 import "compiler/Compiler"
-//import "compiler/TestContext"
-//import "compiler/ValidationResult"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/node/annotation/Annotatable"
 import "compiler/tree/node/annotation/Annotation"
 import "compiler/tree/node/exceptionhandling/Try"
 import "compiler/util/Location"
 import "compiler/util/StringUtils"
+import "compiler/error/UnimplementedOperationException"
 
 import "nova/datastruct/Bounds"
 
@@ -25,12 +24,25 @@ import "nova/datastruct/Bounds"
  */
 public abstract class Node implements Listenable, Annotatable
 {
-	private Location		locationIn
+	visible Location location
 	
-	private Node			parent
-
-	private Node[]			children
-	private Annotation[]	annotations
+	public Node parent
+	{
+		get { return parent }
+		
+		set(Node value)
+		{
+			if (parent != value)
+			{
+				detach()
+				
+				parent = value
+			}
+		}
+	}
+	
+	visible Node[] children
+	visible Annotation[] annotations
 	
 	/**
 	 * Get the Scope instance of this Node if it even has
@@ -39,49 +51,10 @@ public abstract class Node implements Listenable, Annotatable
 	 * 
 	 * @return The Scope instance, if it exists.
 	 */
-	public getScope() -> Scope
+	public Scope scope
 	{
-		return null
-	}
-	
-	/**
-	 * Get whether or not the current node type has a scope.
-	 * 
-	 * @return Whether or not the current node type has a scope.
-	 */
-	public containsScope() -> Bool
-	{
-		return getScope() != null
-	}
-	
-	[Override]
-	public addAnnotation(Annotation annotation)
-	{
-		if (annotations == null)
-		{
-			annotations = new Array()
-		}
-		
-		annotations.add(annotation)
-		
-		annotation.setTemporaryParent(this)
-	}
-	
-	/**
-	 * Set a temporary parent for the specified Node. When, if ever,
-	 * the Node is formally added to a Node, the temporary parent
-	 * will be removed.
-	 * 
-	 * @param parent The Node to act as the parent temporarily.
-	 */
-	public setTemporaryParent(Node parent)
-	{
-		if (this.parent != parent)
-		{
-			detach()
-			
-			this.parent = parent
-		}
+		get { return null }
+		set { throw new UnimplementedOperationException("This Node does not support Scopes") }
 	}
 	
 	/**
@@ -91,9 +64,40 @@ public abstract class Node implements Listenable, Annotatable
 	 * @return Whether or not the specified Node is being decoded at
 	 * 		the current moment.
 	 */
-	public isDecoding() -> Bool
+	visible Bool isDecoding
 	{
-		return parent == null || !parent.containsChild(this)
+		get { return parent == null || !parent.containsChild(this) }
+		no set
+	}
+	
+	visible Bool containsScope
+	{
+		get { return scope != null }
+		no set
+	}
+	
+	/**
+	 * Create a new Node. Initializes the data.
+	 * 
+	 * @param parent The Node to act as the parent temporarily.
+	 * @param location The location of the Node in the source file.
+	 */
+	public construct(Node parent, Location location)
+	{
+		children = Array(4)
+		
+		this.parent = parent
+		this.location = location
+	}
+	
+	[Override]
+	public addAnnotation(Annotation annotation)
+	{
+		annotations = annotations ?: new Array()
+		
+		annotations.add(annotation)
+		
+		annotation.parent = this
 	}
 	
 	/**
@@ -101,16 +105,13 @@ public abstract class Node implements Listenable, Annotatable
 	 */
 	public detach()
 	{
-		if (parent == null || isDecoding())
-		{
-			return
-		}
+		if (isDecoding) return
 		
-		Node from = parent
+		var from = parent
 		
-		if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope())
+		if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope)
 		{
-			from = parent.getScope()
+			from = parent.scope
 		}
 		
 		detach(from)
@@ -153,16 +154,9 @@ public abstract class Node implements Listenable, Annotatable
 		{
 			return true
 		}
-		
-		if (recursive)
+		else if (recursive)
 		{
-			for (n in children)
-			{
-				if (n.containsChild(child, recursive))
-				{
-					return true
-				}
-			}
+			children.any({ _.containsChild(child, true) })
 		}
 		
 		return false
