@@ -5,11 +5,13 @@ import "compiler/util/FileUtils"
 
 public class Compiler
 {
-	visible static Bool DEBUG
+	visible static Bool DEBUG = true
 	
 	public static main(String[] args)
 	{
-		Console.writeLine("In compiler")
+		var c = new Compiler()
+		
+		c.compile(null)
 		
 		Console.waitForEnter()
 	}
@@ -25,9 +27,9 @@ public class Compiler
 		
 		if (DEBUG)
 		{
-			testClasses();
+			testClasses()
 			
-			/*args =
+			args =
 			[
 				"../Compiler",
 				"example",
@@ -60,7 +62,9 @@ public class Compiler
 //				"-no-errors",
 				"-no-optimize"
 //				"-library"
-			]*/
+			]
+			
+			Console.writeLine("Args: #args")
 		}
 	}
 	
