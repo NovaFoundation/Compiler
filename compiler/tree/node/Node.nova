@@ -22,7 +22,7 @@ import "nova/datastruct/Bounds"
  * @since	v0.1 Jan 5, 2014 at 9:00:11 PM
  * @version	v0.2.41 Dec 17, 2014 at 7:48:17 PM
  */
-public abstract class Node implements Listenable, Annotatable
+public abstract class Node implements Annotatable
 {
 	visible Location location
 	
@@ -143,12 +143,7 @@ public abstract class Node implements Listenable, Annotatable
 	 * @param child The Node to check whether is a child or not.
 	 * @return Whether or not the given Node is a child.
 	 */
-	public containsChild(Node child) -> Bool
-	{
-		return containsChild(child, false)
-	}
-	
-	public containsChild(Node child, Bool recursive) -> Bool
+	public containsChild(Node child, Bool recursive = false) -> Bool
 	{
 		if (children.contains(child))
 		{
@@ -174,23 +169,9 @@ public abstract class Node implements Listenable, Annotatable
 	 * @param temporaryParent The Node to act as the parent
 	 * 		temporarily.
 	 * @param locationIn The Location instance holding the information.
-	 * @return A clone of the specified Node.
-	 */
-	public clone(Node temporaryParent, Location locationIn) -> Node
-	{
-		return clone(temporaryParent, locationIn, true)
-	}
-	
-	/**
-	 * Return a new Node containing a copy of the values of the
-	 * specified node, including clones of the children.
-	 * 
-	 * @param temporaryParent The Node to act as the parent
-	 * 		temporarily.
-	 * @param locationIn The Location instance holding the information.
 	 * @param cloneChildren Whether or not to clone the children of the
 	 * 		Node as well.
 	 * @return A clone of the specified Node.
 	 */
-	public abstract clone(Node temporaryParent, Location locationIn, Bool cloneChildren) -> Node
+	public abstract clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Node
 }
