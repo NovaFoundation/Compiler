@@ -33,7 +33,7 @@ public class Scope extends Node
 	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, Bool)
 	 */
 	[Override]
-	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren) -> Scope
+	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Scope
 	{
 		return null
 	}

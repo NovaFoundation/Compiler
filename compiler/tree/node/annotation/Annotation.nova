@@ -14,7 +14,7 @@ public class Annotation extends Node
 	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, boolean)
 	 */
 	[Override]
-	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren) -> Annotation
+	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Annotation
 	{
 		return null
 	}
