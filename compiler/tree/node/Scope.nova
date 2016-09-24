@@ -23,7 +23,7 @@ import "compiler/util/Location"
  */
 public class Scope extends Node
 {
-	private Int	id, localVariableID
+	private Int	id
 	
 	private Listener[] listeners
 	
@@ -33,7 +33,7 @@ public class Scope extends Node
 	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, Bool)
 	 */
 	[Override]
-	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Scope
+	public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Scope
 	{
 		return null
 	}
