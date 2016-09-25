@@ -7,7 +7,7 @@ public interface Annotatable
 {
 	visible Annotation[] annotations
 	
-	addAnnotation(Annotation annotation)
+	public addAnnotation(Annotation annotation)
 	
 	//containsAnnotationOfType(Class c) -> Bool
 	/*{
