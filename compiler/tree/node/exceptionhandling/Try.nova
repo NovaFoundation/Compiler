@@ -9,10 +9,11 @@ package "compiler/tree/node/exceptionhandling"
  * @since	v0.1 Mar 22, 2014 at 4:01:38 PM
  * @version	v0.2.38 Dec 6, 2014 at 5:19:17 PM
  */
-public class Try //extends ExceptionHandler
+class Try extends ExceptionHandler
 {
 	private Int[]	codes
 	
 	visible static String IDENTIFIER = "try"
 	
+	visible Try parentTry => this
 }
