@@ -1,0 +1,6 @@
+package "compiler/tree/node"
+
+class NodeList<E extends Node> extends Node
+{
+	
+}
