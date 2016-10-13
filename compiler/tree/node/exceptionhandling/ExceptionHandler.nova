@@ -12,18 +12,10 @@ import "compiler/util/Location"
  * @since	v0.1 Mar 21, 2014 at 10:50:26 PM
  * @version	v0.2.26 Aug 6, 2014 at 2:48:50 PM
  */
-public class ExceptionHandler extends Node
+class ExceptionHandler extends Node
 {
-	/**
-	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, boolean)
-	 */
-	[Override]
-	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> ExceptionHandler
+	public doa()
 	{
-		//ExceptionHandler node = new ExceptionHandler(temporaryParent, locationIn)
 		
-		//return cloneTo(node, cloneChildren)
-		
-		return null
 	}
 }
