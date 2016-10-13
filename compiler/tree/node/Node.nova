@@ -190,10 +190,8 @@ public class Node implements Annotatable
 	 * @param child The Node to check whether is a child or not.
 	 * @return Whether or not the given Node is a child.
 	 */
-	public containsChild(Node child, Bool recursive = false) -> Bool
-	{
-		return children.contains(child) || (recursive && children.any({ _.containsChild(child, true) }))
-	}
+	public containsChild(Node child, Bool recursive = false) =>
+			children.contains(child) || (recursive && children.any({ _.containsChild(child, true) }))
 	
 	public onAdded(Node parent)
 	{
@@ -237,13 +235,15 @@ public class Node implements Annotatable
 	 */
 	public inheritChildren(Node oldParent, Bool clone = false)
 	{
-		/*oldParent.children.forEach(child -> {
+		oldParent.children.forEach(child -> {
 			if (clone)
 				child = child.clone(this, child.location, true)
 			
 			addChild(child)
-		})*/
+		})
 	}
+	
+	public removeChild(Node node) => removeChild(children.indexOf(node))
 	
 	public removeChild(Int index) -> Node
 	{
@@ -256,10 +256,7 @@ public class Node implements Annotatable
 		return node
 	}
 	
-	public removeChild(Node node) -> Node
-	{
-		return removeChild(children.indexOf(node))
-	}
+	public replaceWith(Node replacement) => parent.replace(this, replacement)
 	
 	public replace(Node old, Node replacement, Bool detach = true)
 	{
@@ -279,6 +276,19 @@ public class Node implements Annotatable
 		old.onReplaced(this, replacement)
 	}
 	
+	public slaughterChildren() => children.forEach(head -> head.detach())
+	
+	public onAfterDecoded() => children.all({ _.onAfterDecoded() })
+	
+	public onStackPopped() => children.forEach({ _.onStackPopped() })
+	
+	public onNextStatementDecoded(Node next) => children.all({ _.onNextStatementDecoded(next) })
+	
+	public followedByScope(Bool scope)
+	{
+		
+	}
+	
 	public onChildReplaced(Node old, Node replacement)
 	{
 		
@@ -287,36 +297,6 @@ public class Node implements Annotatable
 	public onReplaced(Node parent, Node replacement)
 	{
 		
-	}
-	
-	public replaceWith(Node replacement)
-	{
-		parent.replace(this, replacement)
-	}
-	
-	public slaughterChildren()
-	{
-		children.forEach(head -> head.detach())
-	}
-	
-	public followedByScope(Bool scope)
-	{
-		
-	}
-	
-	public onAfterDecoded() -> Bool
-	{
-		return children.all({ _.onAfterDecoded() })
-	}
-	
-	public onStackPopped()
-	{
-		children.forEach({ _.onStackPopped() })
-	}
-	
-	public onNextStatementDecoded(Node next) -> Bool
-	{
-		return children.all({ _.onNextStatementDecoded(next) })
 	}
 	
 	/**
@@ -351,10 +331,7 @@ public class Node implements Annotatable
 	 * Rollback any changes to external resources that the specified Node
 	 * has made, if the Node is not going to be used.
 	 */
-	public rollback()
-	{
-		children.forEach({ _.rollback() })
-	}
+	public rollback() => children.forEach({ _.rollback() })
 	
 	/**
 	 * Return a new Node containing a copy of the values of the
