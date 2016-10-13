@@ -1,0 +1,6 @@
+package "compiler/tree/node"
+
+class NovaClass extends Node
+{
+	visible NovaClass parentClass => this
+}
