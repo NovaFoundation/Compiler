@@ -1,0 +1,11 @@
+package "compiler/tree/node"
+
+class Program extends Node
+{
+	visible Program program => this
+	
+	public getClassDeclaration(String location) -> NovaClass
+	{
+		
+	}
+}
