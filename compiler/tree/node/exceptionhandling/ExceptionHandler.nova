@@ -14,8 +14,5 @@ import "compiler/util/Location"
  */
 class ExceptionHandler extends Node
 {
-	public doa()
-	{
-		
-	}
+	
 }
