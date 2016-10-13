@@ -2,7 +2,7 @@ package "compiler/tree/node"
 
 import "compiler/util/Location"
 import "compiler/tree/node/closures/ClosureContext"
-//import "compiler/tree/node/closures/ClosureDeclaration"
+import "compiler/tree/node/closures/ClosureDeclaration"
 import "nova/io/File"
 
 class NovaFile extends Node
