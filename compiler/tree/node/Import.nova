@@ -1,0 +1,65 @@
+package "compiler/tree/node"
+
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+
+class Import extends Node
+{
+	public Bool used
+	
+	public String alias, importLocation
+	
+	visible String parentLocation => importLocation.substring(0, importLocation.lastIndexOf("/", defaultReturnValue: 0))
+	
+	public static String IDENTIFIER = "import"
+	public static String ALIAS_IDENTIFIER = "as"
+	
+	visible NovaClass classDeclaration => program.getClassDeclaration(importLocation)
+	
+	public construct(String input, Node parent = null, Location location = Location.INVALID)
+	{
+		super(parent, location)
+		
+		if (tryParse(input, parent, location, this) == null)
+		{
+			throw new SyntaxErrorException("Could not parse import statement: '#input'", this)
+		}
+	}
+	
+	public getClassLocation(Bool aliased = false) -> String
+	{
+		return aliased && alias != null ? "#parentLocation/#alias" : importLocation
+	}
+	
+	public tryParse(String input, Node parent, Location location = Location.INVALID, Import node = null) -> Import
+	{
+		if (true)//StringUtils.findNextWord(statement).equals(IDENTIFIER))
+		{
+			node = node ?: new Import(input, parent, location)
+			
+			var quoteStart = 0//StringUtils.findNextNonWhitespaceIndex(statement, IDENTIFIER.length())
+			
+			if (quoteStart < 0 || input.chars[quoteStart] != '"')
+			{
+				return null
+			}
+			
+			var quoteEnd = 0//StringUtils.findEndingChar(statement, '"', quoteStart, 1)
+			
+			if (quoteEnd < 0)
+			{
+				//SyntaxMessage.error("Missing ending quotation for import statement", n)
+			}
+			
+			var importLocation = input.substring(quoteStart + 1, quoteEnd)
+			var alias = input.substring(quoteEnd + 1).trim()
+			
+			if (true)//node.validateImportLocation(importLocation) && node.validateAlias(alias, require))
+			{
+				return node
+			}
+		}
+		
+		return null
+	}
+}
