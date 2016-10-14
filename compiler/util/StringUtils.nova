@@ -4,7 +4,7 @@ public class StringUtils
 {
 	public static isSurroundedByQuotes(String input) -> Bool
 	{
-		return input.count >= 2 && input.charAt(0) == '"' && input.charAt(input.count - 1) == '"'
+		return input.count >= 2 && input.chars.first == '"' && input.chars.last == '"'
 	}
 	
 	/**
