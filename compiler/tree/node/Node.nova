@@ -193,15 +193,8 @@ public class Node implements Annotatable
 	public containsChild(Node child, Bool recursive = false) =>
 			children.contains(child) || (recursive && children.any({ _.containsChild(child, true) }))
 	
-	public onAdded(Node parent)
-	{
-		
-	}
-	
-	public onRemoved(Node from)
-	{
-		
-	}
+	public onAdded(Node parent) {}
+	public onRemoved(Node from) {}
 	
 	public addChild(Node node, Int index = children.count, Node toNode = this, Bool detach = true) -> Node
 	{
@@ -233,15 +226,10 @@ public class Node implements Annotatable
 	 * @param clone Whether or not to clone the children and not remove
 	 * 		them from the previous owner.
 	 */
-	public inheritChildren(Node oldParent, Bool clone = false)
-	{
+	public inheritChildren(Node oldParent, Bool clone = false) =>
 		oldParent.children.forEach(child -> {
-			if (clone)
-				child = child.clone(this, child.location, true)
-			
-			addChild(child)
+			addChild(clone ? child.clone(this, child.location, true) : child)
 		})
-	}
 	
 	public removeChild(Node node) => removeChild(children.indexOf(node))
 	
@@ -277,27 +265,12 @@ public class Node implements Annotatable
 	}
 	
 	public slaughterChildren() => children.forEach(head -> head.detach())
-	
 	public onAfterDecoded() => children.all({ _.onAfterDecoded() })
-	
 	public onStackPopped() => children.forEach({ _.onStackPopped() })
-	
 	public onNextStatementDecoded(Node next) => children.all({ _.onNextStatementDecoded(next) })
-	
-	public followedByScope(Bool scope)
-	{
-		
-	}
-	
-	public onChildReplaced(Node old, Node replacement)
-	{
-		
-	}
-	
-	public onReplaced(Node parent, Node replacement)
-	{
-		
-	}
+	public followedByScope(Bool scope) {}
+	public onChildReplaced(Node old, Node replacement) {}
+	public onReplaced(Node parent, Node replacement) {}
 	
 	/**
 	 * Validate the node to make last minute changes or error checking.
