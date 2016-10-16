@@ -23,36 +23,28 @@ import "nova/datastruct/Bounds"
  * @since	v0.1 Jan 5, 2014 at 9:00:11 PM
  * @version	v0.2.41 Dec 17, 2014 at 7:48:17 PM
  */
-public class Node implements Annotatable
-{
+public class Node implements Annotatable {
 	visible Location location
 	
 	visible Node[] children
 	visible Annotation[] annotations
 	
-	public Node parent => parent
-	{
-		set
-		{
-			if (parent != value)
-			{
+	public Node parent => parent {
+		set {
+			if (parent != value) {
 				value.addChild(this)
 			}
 		}
 	}
 	
-	visible String locationInfo
-	{
-		get
-		{
+	visible String locationInfo {
+		get {
 			String info = ""
 			
-			if (parentFile != null)
-			{
+			if (parentFile != null) {
 				info += " in file #parentFile.name"
 			}
-			if (location != null)
-			{
+			if (location != null) {
 				info += " on line number #location.lineNumber at offset #location.offset"
 			}
 			
@@ -94,19 +86,15 @@ public class Node implements Annotatable
 	visible Node next => getAdjacentNode(1)
 	visible Node previous => getAdjacentNode(-1)
 	
-	visible Int index => parent.children.indexOf(this)
-	{
+	visible Int index => parent.children.indexOf(this) {
 		set { parent.children.swap(index, value) }
 	}
 	
-	public getAdjacentNode(Int offset) -> Node
-	{
-		if (parent != null)
-		{
+	public getAdjacentNode(Int offset) -> Node {
+		if (parent != null) {
 			Int index = this.index + offset
 			
-			if (index >= 0 && index < parent.children.count)
-			{
+			if (index >= 0 && index < parent.children.count) {
 				return parent.children[index]
 			}
 		}
@@ -121,8 +109,7 @@ public class Node implements Annotatable
 	 * 
 	 * @return The Scope instance, if it exists.
 	 */
-	public Scope scope => null
-	{
+	public Scope scope => null {
 		set { throw new UnimplementedOperationException("This Node does not support Scopes") }
 	}
 	
@@ -134,8 +121,7 @@ public class Node implements Annotatable
 	 * @param parent The Node to act as the parent temporarily.
 	 * @param location The location of the Node in the source file.
 	 */
-	public construct(Node parent, Location location)
-	{
+	public construct(Node parent, Location location) {
 		children = Array(4)
 		
 		this.parent = parent
@@ -143,8 +129,7 @@ public class Node implements Annotatable
 	}
 	
 	[Override]
-	public addAnnotation(Annotation annotation)
-	{
+	public addAnnotation(Annotation annotation) {
 		annotations = annotations ?: new Array()
 		
 		annotations.add(annotation)
@@ -155,14 +140,12 @@ public class Node implements Annotatable
 	/**
 	 * Detach the specified node from its parent.
 	 */
-	public detach()
-	{
+	public detach() {
 		if (isDecoding) return
 		
 		var from = parent
 		
-		if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope)
-		{
+		if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope) {
 			from = parent.scope
 		}
 		
@@ -174,8 +157,7 @@ public class Node implements Annotatable
 	 * 
 	 * @param fromNode The Node to detach the specified Node from.
 	 */
-	private detach(Node fromNode)
-	{
+	private detach(Node fromNode) {
 		fromNode.children.remove(this)
 		
 		parent = null
@@ -196,10 +178,8 @@ public class Node implements Annotatable
 	public onAdded(Node parent) {}
 	public onRemoved(Node from) {}
 	
-	public addChild(Node node, Int index = children.count, Node toNode = this, Bool detach = true) -> Node
-	{
-		if (detach)
-		{
+	public addChild(Node node, Int index = children.count, Node toNode = this, Bool detach = true) -> Node {
+		if (detach) {
 			// If the node already belongs to a parent, remove it from its old parent.
 			node.detach()
 			
@@ -208,8 +188,7 @@ public class Node implements Annotatable
 
 			toNode.children.add(index, node)
 		}
-		else
-		{
+		else {
 			toNode.children[index] = node
 		}
 		
@@ -233,8 +212,7 @@ public class Node implements Annotatable
 	
 	public removeChild(Node node) => removeChild(children.indexOf(node))
 	
-	public removeChild(Int index) -> Node
-	{
+	public removeChild(Int index) -> Node {
 		if (index < 0) return null
 		
 		Node node = children[index]
@@ -246,17 +224,14 @@ public class Node implements Annotatable
 	
 	public replaceWith(Node replacement) => parent.replace(this, replacement)
 	
-	public replace(Node old, Node replacement, Bool detach = true)
-	{
+	public replace(Node old, Node replacement, Bool detach = true) {
 		Int index = children.indexOf(old)
 		
-		if (detach)
-		{
+		if (detach) {
 			old.detach()
 		}
 		
-		if (replacement != null)
-		{
+		if (replacement != null) {
 			addChild(replacement, index, this, detach)
 		}
 		
@@ -278,8 +253,7 @@ public class Node implements Annotatable
 	 * @param phase The phase that the node is being validated in.
 	 * @return The Node to continue the validation off of.
 	 */
-	public validate(Int phase) -> ValidationResult
-	{
+	public validate(Int phase) -> ValidationResult {
 		/*return annotations?.reverse().firstNonNull({
 			ValidationResult result = _.validate(phase)
 			
@@ -288,9 +262,8 @@ public class Node implements Annotatable
 		
 		ValidationResult result
 		
-		if (annotations != null)
-		{
-			result = (ValidationResult)annotations.reverse().firstNonNull({
+		if (annotations != null) {
+			result = annotations.reverse().firstNonNull({
 				ValidationResult result = _.validate(phase)
 				
 				return result.skipValidation ? result : null
@@ -316,8 +289,7 @@ public class Node implements Annotatable
 	 * 		Node as well.
 	 * @return A clone of the specified Node.
 	 */
-	public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node
-	{
+	public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
 		
 	}
 }
