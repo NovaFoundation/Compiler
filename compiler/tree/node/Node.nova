@@ -23,15 +23,15 @@ import "nova/datastruct/Bounds"
  * @since	v0.1 Jan 5, 2014 at 9:00:11 PM
  * @version	v0.2.41 Dec 17, 2014 at 7:48:17 PM
  */
-public class Node implements Annotatable {
+class Node implements Annotatable {
 	visible Location location
 	
 	visible Node[] children
 	visible Annotation[] annotations
 	
-	public Node parent => parent {
+	public Node parent {
 		set {
-			if (parent != value) {
+			if (parent != value) { // Skip if already a child of this parent
 				value.addChild(this)
 			}
 		}
@@ -67,27 +67,27 @@ public class Node implements Annotatable {
 	visible Bool isEmpty => children.count == 0
 	visible Bool isUserMade => true
 	visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
-	visible Bool isWithinExternalContext => parent != null && !parent.isWithinExternalContext
+	visible Bool isWithinExternalContext => parent?.isWithinExternalContext
 	
-	visible Program program => parent.program
+	visible Program program => parent?.program
 	
-	visible NovaFile parentFile => parent.parentFile
+	visible NovaFile parentFile => parent?.parentFile
 	visible Bool isWithinFile => parentFile != null
 	
-	visible NovaFunction parentFunction => parent.parentFunction
+	visible NovaFunction parentFunction => parent?.parentFunction
 	visible Bool isWithinFunction => parentFunction != null
 	
-	visible Try parentTry => parent.parentTry
+	visible Try parentTry => parent?.parentTry
 	visible Bool isWithinTry => parentTry != null
 	
-	visible NovaClass parentClass => parent.parentClass
+	visible NovaClass parentClass => parent?.parentClass
 	visible Bool isWithinClass => parentClass != null
 	
 	visible Node next => getAdjacentNode(1)
 	visible Node previous => getAdjacentNode(-1)
 	
-	visible Int index => parent.children.indexOf(this) {
-		set { parent.children.swap(index, value) }
+	visible Int index => parent?.children.indexOf(this) {
+		set { parent?.children.swap(index, value) }
 	}
 	
 	public getAdjacentNode(Int offset) -> Node {
@@ -158,7 +158,7 @@ public class Node implements Annotatable {
 	 * @param fromNode The Node to detach the specified Node from.
 	 */
 	private detach(Node fromNode) {
-		fromNode.children.remove(this)
+		fromNode?.children.remove(this)
 		
 		parent = null
 		
@@ -187,8 +187,7 @@ public class Node implements Annotatable {
 			node.parent = this
 
 			toNode.children.add(index, node)
-		}
-		else {
+		} else {
 			toNode.children[index] = node
 		}
 		
@@ -254,23 +253,15 @@ public class Node implements Annotatable {
 	 * @return The Node to continue the validation off of.
 	 */
 	public validate(Int phase) -> ValidationResult {
-		/*return annotations?.reverse().firstNonNull({
+		return annotations?.reverse().firstNonNull({
 			ValidationResult result = _.validate(phase)
 			
 			return result.skipValidation ? result : null
-		}) ?: new ValidationResult(this)*/
+		}) ?: new ValidationResult(this)
 		
-		ValidationResult result
-		
-		if (annotations != null) {
-			result = annotations.reverse().firstNonNull({
-				ValidationResult result = _.validate(phase)
-				
-				return result.skipValidation ? result : null
-			})
-		}
-		
-		return result ?: new ValidationResult(this)
+		/*return annotations?.reverse()
+			.firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
+			new ValidationResult(this)*/
 	}
 	
 	/**
