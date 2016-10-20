@@ -2,12 +2,10 @@ package "compiler/tree/node"
 
 import "compiler/util/Location"
 
-class ImportList extends NodeList<Import>
-{
-	public construct(Node parent = null, Location location = Location.INVALID)
-	{
-		super(parent, location)
-	}
-	
-	
+class ImportList extends NodeList<Import> {
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    
 }

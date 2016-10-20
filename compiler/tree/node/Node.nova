@@ -19,268 +19,268 @@ import "nova/datastruct/Bounds"
  * children, however some of the extensions of Node have default
  * children at the start.
  * 
- * @author	Braden Steffaniak
- * @since	v0.1 Jan 5, 2014 at 9:00:11 PM
- * @version	v0.2.41 Dec 17, 2014 at 7:48:17 PM
+ * @author    Braden Steffaniak
+ * @since    v0.1 Jan 5, 2014 at 9:00:11 PM
+ * @version    v0.2.41 Dec 17, 2014 at 7:48:17 PM
  */
 class Node implements Annotatable {
-	visible Location location
-	
-	visible Node[] children
-	visible Annotation[] annotations
-	
-	public Node parent {
-		set {
-			if (parent != value) { // Skip if already a child of this parent
-				value.addChild(this)
-			}
-		}
-	}
-	
-	visible String locationInfo {
-		get {
-			String info = ""
-			
-			if (parentFile != null) {
-				info += " in file #parentFile.name"
-			}
-			if (location != null) {
-				info += " on line number #location.lineNumber at offset #location.offset"
-			}
-			
-			return info
-		}
-		
-		no set
-	}
-	
-	
-	/**
-	 * Get whether or not the specified Node is being decoded at
-	 * the current moment.
-	 * 
-	 * @return Whether or not the specified Node is being decoded at
-	 * 		the current moment.
-	 */
-	visible Bool isDecoding => parent == null || !parent.containsChild(this)
-	visible Bool isValid => parent != null
-	visible Bool isEmpty => children.count == 0
-	visible Bool isUserMade => true
-	visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
-	visible Bool isWithinExternalContext => parent?.isWithinExternalContext
-	
-	visible Program program => parent?.program
-	
-	visible NovaFile parentFile => parent?.parentFile
-	visible Bool isWithinFile => parentFile != null
-	
-	visible NovaFunction parentFunction => parent?.parentFunction
-	visible Bool isWithinFunction => parentFunction != null
-	
-	visible Try parentTry => parent?.parentTry
-	visible Bool isWithinTry => parentTry != null
-	
-	visible NovaClass parentClass => parent?.parentClass
-	visible Bool isWithinClass => parentClass != null
-	
-	visible Node next => getAdjacentNode(1)
-	visible Node previous => getAdjacentNode(-1)
-	
-	visible Int index => parent?.children.indexOf(this) {
-		set { parent?.children.swap(index, value) }
-	}
-	
-	public getAdjacentNode(Int offset) -> Node {
-		if (parent != null) {
-			Int index = this.index + offset
-			
-			if (index >= 0 && index < parent.children.count) {
-				return parent.children[index]
-			}
-		}
-		
-		return null
-	}
-	
-	/**
-	 * Get the Scope instance of this Node if it even has
-	 * a scope. If the Node does not have a Scope then this
-	 * method call will return null.
-	 * 
-	 * @return The Scope instance, if it exists.
-	 */
-	public Scope scope => null {
-		set { throw new UnimplementedOperationException("This Node does not support Scopes") }
-	}
-	
-	visible Bool containsScope => scope != null
-	
-	/**
-	 * Create a new Node. Initializes the data.
-	 * 
-	 * @param parent The Node to act as the parent temporarily.
-	 * @param location The location of the Node in the source file.
-	 */
-	public construct(Node parent, Location location) {
-		children = Array(4)
-		
-		this.parent = parent
-		this.location = location
-	}
-	
-	[Override]
-	public addAnnotation(Annotation annotation) {
-		annotations = annotations ?: new Array()
-		
-		annotations.add(annotation)
-		
-		annotation.parent = this
-	}
-	
-	/**
-	 * Detach the specified node from its parent.
-	 */
-	public detach() {
-		if (isDecoding) return
-		
-		var from = parent
-		
-		if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope) {
-			from = parent.scope
-		}
-		
-		detach(from)
-	}
-	
-	/**
-	 * Detach the specified Node from the given Node.
-	 * 
-	 * @param fromNode The Node to detach the specified Node from.
-	 */
-	private detach(Node fromNode) {
-		fromNode?.children.remove(this)
-		
-		parent = null
-		
-		onRemoved(fromNode)
-	}
-	
-	/**
-	 * Get whether or not the given Node is a child of the specified
-	 * Node.
-	 * 
-	 * @param child The Node to check whether is a child or not.
-	 * @return Whether or not the given Node is a child.
-	 */
-	public containsChild(Node child, Bool recursive = false) =>
-			children.contains(child) || (recursive && children.any({ _.containsChild(child, true) }))
-	
-	public onAdded(Node parent) {}
-	public onRemoved(Node from) {}
-	
-	public addChild(Node node, Int index = children.count, Node toNode = this, Bool detach = true) -> Node {
-		if (detach) {
-			// If the node already belongs to a parent, remove it from its old parent.
-			node.detach()
-			
-			// Set this instance as the new parent.
-			node.parent = this
+    visible Location location
+    
+    visible Node[] children
+    visible Annotation[] annotations
+    
+    public Node parent {
+        set {
+            if (parent != value) { // Skip if already a child of this parent
+                value.addChild(this)
+            }
+        }
+    }
+    
+    visible String locationInfo {
+        get {
+            String info = ""
+            
+            if (parentFile != null) {
+                info += " in file #parentFile.name"
+            }
+            if (location != null) {
+                info += " on line number #location.lineNumber at offset #location.offset"
+            }
+            
+            return info
+        }
+        
+        no set
+    }
+    
+    
+    /**
+     * Get whether or not the specified Node is being decoded at
+     * the current moment.
+     * 
+     * @return Whether or not the specified Node is being decoded at
+     *         the current moment.
+     */
+    visible Bool isDecoding => parent == null || !parent.containsChild(this)
+    visible Bool isValid => parent != null
+    visible Bool isEmpty => children.count == 0
+    visible Bool isUserMade => true
+    visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
+    visible Bool isWithinExternalContext => parent?.isWithinExternalContext
+    
+    visible Program program => parent?.program
+    
+    visible NovaFile parentFile => parent?.parentFile
+    visible Bool isWithinFile => parentFile != null
+    
+    visible NovaFunction parentFunction => parent?.parentFunction
+    visible Bool isWithinFunction => parentFunction != null
+    
+    visible Try parentTry => parent?.parentTry
+    visible Bool isWithinTry => parentTry != null
+    
+    visible NovaClass parentClass => parent?.parentClass
+    visible Bool isWithinClass => parentClass != null
+    
+    visible Node next => getAdjacentNode(1)
+    visible Node previous => getAdjacentNode(-1)
+    
+    visible Int index => parent?.children.indexOf(this) {
+        set { parent?.children.swap(index, value) }
+    }
+    
+    public getAdjacentNode(Int offset) -> Node {
+        if (parent != null) {
+            Int index = this.index + offset
+            
+            if (index >= 0 && index < parent.children.count) {
+                return parent.children[index]
+            }
+        }
+        
+        return null
+    }
+    
+    /**
+     * Get the Scope instance of this Node if it even has
+     * a scope. If the Node does not have a Scope then this
+     * method call will return null.
+     * 
+     * @return The Scope instance, if it exists.
+     */
+    public Scope scope => null {
+        set { throw new UnimplementedOperationException("This Node does not support Scopes") }
+    }
+    
+    visible Bool containsScope => scope != null
+    
+    /**
+     * Create a new Node. Initializes the data.
+     * 
+     * @param parent The Node to act as the parent temporarily.
+     * @param location The location of the Node in the source file.
+     */
+    public construct(Node parent, Location location) {
+        children = Array(4)
+        
+        this.parent = parent
+        this.location = location
+    }
+    
+    [Override]
+    public addAnnotation(Annotation annotation) {
+        annotations = annotations ?: new Array()
+        
+        annotations.add(annotation)
+        
+        annotation.parent = this
+    }
+    
+    /**
+     * Detach the specified node from its parent.
+     */
+    public detach() {
+        if (isDecoding) return
+        
+        var from = parent
+        
+        if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope) {
+            from = parent.scope
+        }
+        
+        detach(from)
+    }
+    
+    /**
+     * Detach the specified Node from the given Node.
+     * 
+     * @param fromNode The Node to detach the specified Node from.
+     */
+    private detach(Node fromNode) {
+        fromNode?.children.remove(this)
+        
+        parent = null
+        
+        onRemoved(fromNode)
+    }
+    
+    /**
+     * Get whether or not the given Node is a child of the specified
+     * Node.
+     * 
+     * @param child The Node to check whether is a child or not.
+     * @return Whether or not the given Node is a child.
+     */
+    public containsChild(Node child, Bool recursive = false) =>
+            children.contains(child) || (recursive && children.any({ _.containsChild(child, true) }))
+    
+    public onAdded(Node parent) {}
+    public onRemoved(Node from) {}
+    
+    public addChild(Node node, Int index = children.count, Node toNode = this, Bool detach = true) -> Node {
+        if (detach) {
+            // If the node already belongs to a parent, remove it from its old parent.
+            node.detach()
+            
+            // Set this instance as the new parent.
+            node.parent = this
 
-			toNode.children.add(index, node)
-		} else {
-			toNode.children[index] = node
-		}
-		
-		node.onAdded(toNode)
-		
-		return node
-	}
-	
-	/**
-	 * Give the specified node the given nodes children. This removes the
-	 * children from the given oldParent node.
-	 * 
-	 * @param oldParent The parent to inherit the children from.
-	 * @param clone Whether or not to clone the children and not remove
-	 * 		them from the previous owner.
-	 */
-	public inheritChildren(Node oldParent, Bool clone = false) =>
-		oldParent.children.forEach(child -> {
-			addChild(clone ? child.clone(this, child.location, true) : child)
-		})
-	
-	public removeChild(Node node) => removeChild(children.indexOf(node))
-	
-	public removeChild(Int index) -> Node {
-		if (index < 0) return null
-		
-		Node node = children[index]
-		
-		node.detach()
-		
-		return node
-	}
-	
-	public replaceWith(Node replacement) => parent.replace(this, replacement)
-	
-	public replace(Node old, Node replacement, Bool detach = true) {
-		Int index = children.indexOf(old)
-		
-		if (detach) {
-			old.detach()
-		}
-		
-		if (replacement != null) {
-			addChild(replacement, index, this, detach)
-		}
-		
-		onChildReplaced(old, replacement)
-		old.onReplaced(this, replacement)
-	}
-	
-	public slaughterChildren() => children.forEach(head -> head.detach())
-	public onAfterDecoded() => children.all({ _.onAfterDecoded() })
-	public onStackPopped() => children.forEach({ _.onStackPopped() })
-	public onNextStatementDecoded(Node next) => children.all({ _.onNextStatementDecoded(next) })
-	public followedByScope(Bool scope) {}
-	public onChildReplaced(Node old, Node replacement) {}
-	public onReplaced(Node parent, Node replacement) {}
-	
-	/**
-	 * Validate the node to make last minute changes or error checking.
-	 * 
-	 * @param phase The phase that the node is being validated in.
-	 * @return The Node to continue the validation off of.
-	 */
-	public validate(Int phase) -> ValidationResult {
-		return annotations?.reverse().firstNonNull({
-			ValidationResult result = _.validate(phase)
-			
-			return result.skipValidation ? result : null
-		}) ?: new ValidationResult(this)
-		
-		/*return annotations?.reverse()
-			.firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
-			new ValidationResult(this)*/
-	}
-	
-	/**
-	 * Rollback any changes to external resources that the specified Node
-	 * has made, if the Node is not going to be used.
-	 */
-	public rollback() => children.forEach({ _.rollback() })
-	
-	/**
-	 * Return a new Node containing a copy of the values of the
-	 * specified node, including clones of the children.
-	 * 
-	 * @param parent The Node to set as the parent.
-	 * @param location The Location instance holding the information.
-	 * @param cloneChildren Whether or not to clone the children of the
-	 * 		Node as well.
-	 * @return A clone of the specified Node.
-	 */
-	public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
-		
-	}
+            toNode.children.add(index, node)
+        } else {
+            toNode.children[index] = node
+        }
+        
+        node.onAdded(toNode)
+        
+        return node
+    }
+    
+    /**
+     * Give the specified node the given nodes children. This removes the
+     * children from the given oldParent node.
+     * 
+     * @param oldParent The parent to inherit the children from.
+     * @param clone Whether or not to clone the children and not remove
+     *         them from the previous owner.
+     */
+    public inheritChildren(Node oldParent, Bool clone = false) =>
+        oldParent.children.forEach(child -> {
+            addChild(clone ? child.clone(this, child.location, true) : child)
+        })
+    
+    public removeChild(Node node) => removeChild(children.indexOf(node))
+    
+    public removeChild(Int index) -> Node {
+        if (index < 0) return null
+        
+        Node node = children[index]
+        
+        node.detach()
+        
+        return node
+    }
+    
+    public replaceWith(Node replacement) => parent.replace(this, replacement)
+    
+    public replace(Node old, Node replacement, Bool detach = true) {
+        Int index = children.indexOf(old)
+        
+        if (detach) {
+            old.detach()
+        }
+        
+        if (replacement != null) {
+            addChild(replacement, index, this, detach)
+        }
+        
+        onChildReplaced(old, replacement)
+        old.onReplaced(this, replacement)
+    }
+    
+    public slaughterChildren() => children.forEach(head -> head.detach())
+    public onAfterDecoded() => children.all({ _.onAfterDecoded() })
+    public onStackPopped() => children.forEach({ _.onStackPopped() })
+    public onNextStatementDecoded(Node next) => children.all({ _.onNextStatementDecoded(next) })
+    public followedByScope(Bool scope) {}
+    public onChildReplaced(Node old, Node replacement) {}
+    public onReplaced(Node parent, Node replacement) {}
+    
+    /**
+     * Validate the node to make last minute changes or error checking.
+     * 
+     * @param phase The phase that the node is being validated in.
+     * @return The Node to continue the validation off of.
+     */
+    public validate(Int phase) -> ValidationResult {
+        return annotations?.reverse().firstNonNull({
+            ValidationResult result = _.validate(phase)
+            
+            return result.skipValidation ? result : null
+        }) ?: new ValidationResult(this)
+        
+        /*return annotations?.reverse()
+            .firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
+            new ValidationResult(this)*/
+    }
+    
+    /**
+     * Rollback any changes to external resources that the specified Node
+     * has made, if the Node is not going to be used.
+     */
+    public rollback() => children.forEach({ _.rollback() })
+    
+    /**
+     * Return a new Node containing a copy of the values of the
+     * specified node, including clones of the children.
+     * 
+     * @param parent The Node to set as the parent.
+     * @param location The Location instance holding the information.
+     * @param cloneChildren Whether or not to clone the children of the
+     *         Node as well.
+     * @return A clone of the specified Node.
+     */
+    public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
+        
+    }
 }

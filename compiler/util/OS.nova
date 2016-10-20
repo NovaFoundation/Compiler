@@ -1,64 +1,55 @@
 package "compiler/util"
 
-public class OS
-{
-	visible static Byte OS
-	
-	visible static Byte WINDOWS = 1
-	visible static Byte MACOSX  = 2
-	visible static Byte LINUX   = 3
-	
-	visible static String OUTPUT_EXTENSION
-	visible static String DYNAMIC_LIB_EXT
-	
-	/**
-	 * Find out which operating system the compiler is running on.
-	 */
-	static
-	{
-		String osName = "windows"//System.getProperty("os.name").toLowerCase()
-		
-		if (osName.startsWith("win"))
-		{
-			OS = WINDOWS
-			OUTPUT_EXTENSION = ".exe"
-			DYNAMIC_LIB_EXT  = ".dll"
-		}
-		else if (osName.startsWith("mac"))
-		{
-			OS = MACOSX
-			OUTPUT_EXTENSION = ""
-			DYNAMIC_LIB_EXT  = ".dylib"
-		}
-		else if (osName.startsWith("lin"))
-		{
-			OS = LINUX
-			OUTPUT_EXTENSION = ""
-			DYNAMIC_LIB_EXT  = ".so"
-		}
-		else
-		{
-			OS = 0
-			OUTPUT_EXTENSION = ""
-			DYNAMIC_LIB_EXT  = ""
-		}
-	}
-	
-	visible static Bool isWindows
-	{
-		get { return OS == WINDOWS }
-		no set
-	}
-	
-	visible static Bool isMacOsx
-	{
-		get { return OS == MACOSX }
-		no set
-	}
-	
-	visible static Bool isLinux
-	{
-		get { return OS == LINUX }
-		no set
-	}
+class OS {
+    visible static Byte OS
+    
+    visible static Byte WINDOWS = 1
+    visible static Byte MACOSX  = 2
+    visible static Byte LINUX   = 3
+    
+    visible static String OUTPUT_EXTENSION
+    visible static String DYNAMIC_LIB_EXT
+    
+    /**
+     * Find out which operating system the compiler is running on.
+     */
+    static {
+        String osName = "windows"//System.getProperty("os.name").toLowerCase()
+        
+        if (osName.startsWith("win")) {
+            OS = WINDOWS
+            OUTPUT_EXTENSION = ".exe"
+            DYNAMIC_LIB_EXT  = ".dll"
+        }
+        else if (osName.startsWith("mac")) {
+            OS = MACOSX
+            OUTPUT_EXTENSION = ""
+            DYNAMIC_LIB_EXT  = ".dylib"
+        }
+        else if (osName.startsWith("lin")) {
+            OS = LINUX
+            OUTPUT_EXTENSION = ""
+            DYNAMIC_LIB_EXT  = ".so"
+        }
+        else {
+            OS = 0
+            OUTPUT_EXTENSION = ""
+            DYNAMIC_LIB_EXT  = ""
+        }
+    }
+    
+    visible static Bool isWindows {
+        get { return OS == WINDOWS }
+        no set
+    }
+    
+    visible static Bool isMacOsx {
+        get { return OS == MACOSX }
+        no set
+    }
+    
+    visible static Bool isLinux {
+        get { return OS == LINUX }
+        no set
+    }
 }

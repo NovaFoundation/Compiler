@@ -10,31 +10,29 @@ import "compiler/util/Location"
  * For example:
  * <blockquote><pre>
  * {
- * 	...
+ *     ...
  * 
- * 	// Statements within here...
+ *     // Statements within here...
  * 
- * 	...
+ *     ...
  * }</pre></blockquote>
  * 
- * @author	Braden Steffaniak
- * @since	v0.1 Apr 5, 2014 at 10:54:20 PM
- * @version	v0.2.41 Dec 17, 2014 at 7:48:17 PM
+ * @author    Braden Steffaniak
+ * @since    v0.1 Apr 5, 2014 at 10:54:20 PM
+ * @version    v0.2.41 Dec 17, 2014 at 7:48:17 PM
  */
-public class Scope extends Node
-{
-	private Int	id
-	
-	private Listener[] listeners
-	
-	//private Pair<LocalDeclaration, Value>[] assignedImplicitVariables
-	
-	/**
-	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, Bool)
-	 */
-	[Override]
-	public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Scope
-	{
-		return null
-	}
+class Scope extends Node {
+    private Int    id
+    
+    private Listener[] listeners
+    
+    //private Pair<LocalDeclaration, Value>[] assignedImplicitVariables
+    
+    /**
+     * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, Bool)
+     */
+    [Override]
+    public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Scope {
+        return null
+    }
 }

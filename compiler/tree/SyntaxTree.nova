@@ -1,9 +1,7 @@
 package "compiler/tree"
 
-public class SyntaxTree
-{
-	public construct()
-	{
-		
-	}
+class SyntaxTree {
+    public construct() {
+        
+    }
 }

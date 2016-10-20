@@ -6,16 +6,14 @@ import "compiler/util/Location"
 /**
  * {@link Node} extension that represents
  * 
- * @author	Braden Steffaniak
+ * @author    Braden Steffaniak
  */
-public class Annotation extends Node
-{
-	/**
-	 * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, boolean)
-	 */
-	[Override]
-	public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Annotation
-	{
-		return null
-	}
+class Annotation extends Node {
+    /**
+     * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, boolean)
+     */
+    [Override]
+    public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Annotation {
+        return null
+    }
 }

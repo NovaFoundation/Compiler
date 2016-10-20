@@ -1,6 +1,5 @@
 package "compiler/tree/node"
 
-class NovaClass extends Node
-{
-	visible NovaClass parentClass => this
+class NovaClass extends Node {
+    visible NovaClass parentClass => this
 }

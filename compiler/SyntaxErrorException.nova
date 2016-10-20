@@ -2,12 +2,10 @@ package "compiler"
 
 import "compiler/tree/node/Node"
 
-class SyntaxErrorException extends Exception
-{
-	public construct(String message, Node node = null)
-	{
-		super(message)
-		
-		
-	}
+class SyntaxErrorException extends Exception {
+    public construct(String message, Node node = null) {
+        super(message)
+        
+        
+    }
 }

@@ -3,10 +3,8 @@ package "compiler/tree/node/closures"
 import "compiler/util/Location"
 import "compiler/tree/node/Node"
 
-class ClosureContext extends Node
-{
-	public construct(Node parent = null, Location location = Location.INVALID)
-	{
-		super(parent, location)
-	}
+class ClosureContext extends Node {
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
 }

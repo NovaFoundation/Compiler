@@ -1,6 +1,5 @@
 package "compiler/util"
 
-public class SyntaxUtils
-{
-	
+class SyntaxUtils {
+    
 }

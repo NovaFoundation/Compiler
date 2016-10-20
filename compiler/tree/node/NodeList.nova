@@ -1,6 +1,5 @@
 package "compiler/tree/node"
 
-class NodeList<E extends Node> extends Node
-{
-	
+class NodeList<E extends Node> extends Node {
+    
 }

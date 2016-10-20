@@ -3,9 +3,8 @@ package "compiler/tree/node/functions"
 import "compiler/tree/node/Node"
 import "compiler/util/Location"
 
-class NovaFunction extends Node
-{
-	visible Bool isStatic
-	visible Bool isInstance => !isStatic
-	visible NovaFunction parentFunction => this
+class NovaFunction extends Node {
+    visible Bool isStatic
+    visible Bool isInstance => !isStatic
+    visible NovaFunction parentFunction => this
 }
