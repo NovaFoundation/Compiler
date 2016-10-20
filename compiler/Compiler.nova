@@ -6,6 +6,8 @@ import "compiler/util/FileUtils"
 class Compiler {
     visible static Bool DEBUG = true
     
+    visible static Bool testClasses = true
+    
     public static main(String[] args) {
         var c = new Compiler()
         
@@ -24,39 +26,45 @@ class Compiler {
         if (DEBUG) {
             testClasses()
             
+            var target = "c"
+            
             args =
             [
                 "../Compiler",
-                "example",
-                "stabilitytest",
-                //"-o",   FileUtils.formatPath(directory + "bin/Executable" + OS.OUTPUT_EXTENSION),
-//                "-dir", FileUtils.formatPath(directory + "../example"),
-//                "-dir", FileUtils.formatPath(directory + "../stabilitytest"),
-//                "-run",
-//                "-csource",
-                "-formatc",
-                testClasses ? "-v" : "",
-//                "-gcc",
-//                "-tcc",
-//                "-small",
-//                "-cargs",
-                "-keepc",
-                "-single-thread",
-                "-main",
-//                "example/Lab",
-//                "stabilitytest/StabilityTest",
-//                "example/SvgChart",
-//                "example/HashMapDemo",
-//                "example/HashSetDemo",
-                "compiler/Compiler",
-//                "-nogc",
-//                "-no-c-output",
-//                "-dry",
-//                "-no-notes",
-//                "-no-warnings",
-//                "-no-errors",
-                "-no-optimize"
-//                "-library"
+				"../Misc/example",
+				"../Misc/stabilitytest", 
+				"-output-directory", "../NovaCompilerOutput/#target",
+				"-package-output-directory", "nova", "../StandardLibrary/#target",
+//				"-dir", formatPath(directory + "../example"),
+//				"-dir", formatPath(directory + "../stabilitytest"),
+//				"-run",
+//				"-csource",
+				"-formatc",
+				//testClasses ? "-v" : "",
+				"-v",
+//				"-gcc",
+//				"-tcc",
+//				"-small",
+//				"-cargs",
+//				"-keepc",
+				"-single-thread",
+				"-single-file",
+				"-main",
+//				"example/Lab",
+//				"stabilitytest/StabilityTest",
+//				"example/SvgChart",
+//				"example/HashMapDemo",
+//				"example/HashSetDemo",
+				"compiler/Compiler",
+//				"-nogc",
+//				"-no-c-output",
+//				"-dry",
+//				"-no-notes",
+//				"-no-warnings",
+//				"-no-errors",
+				"-no-optimize",
+				"-target", target,
+//				"-library",
             ]
             
             Console.writeLine("Args: #args")
