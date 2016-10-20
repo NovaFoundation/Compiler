@@ -20,18 +20,15 @@ class OS {
             OS = WINDOWS
             OUTPUT_EXTENSION = ".exe"
             DYNAMIC_LIB_EXT  = ".dll"
-        }
-        else if (osName.startsWith("mac")) {
+        } else if (osName.startsWith("mac")) {
             OS = MACOSX
             OUTPUT_EXTENSION = ""
             DYNAMIC_LIB_EXT  = ".dylib"
-        }
-        else if (osName.startsWith("lin")) {
+        } else if (osName.startsWith("lin")) {
             OS = LINUX
             OUTPUT_EXTENSION = ""
             DYNAMIC_LIB_EXT  = ".so"
-        }
-        else {
+        } else {
             OS = 0
             OUTPUT_EXTENSION = ""
             DYNAMIC_LIB_EXT  = ""

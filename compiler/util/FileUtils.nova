@@ -16,8 +16,7 @@ class FileUtils {
             path = StringUtils.removeSurroundingQuotes(path)
             
             return '"' + path + '"'
-        }
-        else {
+        } else {
             return escapeSpaces(path)
         }
     }
