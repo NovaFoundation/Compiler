@@ -45,7 +45,7 @@ class NovaFile extends Node {
         "nova/Object",
         "nova/String",
         "nova/System",
-        "nova/Class"
+        "nova/Class",
     ]
     
     public construct(File file, Node parent = null, Location location = Location.INVALID) {
@@ -70,7 +70,7 @@ class NovaFile extends Node {
     public addImport(String location) -> Import {
         if (containsImport(location)) return null
         
-        return (Import)addChild(new Import("import \"#location\"", this, this.location))
+        return (Import)addChild(Import.tryParse("import \"#location\"", this, this.location))
     }
     
     public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
