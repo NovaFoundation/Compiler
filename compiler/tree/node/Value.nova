@@ -1,0 +1,7 @@
+package "compiler/tree/node"
+
+class Value extends Node {
+    visible static Byte VALUE = 1, POINTER = 2, REFERENCE = 3, DOUBLE_POINTER = 4
+    
+    public ArrayAccess arrayAccess
+}
