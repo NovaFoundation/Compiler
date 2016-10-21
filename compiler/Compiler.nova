@@ -28,8 +28,7 @@ class Compiler {
             
             var target = "c"
             
-            args =
-            [
+            args = [
                 "../Compiler",
 				"../Misc/example",
 				"../Misc/stabilitytest", 
