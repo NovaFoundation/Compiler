@@ -1,5 +1,43 @@
 package "compiler/util"
 
 class SyntaxUtils {
-    
+    public static findStringInBaseScope(String haystack, String[] needles, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
+        while (start < haystack.count) {
+            var c = haystack[start]
+            
+            if (StringUtils.containsString(haystack, needles, start)) {
+                return start
+            } else if (c == '"') {
+                start = StringUtils.findEndingQuote(haystack, start) + 1
+            } else if (c == '\'') {
+                start = StringUtils.findEndingChar(haystack, c, start, 1) + 1
+            } else if (c == '(') {
+                start = StringUtils.findEndingMatch(haystack, start, '(', ')') + 1
+                
+                if (start <= 0) {
+                    return -1
+                }
+            } else if (c == '[') {
+                start = StringUtils.findEndingMatch(haystack, start, '[', ']') + 1
+                
+                if (start <= 0) {
+                    return -1
+                }
+            } else if (searchGenerics && c == '<') {
+                start = StringUtils.findEndingMatch(haystack, start, '<', '>') + 1
+                
+                if (start <= 0) {
+                    return -1
+                }
+            }
+//          else if (c == '=') {
+//              return -1
+//          }
+            else {
+                start++
+            }
+        }
+        
+        return defaultReturnValue
+    }
 }

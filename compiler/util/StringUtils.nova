@@ -1,9 +1,8 @@
 package "compiler/util"
 
 class StringUtils {
-    public static isSurroundedByQuotes(String input) -> Bool {
-        return input.count >= 2 && input.chars.first == '"' && input.chars.last == '"'
-    }
+    public static isSurroundedByQuotes(String input) =>
+    	input.count >= 2 && input.chars.first == '"' && input.chars.last == '"'
     
     /**
      * Remove the surrounding double quotes from the given input String.<br>
@@ -24,4 +23,144 @@ class StringUtils {
         
         return input
     }
+    
+    public static containsString(String haystack, String[] needles, Int index = 0) =>
+    	needles.any({ containsString(haystack, _, index) })
+	
+	public static containsString(String haystack, String needle, Int index = 0) -> Bool {
+		for (i in 0..needle.count) {
+			if (i + index >= haystack.count || haystack[i + index] != needle[i]) {
+				return false
+			}
+		}
+		
+		return true
+	}
+	
+	public static defaultCharacterCheck(String value, Char c, Int start, Int direction = 1) -> Int {
+		start += direction
+		
+		if (start > 0 && value[start - 1] == '\\' && value[start - 2] != '\\') {
+			return start + direction
+		}
+		
+		return start
+	}
+	
+	/**
+	 * Find the index of the ending char that matches the given 'c' param,
+	 * given the index of the start char.
+	 * 
+	 * @param value The String to search within.
+	 * @param c The char to search for an end for.
+	 * @param start The index of the starting quote.
+	 * @param direction The direction in which to search the given String.
+	 * @return The index of the matching char. If an end is not found, -1
+	 * 		is returned instead.
+	 */
+	public static findEndingChar(String value, Char c, Int start, Int direction = 1, advance(String, Char, Int, Int) -> Int = defaultCharacterCheck, Int defaultReturnValue = -1) -> Int {
+		if (start < 0 || start >= value.count) {
+			return -1
+		}
+		
+		start = advance(value, value[start], start, direction)
+		
+		while (start >= 0 && start < value.count) {
+			if (value[start] == c) {
+				return start
+			}
+			
+			start = advance(value, value[start], start, direction)
+		}
+		
+		return defaultReturnValue
+	}
+	
+	/**
+	 * Find the index of the ending quote, given the index of the start
+	 * quote.
+	 * 
+	 * @param value The String to search within.
+	 * @param start The index of the starting quote.
+	 * @param direction The direction in which to search the given String.
+	 * @return The index of the ending quote. If an end is not found, -1
+	 * 		is returned instead.
+	 */
+	public static findEndingQuote(String value, Int start, Int direction = 1) =>
+		findEndingChar(value, '"', start, direction, (str, c, i, dir) -> {
+			i += dir
+			
+			if (dir > 0 && i < str.count - 3 && str[i] == '#' && str[i + 1] == '{') {
+				return (i = findEndingChar(str, '}', i + dir, dir)) >= 0 ? i + dir : i
+			}
+			
+			return defaultCharacterCheck(str, c, i - dir, dir)
+		})
+	
+	public static findEndingMatch(String str, Int index, Char start, Char end, Char escapeChar = '\0', Int direction = 1) =>
+		findEndingMatch(str, index, "#start", "#end", escapeChar, direction)
+	
+	/**
+	 * Find the index of the ending String for the match. For instance, to
+	 * search for an ending parenthesis, starting from the opening
+	 * parenthesis, you would pass findEndingMatch(str, 0, "(", ")", '\\');
+	 * <i>(The backslash would act to escape any parentheses. eg: \\(
+	 * would not be counted.)</i> The method call would return the index
+	 * of the ending parenthesis that is paired with the index of 0.
+	 * 
+	 * @param str The String to search for the pair to the start String.
+	 * @param index The index of the start String in the pair.
+	 * @param start The String that starts off the pair. eg. "("
+	 * @param end The String that ends the pair. eg: ")"
+	 * @param escapeChar The char that escapes a start or end char, of
+	 * 		there is no escape char, pass '(char)0'.
+	 * @param direction The direction in which to search for the match in.
+	 * @return The index of the pair to the starting String, if no pair is
+	 * 		found then -1 is returned.
+	 */
+	public static findEndingMatch(String str, Int index, String start, String end, Char escapeChar = '\0', Int direction = 1, Int defaultReturnValue = -1) -> Int {
+		if (direction < 0) {
+			String temp = start
+			start = end
+			end   = temp
+		}
+		
+		Int scope = 0
+		
+		while (index >= 0 && index < str.count) {
+			Char c = str[index]
+			
+			if (c == escapeChar && direction > 0) {
+				if (index < str.count - 1) {
+					if (containsString(str, start, index + 1)) {
+						index++
+					}
+				}
+			} else if (containsString(str, start, index) && (direction > 0 || index > 0 && str[index - 1] != escapeChar) && (!start.equals(end) || scope == 0)) {
+				scope++
+			} else if (containsString(str, end, index) && (direction > 0 || index > 0 && str[index - 1] != escapeChar)) {
+				scope--
+				
+				if (scope == 0) {
+					return index
+				}
+			} else if (c == '"') {
+				index = findEndingQuote(str, index, direction)
+				
+				if (index < 0) {
+					break
+				}
+			} else if (c == '\'') {
+				index = findEndingChar(str, c, index, direction)
+				
+				if (index < 0) {
+					break
+				}
+			}
+			
+			index += direction
+		}
+		
+		return defaultReturnValue
+	}
 }
