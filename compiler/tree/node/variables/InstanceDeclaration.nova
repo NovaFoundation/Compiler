@@ -1,0 +1,83 @@
+package "compiler/tree/node/variables"
+
+import "compiler/tree/node/Node"
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+
+/// <summary>
+/// <a href="compiler/tree/node/VariableDeclaration">VariableDeclaration</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
+class InstanceDeclaration extends VariableDeclaration {
+    public Bool isStatic = false
+    
+    public String visibility = "private"
+    
+    public Bool isPublic    => visibility.equals("public")
+    public Bool isPrivate   => visibility.equals("private")
+    public Bool isProtected => visibility.equals("protected")
+    
+    /// <summary>
+    /// Create a new InstanceDeclaration node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the InstanceDeclaration node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// <summary>
+    /// Decode the given input into a InstanceDeclaration node. If the input cannot be parsed
+    /// into a InstanceDeclaration node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a InstanceDeclaration instance.</param>
+    /// <param name="parent">The parent of the InstanceDeclaration node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed InstanceDeclaration node, if successful; null otherwise.</returns>
+    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> InstanceDeclaration {
+        if (true) {
+            InstanceDeclaration node = new InstanceDeclaration(parent, location)
+            
+            
+            
+            return node
+        }
+        
+        return null
+    }
+    
+    [Override]
+    public parseModifier(String modifier) -> Bool {
+        if (super.parseModifier(modifier)) return true
+        
+        match (modifier)
+            case "public"    fallthrough
+            case "private"   fallthrough
+            case "protected" visibility = modifier
+            case "static"    isStatic   = true
+            default return false
+        return true
+    }
+    
+    public writeVisibility() => visibility != null ? "#visibility" : ""
+    public writeStatic() => isStatic ? "static" : ""
+    public writeModifiers() => "#writeVisibility() #writeStatic() "
+}
