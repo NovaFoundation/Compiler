@@ -1,0 +1,71 @@
+package "compiler/tree/node/variables"
+
+import "compiler/tree/node/Node"
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+import "compiler/tree/node/Identifier"
+
+/// <summary>
+/// <a href="compiler/tree/node/Node">Node</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
+class VariableDeclaration extends Identifier {
+    
+    
+    /// <summary>
+    /// Create a new VariableDeclaration node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the VariableDeclaration node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// <summary>
+    /// Decode the given input into a VariableDeclaration node. If the input cannot be parsed
+    /// into a VariableDeclaration node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a VariableDeclaration instance.</param>
+    /// <param name="parent">The parent of the VariableDeclaration node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed VariableDeclaration node, if successful; null otherwise.</returns>
+    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
+        if (true) {
+            VariableDeclaration node = new VariableDeclaration(parent, location)
+            
+            
+            
+            return node
+        }
+        
+        return null
+    }
+    
+    public parseModifier(String modifier) -> Bool {
+        return false
+    }
+    
+    public parseModifiers(String modifiers) =>
+        modifiers.split("\\s+").all({ parseModifier(_) })
+    
+    public getInvalidModifiers(String modifiers) =>
+        modifiers.split("\\s+").filter({ !parseModifier(_) })
+}
