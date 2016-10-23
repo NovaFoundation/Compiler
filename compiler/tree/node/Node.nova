@@ -29,23 +29,25 @@ class Node implements Annotatable {
     visible Node[] children
     visible Annotation[] annotations
     
-    public Node parent {
+    public Node parent/* {
         set {
             if (parent != value) { // Skip if already a child of this parent
+            	this.parent = value
+            	
                 value.addChild(this)
             }
         }
-    }
+    }*/
     
     visible String locationInfo {
         get {
             String info = ""
             
             if (parentFile != null) {
-                info += " in file #parentFile.name"
+                info += "in file #parentFile.name"
             }
             if (location != null) {
-                info += " on line number #location.lineNumber at offset #location.offset"
+                info += (info.count > 0 ? " " : "") + "on line number #location.lineNumber at offset #location.offset"
             }
             
             return info
@@ -121,7 +123,7 @@ class Node implements Annotatable {
      * @param parent The Node to act as the parent temporarily.
      * @param location The location of the Node in the source file.
      */
-    public construct(Node parent, Location location) {
+    public construct(Node parent = null, Location location = Location.INVALID) {
         children = Array(4)
         
         this.parent = parent
