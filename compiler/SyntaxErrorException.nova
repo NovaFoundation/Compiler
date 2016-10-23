@@ -3,9 +3,11 @@ package "compiler"
 import "compiler/tree/node/Node"
 
 class SyntaxErrorException extends Exception {
+    public construct() {}
+    
     public construct(String message, Node node = null) {
         super(message)
         
-        
+        node.program.compiler.errors.add(message)
     }
 }
