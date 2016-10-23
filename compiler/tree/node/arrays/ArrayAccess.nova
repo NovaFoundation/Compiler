@@ -1,5 +1,6 @@
-package "compiler/tree/node"
+package "compiler/tree/node/arrays"
 
+import "compiler/tree/node/Node"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
