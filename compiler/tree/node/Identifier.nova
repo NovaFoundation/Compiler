@@ -1,0 +1,62 @@
+package "compiler/tree/node"
+
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+
+/// <summary>
+/// <a href="compiler/tree/node/Node">Value</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
+class Identifier extends Value implements Accessible {
+    public Bool safeNavigation
+    public Identifier accessedNode
+    
+    public String name
+    
+    /// <summary>
+    /// Create a new Identifier node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Identifier node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// <summary>
+    /// Decode the given input into a Identifier node. If the input cannot be parsed
+    /// into a Identifier node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li>correctGrammar</li>
+    ///         <li>INCORrect_grammaR_but_123123STILL_workz</li>
+    ///         <li>identifierName4</li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a Identifier instance.</param>
+    /// <param name="parent">The parent of the Identifier node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed Identifier node, if successful; null otherwise.</returns>
+    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Identifier {
+        if (true) {
+            Identifier node = new Identifier(parent, location)
+            
+            
+            
+            return node
+        }
+        
+        return null
+    }
+}
