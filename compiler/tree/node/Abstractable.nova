@@ -1,0 +1,7 @@
+package "compiler/tree/node"
+
+interface Abstractable {
+    public Bool isAbstract = false
+    
+    public writeAbstract() => isAbstract ? "abstract " : ""
+}
