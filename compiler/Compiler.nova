@@ -2,11 +2,17 @@ package "compiler"
 
 import "compiler/util/OS"
 import "compiler/util/FileUtils"
+import "compiler/tree/node/NovaClass"
+import "compiler/tree/node/Program"
 
 class Compiler {
     visible static Bool DEBUG = true
     
     visible static Bool testClasses = true
+    
+    visible String[] errors = new Array()
+    visible String[] warnings = new Array()
+    visible String[] info = new Array()
     
     public static main(String[] args) {
         var c = new Compiler()
@@ -65,6 +71,20 @@ class Compiler {
 				"-target", target,
 //				"-library",
             ]
+            
+            var program = new Program(this)
+            
+            try {
+                NovaClass c = NovaClass.tryParse("private abstract class Something", program)
+                
+                Console.writeLine("Parsed #c")
+            } catch (SyntaxErrorException e) {
+                
+            }
+            
+            errors.forEach({ Console.writeLine("Error: #_") })
+            warnings.forEach({ Console.writeLine("Warning: #_") })
+            info.forEach({ Console.writeLine("Info: #_") })
             
             Console.writeLine("Args: #args")
         }
