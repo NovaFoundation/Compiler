@@ -1,5 +1,7 @@
 package "compiler/tree/node"
 
+import "compiler/tree/node/arrays/ArrayAccess"
+
 class Value extends Node {
     visible static Byte VALUE = 1, POINTER = 2, REFERENCE = 3, DOUBLE_POINTER = 4
     
