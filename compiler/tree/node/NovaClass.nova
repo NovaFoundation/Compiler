@@ -1,5 +1,125 @@
 package "compiler/tree/node"
 
-class NovaClass extends Node {
+import "compiler/SyntaxErrorException"
+import "compiler/SyntaxMessage"
+import "compiler/util/Location"
+import "compiler/util/StringUtils"
+import "compiler/tree/node/variables/InstanceDeclaration"
+import "nova/regex/Pattern"
+
+/// <summary>
+/// <a href="compiler/tree/node/InstanceDeclaration">InstanceDeclaration</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
+class NovaClass extends InstanceDeclaration implements Abstractable {
     visible NovaClass parentClass => this
+    
+    public Bool isAbstract = false
+    
+    /// <summary>
+    /// Create a new NovaClass node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the NovaClass node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// <summary>
+    /// Decode the given input into a NovaClass node. If the input cannot be parsed
+    /// into a NovaClass node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li>class MyClass</li>
+    ///         <li>public class Abc extends MyClass</li>
+    ///         <li>private class Xyz extends Abc implements Multiply, Divide</li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a NovaClass instance.</param>
+    /// <param name="parent">The parent of the NovaClass node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed NovaClass node, if successful; null otherwise.</returns>
+    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaClass {
+        var index = input.nextWordIndex("class")
+        
+        if (index >= 0) {
+            var node = new NovaClass(parent, location)
+            
+            var modifiers = input.substring(end: index).trim()
+            
+            if (!node.parseModifiers(modifiers) && require) {
+                node.getInvalidModifiers(modifiers).forEach({
+                    SyntaxMessage.error("Invalid modifier '#_'", node, throwException: false)
+                })
+                
+                if (require) {
+                    throw new SyntaxErrorException()
+                }
+                
+                return null
+            }
+            
+            var start = input.nextNonWhitespaceIndex(index + 6)
+            var end   = input.nextWhitespaceIndex(start + 1)
+            
+            if (end > start) {
+                node.name = input.substring(start, end)
+                
+                var extensions = input.substring(input.nextNonWhitespaceIndex(end + 1, defaultReturnValue: input.count))
+                var implementations = ""
+                
+                //if (extensions)
+                
+                if (extensions.containsWord("implements")) {
+                    implementations = extensions.substring(extensions.nextWhitespaceIndex(extensions.nextWordIndex("implements") + 10))
+                }
+                
+                
+                return node
+            }
+        }
+        
+        return null
+    }
+    
+    parseExtension() -> Bool {
+        
+        
+        return true
+    }
+    
+    parseImplementations() -> Bool {
+        
+        
+        return true
+    }
+    
+    [Override]
+    public parseModifier(String modifier) -> Bool {
+        if (super.parseModifier(modifier)) return true
+            
+        match (modifier)
+            case "abstract" isAbstract = true
+            default return false
+        return true
+    }
+    
+    public writeAbstract() => isAbstract ? "abstract " : ""
+    
+    public writeModifiers() => super.writeModifiers() + writeAbstract()
+    
+    [Override]
+    public toString() => "#writeModifiers() class #name".replace(new Pattern("\\s+"), " ")
 }
