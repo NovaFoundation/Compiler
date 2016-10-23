@@ -40,4 +40,6 @@ class SyntaxUtils {
         
         return defaultReturnValue
     }
+    
+    public static checkTypes(Class[] types, Class clazz) => false//types.any({ clazz.isOfType(_) })
 }
