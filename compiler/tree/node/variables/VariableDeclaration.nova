@@ -64,8 +64,8 @@ class VariableDeclaration extends Identifier {
     }
     
     public parseModifiers(String modifiers) =>
-        modifiers.split("\\s+").all({ parseModifier(_) })
+        modifiers.split(/\s+/).all({ parseModifier(_) })
     
     public getInvalidModifiers(String modifiers) =>
-        modifiers.split("\\s+").filter({ !parseModifier(_) })
+        modifiers.split(/\s+/).filter({ !parseModifier(_) })
 }

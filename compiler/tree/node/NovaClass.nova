@@ -121,5 +121,5 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     public writeModifiers() => super.writeModifiers() + writeAbstract()
     
     [Override]
-    public toString() => "#writeModifiers() class #name".replace(new Pattern("\\s+"), " ")
+    public toString() => "#writeModifiers() class #name".replace(/\s+/, " ")
 }
