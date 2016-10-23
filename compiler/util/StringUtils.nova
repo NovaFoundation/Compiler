@@ -1,6 +1,8 @@
 package "compiler/util"
 
 class StringUtils {
+	static Char[] WHITESPACE = [ ' ', '\t', '\n', '\r' ]
+    
     public static isSurroundedByQuotes(String input) =>
     	input.count >= 2 && input.chars.first == '"' && input.chars.last == '"'
     
