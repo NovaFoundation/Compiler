@@ -5,6 +5,8 @@ import "compiler/util/FileUtils"
 import "compiler/tree/node/NovaClass"
 import "compiler/tree/node/Program"
 
+import "compiler/util/CompilerStringFunctions"
+
 class Compiler {
     visible static Bool DEBUG = true
     
@@ -71,6 +73,18 @@ class Compiler {
 				"-target", target,
 //				"-library",
             ]
+            
+            [KeepWhitespace indent: "baseline"]
+            var input =
+            "class Test {
+                Int x = 15
+                
+                public construct() {
+                    Console.writeLine(\"Constructed\")
+                }
+            }"
+            
+            Console.writeLine("splitted commas: #{"hello, what(\"my func,hwith inner ,commas arg\"), does this work??".splitCommas()}")
             
             var program = new Program(this)
             
