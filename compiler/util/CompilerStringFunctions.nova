@@ -1,0 +1,281 @@
+package "compiler/util"
+
+extension CompilerStringFunctions
+{
+    static Char[] WHITESPACE = [ ' ', '\t', '\n', '\r' ]
+    
+    public containsWord(String this, String search, Int start = 0) =>
+        nextWordIndex(search, start) >= 0
+    
+    public nextWordIndex(String this, String search, Int start = 0, Int defaultReturnValue = -1) -> Int {
+        var index = indexOf(search, start)
+        
+        while (index >= 0) {
+            if ((index == 0 || WHITESPACE.contains(chars[index - 1])) &&
+                (index + search.count >= count || WHITESPACE.contains(chars[index + search.count]))) {
+                return index
+            }
+            
+            index = indexOf(search, index + search.count + 1)
+        }
+        
+        return defaultReturnValue
+    }
+    
+    public nextNonWhitespaceIndex(String this, Int start = 0, Int defaultReturnValue = -1) =>
+        nextIndexThatContains(WHITESPACE, start, true, defaultReturnValue)
+    
+    public nextWhitespaceIndex(String this, Int start = 0, Int defaultReturnValue = -1) =>
+        nextIndexThatContains(WHITESPACE, start, false, defaultReturnValue)
+    
+    public nextIndexThatContains(String this, Char[] searchChars, Int start = 0, Bool opposite = false, Int defaultReturnValue = -1) -> Int {
+        while (start < count && searchChars.contains(chars[start]) == opposite) start++
+        
+        if (start <= count) {
+            return start
+        }
+        
+        return defaultReturnValue
+    }
+    
+    public isSurroundedByQuotes(String this) =>
+        count >= 2 && chars.first == '"' && chars.last == '"'
+    
+    /**
+     * Remove the surrounding double quotes from the given input String.<br>
+     * For example:
+     * <blockquote><pre>
+     * String s = "\"C:/myfile/test\""
+     * String out = removeSurroundingQuotes(s)</pre></blockquote>
+     * The out String would contain the data "C:/myfile/test" without
+     * the surrounding quotes.
+     * 
+     * @param input The String to remove the surrounding quotes from.
+     * @return The String without the surrounding quotes.
+     */
+    public removeSurroundingQuotes(String this) -> String {
+        String input = this
+        
+        while (input.isSurroundedByQuotes()) {
+            input = input.substring(1, input.count - 1)
+        }
+        
+        return input
+    }
+    
+    public containsString(String this, String[] needles, Int index = 0) =>
+        needles.any({ containsString(_, index) })
+    
+    public containsString(String this, String needle, Int index = 0) -> Bool {
+        for (i in 0..needle.count) {
+            if (i + index >= count || chars[i + index] != needle[i]) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
+    public static defaultCharacterCheck(String value, Char c, Int start, Int direction = 1) -> Int {
+        start += direction
+        
+        if (start > 0 && value[start - 1] == '\\' && value[start - 2] != '\\') {
+            return start + direction
+        }
+        
+        return start
+    }
+    
+    /**
+     * Find the index of the ending char that matches the given 'c' param,
+     * given the index of the start char.
+     * 
+     * @param value The String to search within.
+     * @param c The char to search for an end for.
+     * @param start The index of the starting quote.
+     * @param direction The direction in which to search the given String.
+     * @return The index of the matching char. If an end is not found, -1
+     *      is returned instead.
+     */
+    public findEndingChar(String this, Char c, Int start, Int direction = 1, advance(String, Char, Int, Int) -> Int = defaultCharacterCheck, Int defaultReturnValue = -1) -> Int {
+        if (start < 0 || start >= count) {
+            return -1
+        }
+        
+        start = advance(this, chars[start], start, direction)
+        
+        while (start >= 0 && start < count) {
+            if (chars[start] == c) {
+                return start
+            }
+            
+            start = advance(this, chars[start], start, direction)
+        }
+        
+        return defaultReturnValue
+    }
+    
+    /**
+     * Find the index of the ending quote, given the index of the start
+     * quote.
+     * 
+     * @param value The String to search within.
+     * @param start The index of the starting quote.
+     * @param direction The direction in which to search the given String.
+     * @return The index of the ending quote. If an end is not found, -1
+     *      is returned instead.
+     */
+    public findEndingQuote(String this, Int start, Int direction = 1) =>
+        findEndingChar('"', start, direction, (str, c, i, dir) -> {
+            i += dir
+            
+            if (dir > 0 && i < str.count - 3 && str[i] == '#' && str[i + 1] == '{') {
+                return (i = str.findEndingChar('}', i + dir, dir)) >= 0 ? i + dir : i
+            }
+            
+            return defaultCharacterCheck(str, c, i - dir, dir)
+        })
+    
+    public findEndingMatch(String this, Int index, Char start, Char end, Char escapeChar = '\0', Int direction = 1) =>
+        findEndingMatch(index, "#start", "#end", escapeChar, direction)
+    
+    /**
+     * Find the index of the ending String for the match. For instance, to
+     * search for an ending parenthesis, starting from the opening
+     * parenthesis, you would pass findEndingMatch(str, 0, "(", ")", '\\');
+     * <i>(The backslash would act to escape any parentheses. eg: \\(
+     * would not be counted.)</i> The method call would return the index
+     * of the ending parenthesis that is paired with the index of 0.
+     * 
+     * @param str The String to search for the pair to the start String.
+     * @param index The index of the start String in the pair.
+     * @param start The String that starts off the pair. eg. "("
+     * @param end The String that ends the pair. eg: ")"
+     * @param escapeChar The char that escapes a start or end char, of
+     *      there is no escape char, pass '(char)0'.
+     * @param direction The direction in which to search for the match in.
+     * @return The index of the pair to the starting String, if no pair is
+     *      found then -1 is returned.
+     */
+    public findEndingMatch(String this, Int index, String start, String end, Char escapeChar = '\0', Int direction = 1, Int defaultReturnValue = -1) -> Int {
+        if (direction < 0) {
+            String temp = start
+            start = end
+            end   = temp
+        }
+        
+        Int scope = 0
+        
+        while (index >= 0 && index < count) {
+            Char c = chars[index]
+            
+            if (c == escapeChar && direction > 0) {
+                if (index < count - 1) {
+                    if (containsString(start, index + 1)) {
+                        index++
+                    }
+                }
+            } else if (containsString(start, index) && (direction > 0 || index > 0 && chars[index - 1] != escapeChar) && (!start.equals(end) || scope == 0)) {
+                scope++
+            } else if (containsString(end, index) && (direction > 0 || index > 0 && chars[index - 1] != escapeChar)) {
+                scope--
+                
+                if (scope == 0) {
+                    return index
+                }
+            } else if (c == '"') {
+                index = findEndingQuote(index, direction)
+                
+                if (index < 0) {
+                    break
+                }
+            } else if (c == '\'') {
+                index = findEndingChar(c, index, direction)
+                
+                if (index < 0) {
+                    break
+                }
+            }
+            
+            index += direction
+        }
+        
+        return defaultReturnValue
+    }
+    
+    /**
+     * Split the src by the commas. Makes sure not to split commas that
+     * are within parentheses and quotes.
+     * 
+     * @param src The String to split the commas from.
+     * @return An array of Strings containing the Strings that were split.
+     */
+    public splitCommas(String this, Bool searchGenerics = false, Bool allowTrailing = false) -> String[] {
+        String[] strs = new Array<String>()
+        
+        Int oldIndex =  0
+        Int index    = -1
+        
+        while ((index = findCharInBaseScope(',', index + 1, searchGenerics)) >= 0) {
+            strs.add(substring(oldIndex, index).trim())
+            
+            oldIndex = index + 1
+        }
+        
+        var last = substring(oldIndex).trim()
+        
+        if (!allowTrailing || last.count > 0) {
+            strs.add(last)
+        }
+        
+        return strs
+    }
+    
+    public findCharInBaseScope(String this, Char c, Int start = 0, Bool searchGenerics = false) -> Int {
+        String[] array = new Array(1)
+        
+        array.add("#c")
+        
+        return findStringInBaseScope(array, start, searchGenerics)
+    }
+    
+    public findStringInBaseScope(String this, String[] needles, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
+        while (start < count) {
+            var c = chars[start]
+            
+            if (containsString(needles, start)) {
+                return start
+            } else if (c == '"') {
+                start = findEndingQuote(start) + 1
+            } else if (c == '\'') {
+                start = findEndingChar(c, start, 1) + 1
+            } else if (c == '(') {
+                start = findEndingMatch(start, '(', ')') + 1
+                
+                if (start <= 0) {
+                    return -1
+                }
+            } else if (c == '[') {
+                start = findEndingMatch(start, '[', ']') + 1
+                
+                if (start <= 0) {
+                    return -1
+                }
+            } else if (searchGenerics && c == '<') {
+                start = findEndingMatch(start, '<', '>') + 1
+                
+                if (start <= 0) {
+                    return -1
+                }
+            }
+//          else if (c == '=') {
+//              return -1
+//          }
+            else {
+                start++
+            }
+        }
+        
+        return defaultReturnValue
+    }
+}

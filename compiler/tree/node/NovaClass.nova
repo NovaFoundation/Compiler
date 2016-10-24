@@ -7,6 +7,8 @@ import "compiler/util/StringUtils"
 import "compiler/tree/node/variables/InstanceDeclaration"
 import "nova/regex/Pattern"
 
+import "compiler/util/CompilerStringFunctions"
+
 /// <summary>
 /// <a href="compiler/tree/node/InstanceDeclaration">InstanceDeclaration</a> extension that represents 
 /// <summary>

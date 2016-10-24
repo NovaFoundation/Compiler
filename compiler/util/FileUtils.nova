@@ -1,5 +1,7 @@
 package "compiler/util"
 
+import "compiler/util/CompilerStringFunctions"
+
 class FileUtils {
     /**
      * Format a path according to how the specified OS needs it.
@@ -13,7 +15,7 @@ class FileUtils {
         path = formAbsolutePath(path)
         
         if (OS.isWindows) {
-            path = StringUtils.removeSurroundingQuotes(path)
+            path = path.removeSurroundingQuotes()
             
             return '"' + path + '"'
         } else {
