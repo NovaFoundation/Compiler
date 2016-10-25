@@ -3,13 +3,19 @@ package "compiler"
 import "compiler/tree/node/Node"
 
 class SyntaxMessage {
+    public static errorIf(String message, Node node, Bool condition, Bool throwException = true) {
+        if (condition) {
+            error(message, node, throwException)
+        }
+    }
+    
     public static error(String message, Node node, Bool throwException = true) {
         if (node != null) {
             message += " - #node.locationInfo"
         }
         
         if (throwException) {
-            throw new SyntaxErrorException(message)
+            throw new SyntaxErrorException(message, node)
         } else {
             node.program.compiler.errors.add(message)
         }
