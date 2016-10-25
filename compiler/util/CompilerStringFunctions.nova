@@ -1,8 +1,19 @@
 package "compiler/util"
 
-extension CompilerStringFunctions
-{
+import "compiler/error/UnimplementedOperationException"
+import "compiler/tree/node/operations/UnaryOperation"
+import "compiler/tree/node/operations/Operator"
+
+extension CompilerStringFunctions {
     static Char[] WHITESPACE = [ ' ', '\t', '\n', '\r' ]
+    
+    static Char[] EITHER_STATEMENT_END_CHARS = [ '\n', ';', '{', '}' ]
+    
+    static Char[] SYMBOLS_CHARS             = [ '-', '+', '~', '!', '=', '%', '^', '&', '|', '*', '/', '\\', '>', '<', ',', '"', '\'', '[', ']', '{', '}', ';', ':', '?', '(', ')' ]
+    static Char[] STMT_PRE_CONT_CHARS       = [ '-', '+', '~', '!', '=', '%', '^', '&', '|', '*', '/', '\\', '>', '<', ',', '.', '[' ]
+    static Char[] STMT_POST_CONT_CHARS      = [ '-', '+', '~', '!', '=', '%', '^', '&', '|', '*', '/', '\\', '>', '<', ',', '.', ']' ]
+    static Char[] INVALID_DECLARATION_CHARS = [ '-', '+', '~', '!', '=', '%', '^', '|', '/', '\\', '"', '\'', '{', '}', ';', '(', ')' ]
+    
     
     public Bool String.isIdentifier {
         get {
@@ -44,6 +55,57 @@ extension CompilerStringFunctions
         }
         
         return defaultReturnValue
+    }
+    
+    /**
+     * Find the next index in which a letter resides, starting at the
+     * given index. If there are no letters available, -1 is returned.
+     * However, if the <u>opposite</u> param is true, then the opposite
+     * of what was stated above is done. Passing true for the <u>bound</u>
+     * parameter makes sure that -1 is never returned (It will return the
+     * end-point of whichever direction that the method was searching
+     * in).<br>
+     * <br>
+     * A letter is anything besides whitespace and symbols.<br>
+     * <br>
+     * For example:
+     * <blockquote><pre>
+     * // Scenario 1
+     * findNextWord("number = ++num2", 11, 1, true);
+     * 
+     * // Scenario 2
+     * findNextWord("number = ++num2", 4, -1, true, true);</pre></blockquote>
+     * Scenario 1 returns 15<br>
+     * Scenario 2 returns 0
+     * 
+     * @param start The index to start the search.
+     * @param direction The direction to search for the word in.
+     * @param opposite Whether or not to search for anything that is NOT
+     *      a letter (instead of searching for a letter).
+     * @param bound Whether or not to bound the result returned if the a
+     *      result was not found.
+     * @return The next index in which a letter resides.
+     */
+    public nextLetterIndex(String this, Int start = 0, Int direction = 1, Bool opposite = false, Bool bound = false) -> Int {
+        while (start >= 0 && start < count) {
+            Char c = chars[start]
+            
+            if ((WHITESPACE.contains(c) || SYMBOLS_CHARS.contains(c)) == opposite) {
+                return start
+            }
+            
+            start += direction
+        }
+        
+        if (bound) {
+            if (direction > 0) {
+                return count
+            }
+            
+            return 0
+        }
+        
+        return -1
     }
     
     public isSurroundedByQuotes(String this) =>
@@ -144,13 +206,13 @@ extension CompilerStringFunctions
             return defaultCharacterCheck(str, c, i - dir, dir)
         })
     
-    public findEndingMatch(String this, Int index, Char start, Char end, Char escapeChar = '\0', Int direction = 1) =>
-        findEndingMatch(index, "#start", "#end", escapeChar, direction)
+    public findEndingMatch(String this, Int index, Char start, Char end, Int direction = 1, Char escapeChar = '\0') =>
+        findEndingMatch(index, "#start", "#end", direction, escapeChar)
     
     /**
      * Find the index of the ending String for the match. For instance, to
      * search for an ending parenthesis, starting from the opening
-     * parenthesis, you would pass findEndingMatch(str, 0, "(", ")", '\\');
+     * parenthesis, you would pass findEndingMatch(str, 0, "(", ")", '\\')
      * <i>(The backslash would act to escape any parentheses. eg: \\(
      * would not be counted.)</i> The method call would return the index
      * of the ending parenthesis that is paired with the index of 0.
@@ -165,7 +227,7 @@ extension CompilerStringFunctions
      * @return The index of the pair to the starting String, if no pair is
      *      found then -1 is returned.
      */
-    public findEndingMatch(String this, Int index, String start, String end, Char escapeChar = '\0', Int direction = 1, Int defaultReturnValue = -1) -> Int {
+    public findEndingMatch(String this, Int index, String start, String end, Int direction = 1, Char escapeChar = '\0', Int defaultReturnValue = -1) -> Int {
         if (direction < 0) {
             String temp = start
             start = end
@@ -239,10 +301,20 @@ extension CompilerStringFunctions
         return strs
     }
     
-    public findCharInBaseScope(String this, Char c, Int start = 0, Bool searchGenerics = false) -> Int {
+    public findCharInBaseScope(String this, Char needle, Int start = 0, Bool searchGenerics = false) -> Int {
         String[] array = new Array(1)
         
-        array.add("#c")
+        array.add("#needle")
+        
+        return findStringInBaseScope(array, start, searchGenerics)
+    }
+    
+    public findCharInBaseScope(String this, Char[] needles, Int start = 0, Bool searchGenerics = false) -> Int {
+        String[] array = new Array(needles.count)
+        
+        for (needle in needles) {
+            array.add("#needle")
+        }
         
         return findStringInBaseScope(array, start, searchGenerics)
     }
@@ -285,5 +357,268 @@ extension CompilerStringFunctions
         }
         
         return defaultReturnValue
+    }
+    
+    /**
+     * Calculate the index in which the next statement end is located at,
+     * after the given currentEnd.
+     * 
+     * @param currentEnd The index to search after.
+     * @return The new statement end index.
+     */
+    public calculateStatementEnd(String this, Int statementEndIndex, Int currentEnd) -> Int {
+        currentEnd = findCharInBaseScope(EITHER_STATEMENT_END_CHARS, currentEnd)
+        
+        if (currentEnd < 0) {
+            if (nextNonWhitespaceIndex(statementEndIndex + 1) < 0) {
+                return -1
+            }
+            
+            return count
+        } else if (chars[currentEnd] == ';') {
+            return currentEnd
+        }
+        
+        Int prevCharIndex = nextNonWhitespaceIndex(currentEnd - 1, -1)
+        Int nextCharIndex = nextNonWhitespaceIndex(currentEnd + 1)
+        
+        return calculateReturnValue(statementEndIndex, currentEnd, nextCharIndex, prevCharIndex)
+    }
+    
+    /**
+     * Calculate the statement end's return value.
+     * 
+     * @param currentEnd The current end value of the statement.
+     * @param nextCharIndex The next char to the right of the current end.
+     * @param prevCharIndex The next char to the left of the current end.
+     * @return The return value of the statement end.
+     */
+    public calculateReturnValue(String this, Int statementEndIndex, Int currentEnd, Int nextCharIndex, Int prevCharIndex) -> Int {
+        if (nextCharIndex < 0) {
+            return -1
+        }
+        
+        if (chars[nextCharIndex] == '{') {
+            return nextCharIndex
+        } else if (checkStatementContinuation(prevCharIndex, nextCharIndex)) {
+            return calculateStatementEnd(statementEndIndex, currentEnd + 1)
+        }
+        
+        return currentEnd
+    }
+    
+    public nextWordBounds(String this, Int start, Int direction) -> Bounds {
+        if (start < 0 || start >= count) {
+            return Bounds.EMPTY
+        }
+        
+        start = nextLetterIndex(start, direction, false, true)
+        
+        Int index = nextLetterIndex(start + direction, direction, true, true)
+        
+        if (direction < 0) {
+            if (index == 0) {
+                index--
+            }
+            
+            return new Bounds(index + 1, start + 1)
+        }
+        
+        return new Bounds(start, index)
+    }
+    
+    public findGroupedSymbols(String this, Int start = 0, Int direction = 1) =>
+        findGroupedChars(SYMBOLS_CHARS, start, direction)
+    
+    /**
+     * Get the next sequence of characters, if they are contained within
+     * the given chars array.<br>
+     * For example:
+     * <blockquote><pre>
+     * // Scenario 1
+     * findGroupedChars("number = ++num2", StringUtils.SYMBOLS_CHARS, 9, 1);
+     * 
+     * // Scenario 2
+     * findGroupedChars("number = ++num2", StringUtils.SYMBOLS_CHARS, 10, -1);</pre></blockquote>
+     * Scenario 1 and 2 both return the "++" String because they are
+     * searching the same symbols at opposite ends and directions.
+     * 
+     * @param chars The chars to search for.
+     * @param start The index to start the search at.
+     * @param direction The direction to search for the characters at.
+     * @return A String containing the grouped chars. If there
+     *      were no grouped chars, then an empty String is returned.
+     */
+    public findGroupedChars(String this, Char[] chars, Int start = 0, Int direction = 1) -> String {
+        Int index = start
+        
+        while (index < count && index >= 0 && chars.contains(this.chars[index])) {
+            index += direction
+        }
+        
+        if (direction < 0) {
+            return substring(index + 1, start + 1)
+        }
+        
+        return substring(start, index)
+    }
+    
+    /**
+     * Check whether or not to continue the search for the end of the
+     * statement.
+     * 
+     * @param nextCharIndex The next char to the right of the current end.
+     * @param prevCharIndex The next char to the left of the current end.
+     * @return Whether or not to continue the search for the end of the
+     *      statement.
+     */
+    public checkStatementContinuation(String this, Int prevCharIndex, Int nextCharIndex) -> Bool {
+        Bounds prevWordBounds = nextWordBounds(prevCharIndex, -1)
+        
+        Int nextNextCharIndex = nextNonWhitespaceIndex(nextWhitespaceIndex(nextCharIndex + 1))
+        
+        // Whether or not the current statement needs the next line to complete the statement
+        Bool pendingCompletion  = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, -1)
+        
+        if (pendingCompletion && "#chars[prevCharIndex]".equals(">")) {
+            if (substring(prevCharIndex - 1, prevCharIndex + 1).equals("=>")) {
+                
+            } else if (searchGenericType(prevCharIndex, true) != null) {
+                pendingCompletion = false
+            }
+        }
+        
+        // Whether or not the next statement needs a fragment before it to complete the statement
+        Bool requiresCompletion = STMT_POST_CONT_CHARS.contains(chars[nextCharIndex]) && (!containsUnaryOperator(nextCharIndex, nextNextCharIndex) || findGroupedSymbols(nextCharIndex).equals("-"))
+        
+        String prevWord = prevWordBounds.extractString(this)
+        
+        return pendingCompletion ^ requiresCompletion || (prevWord.equals("return") && pendingCompletion /*&& parentStack.check().parentMethod.type != null*/)
+    }
+    
+    private static validBounds(Bounds bounds, Int stopIndex, Int direction) =>
+        bounds.isValid && (direction > 0 && bounds.end < stopIndex || direction < 0 && bounds.start >= stopIndex)
+    
+    /**
+     * Check whether or not the next sequence of chars in the given source
+     * is a unary operator.
+     * 
+     * @param index The index to start the search at.
+     * @param stopIndex The index to stop the search at.
+     * @param direction The direction to search in, e.g., 1 is forward and
+     *      -1 is backward.
+     * @return Whether or not the next sequence of chars is a unary
+     *      operator.
+     */
+    public containsUnaryOperator(String this, Int index, Int stopIndex, Int direction = 1) -> Bool {
+        Bounds bounds = findStrings(Operator.UNARY_OPERATORS_NO_MINUS, index, direction)
+        
+        if (!validBounds(bounds, stopIndex, direction)) {
+            bounds = findStrings(Operator.MINUS, index, direction)
+        }
+        
+        if (validBounds(bounds, stopIndex, direction)) {
+            String unary = substring(bounds.start, bounds.end)
+            
+            // Get the propper sides
+            Int foundSide   = -direction
+            Int correctSide = -1//UnaryOperation.SIDES[unary]
+            
+            return correctSide == foundSide || correctSide == UnaryOperation.EITHER
+        }
+        
+        return false
+    }
+    
+    public findStrings(String this, String[] strings, Int start = 0, Int direction = 1, Char[] scopeChecks = null) -> Bounds {
+        while (start >= 0 && start < count) {
+            Char c = chars[start]
+            
+            if (scopeChecks != null) {
+                if (scopeChecks.contains('"') && c == '"') {
+                    start = findEndingQuote(start, direction)
+                    
+                    if (start < 0) return Bounds.EMPTY
+                    
+                    start += direction
+                    
+                    continue
+                } else if (scopeChecks.contains('\'') && c == '\'') {
+                    start = findEndingChar(c, start, direction)
+
+                    if (start < 0) return Bounds.EMPTY
+                    
+                    start += direction
+                    
+                    continue
+                } else if (scopeChecks.contains('(') && (c == '(' && direction > 0 || c == ')' && direction < 0)) {
+                    start = findEndingMatch(start, '(', ')', direction)
+
+                    if (start < 0) return Bounds.EMPTY
+                    
+                    start += direction
+                    
+                    if (start <= 0 || start >= count) return Bounds.EMPTY
+                    
+                    continue
+                } else if (scopeChecks.contains('[') && (c == '[' && direction > 0 || c == ']' && direction < 0)) {
+                    start = findEndingMatch(start, '[', ']', direction)
+
+                    if (start < 0) return Bounds.EMPTY
+                    
+                    start += direction
+                    
+                    if (start == 0) return Bounds.EMPTY
+                    
+                    continue
+                }
+            }
+            
+            for (str in strings) {
+                for (Int i = 0; i < str.count && start + i < count; i++) {
+                    if (chars[start + i] != str[i]) {
+                        break
+                    }
+                    
+                    if (i == str.count - 1) {
+                        return new Bounds(start, start + str.count)
+                    }
+                }
+            }
+            
+            start += direction
+        }
+        
+        return Bounds.EMPTY
+    }
+    
+    public searchGenericType(String this, Int start, Bool backwards = true) -> String {
+        if (backwards) {
+            Int stack = 0
+            Int index = 0
+            
+            for (Int i = start; i >= 0; i--) {
+                String c = "#chars[i]"
+                
+                if (c.equals(">")) {
+                    index = stack == 0 ? i : index
+                    stack++
+                } else if (c.equals("<")) {
+                    stack--
+                }
+                
+                if (stack == 0) {
+                    if (index > 0) {
+                        return substring(i + 1, index)
+                    }
+                    
+                    return null
+                }
+            }
+        } else {
+            throw new UnimplementedOperationException("forwards checking not implemented yet... Looks like its time to do that.")
+        }
+        
+        return null
     }
 }
