@@ -4,6 +4,14 @@ extension CompilerStringFunctions
 {
     static Char[] WHITESPACE = [ ' ', '\t', '\n', '\r' ]
     
+    public Bool String.isIdentifier {
+        get {
+            return matches(/[A-Za-z_][A-Za-z0-9_]*/)
+        }
+        
+        no set
+    }
+    
     public containsWord(String this, String search, Int start = 0) =>
         nextWordIndex(search, start) >= 0
     
