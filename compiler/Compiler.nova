@@ -89,7 +89,19 @@ class Compiler {
             var program = new Program(this)
             
             try {
-                NovaClass c = NovaClass.tryParse("private abstract class Something", program)
+                NovaClass c = NovaClass.tryParse("private abstract class Something extends MyButt implements yo, what, up323s", program)
+                
+                Console.writeLine("Parsed #c")
+                
+                c = NovaClass.tryParse("class Something2", program)
+                
+                Console.writeLine("Parsed #c")
+                
+                c = NovaClass.tryParse("class Something3 extends MyButt", program)
+                
+                Console.writeLine("Parsed #c")
+                
+                c = NovaClass.tryParse("class Something4 implements Annotatable", program)
                 
                 Console.writeLine("Parsed #c")
             } catch (SyntaxErrorException e) {
