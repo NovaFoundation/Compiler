@@ -43,7 +43,7 @@ class Import extends Node {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed ArrayAccess node, if successful; null otherwise.</returns>
-    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Import {
+    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Import {
         if (true) {//StringUtils.findNextWord(statement).equals(IDENTIFIER))
             Import node = new Import(parent, location)
             

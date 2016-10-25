@@ -48,7 +48,7 @@ class Identifier extends Value implements Accessible {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed Identifier node, if successful; null otherwise.</returns>
-    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Identifier {
+    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Identifier {
         if (true) {
             Identifier node = new Identifier(parent, location)
             

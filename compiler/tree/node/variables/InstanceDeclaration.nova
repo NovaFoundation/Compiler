@@ -52,7 +52,7 @@ class InstanceDeclaration extends VariableDeclaration {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed InstanceDeclaration node, if successful; null otherwise.</returns>
-    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> InstanceDeclaration {
+    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> InstanceDeclaration {
         if (true) {
             InstanceDeclaration node = new InstanceDeclaration(parent, location)
             
