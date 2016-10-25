@@ -12,8 +12,10 @@ class NovaFile extends Node {
     
     visible File file
     
+    visible ImportList importList
+    
     visible Package packageDeclaration
-    visible ImportList imports
+    visible Import[] imports => importList.imports
     
     visible ClosureDeclaration[] closures = new Array()
     visible ClosureContext[] contexts = new Array()
@@ -54,7 +56,7 @@ class NovaFile extends Node {
         this.file = file
         
         packageDeclaration = Package.generateDefaultPackage(this)
-        imports = new ImportList(this, location)
+        importList = new ImportList(this, location)
         
         addDefaultImports()
     }
@@ -70,7 +72,7 @@ class NovaFile extends Node {
     public addImport(String location) -> Import {
         if (containsImport(location)) return null
         
-        return (Import)addChild(Import.tryParse("import \"#location\"", this, this.location))
+        return imports.add(Import.tryParse("import \"#location\"", this, this.location)).last
     }
     
     public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
