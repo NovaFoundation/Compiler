@@ -5,6 +5,8 @@ import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 import "compiler/tree/node/Identifier"
 
+import "compiler/util/CompilerStringFunctions"
+
 /// <summary>
 /// <a href="compiler/tree/node/Node">Node</a> extension that represents 
 /// <summary>
@@ -47,7 +49,7 @@ class VariableDeclaration extends Identifier {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed VariableDeclaration node, if successful; null otherwise.</returns>
-    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
+    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
         if (true) {
             VariableDeclaration node = new VariableDeclaration(parent, location)
             
@@ -64,8 +66,8 @@ class VariableDeclaration extends Identifier {
     }
     
     public parseModifiers(String modifiers) =>
-        modifiers.split(/\s+/).all({ parseModifier(_) })
+        modifiers.split(/\s+/).all(x -> { x.count == 0 || parseModifier(x) })
     
     public getInvalidModifiers(String modifiers) =>
-        modifiers.split(/\s+/).filter({ !parseModifier(_) })
+        modifiers.split(/\s+/).filter(x -> { x.count > 0 && !parseModifier(x) })
 }
