@@ -6,7 +6,6 @@ import "compiler/tree/node/annotation/Annotatable"
 import "compiler/tree/node/annotation/Annotation"
 import "compiler/tree/node/exceptionhandling/Try"
 import "compiler/util/Location"
-import "compiler/util/StringUtils"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/node/functions/NovaFunction"
 
@@ -26,7 +25,6 @@ import "nova/datastruct/Bounds"
 class Node implements Annotatable {
     visible Location location
     
-    visible Node[] children
     visible Annotation[] annotations
     
     public Node parent/* {
@@ -64,9 +62,8 @@ class Node implements Annotatable {
      * @return Whether or not the specified Node is being decoded at
      *         the current moment.
      */
-    visible Bool isDecoding => parent == null || !parent.containsChild(this)
+    visible Bool isDecoding => false
     visible Bool isValid => parent != null
-    visible Bool isEmpty => children.count == 0
     visible Bool isUserMade => true
     visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
     visible Bool isWithinExternalContext => parent?.isWithinExternalContext
@@ -85,37 +82,28 @@ class Node implements Annotatable {
     visible NovaClass parentClass => parent?.parentClass
     visible Bool isWithinClass => parentClass != null
     
+    visible Scope parentScope => parent?.parentScope
+    visible Bool isWithinScope => parentScope != null
+    
     visible Node next => getAdjacentNode(1)
     visible Node previous => getAdjacentNode(-1)
     
-    visible Int index => parent?.children.indexOf(this) {
-        set { parent?.children.swap(index, value) }
+    visible Int index {
+    	get { parentScope.children.indexOf(this) }
+        set { parentScope.children.swap(index, value) }
     }
     
     public getAdjacentNode(Int offset) -> Node {
         if (parent != null) {
             Int index = this.index + offset
             
-            if (index >= 0 && index < parent.children.count) {
-                return parent.children[index]
+            if (index >= 0 && index < parentScope.children.count) {
+                return parentScope.children[index]
             }
         }
         
         return null
     }
-    
-    /**
-     * Get the Scope instance of this Node if it even has
-     * a scope. If the Node does not have a Scope then this
-     * method call will return null.
-     * 
-     * @return The Scope instance, if it exists.
-     */
-    public Scope scope => null {
-        set { throw new UnimplementedOperationException("This Node does not support Scopes") }
-    }
-    
-    visible Bool containsScope => scope != null
     
     /**
      * Create a new Node. Initializes the data.
@@ -124,8 +112,6 @@ class Node implements Annotatable {
      * @param location The location of the Node in the source file.
      */
     public construct(Node parent = null, Location location = Location.INVALID) {
-        children = Array(4)
-        
         this.parent = parent
         this.location = location
     }
@@ -145,13 +131,7 @@ class Node implements Annotatable {
     public detach() {
         if (isDecoding) return
         
-        var from = parent
-        
-        if (parent.children.count > 0 && !parent.containsChild(this) && parent.containsScope) {
-            from = parent.scope
-        }
-        
-        detach(from)
+        detach(parent)
     }
     
     /**
@@ -160,93 +140,24 @@ class Node implements Annotatable {
      * @param fromNode The Node to detach the specified Node from.
      */
     private detach(Node fromNode) {
-        fromNode?.children.remove(this)
-        
+    	var p = parent
+    	
         parent = null
         
+        p.onChildDetached(this)
         onRemoved(fromNode)
     }
-    
-    /**
-     * Get whether or not the given Node is a child of the specified
-     * Node.
-     * 
-     * @param child The Node to check whether is a child or not.
-     * @return Whether or not the given Node is a child.
-     */
-    public containsChild(Node child, Bool recursive = false) =>
-            children.contains(child) || (recursive && children.any({ _.containsChild(child, true) }))
     
     public onAdded(Node parent) {}
     public onRemoved(Node from) {}
     
-    public addChild(Node node, Int index = children.count, Node toNode = this, Bool detach = true) -> Node {
-        if (detach) {
-            // If the node already belongs to a parent, remove it from its old parent.
-            node.detach()
-            
-            // Set this instance as the new parent.
-            node.parent = this
-
-            toNode.children.add(index, node)
-        } else {
-            toNode.children[index] = node
-        }
-        
-        node.onAdded(toNode)
-        
-        return node
-    }
-    
-    /**
-     * Give the specified node the given nodes children. This removes the
-     * children from the given oldParent node.
-     * 
-     * @param oldParent The parent to inherit the children from.
-     * @param clone Whether or not to clone the children and not remove
-     *         them from the previous owner.
-     */
-    public inheritChildren(Node oldParent, Bool clone = false) =>
-        oldParent.children.forEach(child -> {
-            addChild(clone ? child.clone(this, child.location, true) : child)
-        })
-    
-    public removeChild(Node node) => removeChild(children.indexOf(node))
-    
-    public removeChild(Int index) -> Node {
-        if (index < 0) return null
-        
-        Node node = children[index]
-        
-        node.detach()
-        
-        return node
-    }
-    
-    public replaceWith(Node replacement) => parent.replace(this, replacement)
-    
-    public replace(Node old, Node replacement, Bool detach = true) {
-        Int index = children.indexOf(old)
-        
-        if (detach) {
-            old.detach()
-        }
-        
-        if (replacement != null) {
-            addChild(replacement, index, this, detach)
-        }
-        
-        onChildReplaced(old, replacement)
-        old.onReplaced(this, replacement)
-    }
-    
-    public slaughterChildren() => children.forEach(head -> head.detach())
-    public onAfterDecoded() => children.all({ _.onAfterDecoded() })
-    public onStackPopped() => children.forEach({ _.onStackPopped() })
-    public onNextStatementDecoded(Node next) => children.all({ _.onNextStatementDecoded(next) })
+    public onAfterDecoded() => true
+    public onNextStatementDecoded(Node next) => true
+    public onStackPopped() {}
     public followedByScope(Bool scope) {}
     public onChildReplaced(Node old, Node replacement) {}
     public onReplaced(Node parent, Node replacement) {}
+    public onChildDetached(Node child) {}
     
     /**
      * Validate the node to make last minute changes or error checking.
@@ -265,12 +176,6 @@ class Node implements Annotatable {
             .firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
             new ValidationResult(this)*/
     }
-    
-    /**
-     * Rollback any changes to external resources that the specified Node
-     * has made, if the Node is not going to be used.
-     */
-    public rollback() => children.forEach({ _.rollback() })
     
     /**
      * Return a new Node containing a copy of the values of the
