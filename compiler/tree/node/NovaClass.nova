@@ -3,7 +3,6 @@ package "compiler/tree/node"
 import "compiler/SyntaxErrorException"
 import "compiler/SyntaxMessage"
 import "compiler/util/Location"
-import "compiler/util/StringUtils"
 import "compiler/tree/node/variables/InstanceDeclaration"
 import "nova/regex/Pattern"
 
@@ -36,7 +35,7 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
-        
+        scope = new Scope(this, location)
     }
     
     /// <summary>
