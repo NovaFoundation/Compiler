@@ -1,12 +1,15 @@
 package "compiler"
 
 import "compiler/tree/node/Node"
+import "compiler/tree/node/Program"
 
 class SyntaxErrorException extends Exception {
     public construct() {}
     
-    public construct(String message, Node node = null) {
+    public construct(String message, Node node = null, Program program = null) {
         super(message)
+        
+        node = node ?: program
         
         node.program.compiler.errors.add(message)
     }
