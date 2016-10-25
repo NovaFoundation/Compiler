@@ -21,6 +21,11 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     
     public Bool isAbstract = false
     
+    public String extendedClass
+    public String[] implementedInterfaces = new Array(0)
+    
+    public Scope scope
+    
     /// <summary>
     /// Create a new NovaClass node.<br><br>
     /// <include id="example-inputs">
@@ -53,7 +58,7 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed NovaClass node, if successful; null otherwise.</returns>
-    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaClass {
+    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaClass {
         var index = input.nextWordIndex("class")
         
         if (index >= 0) {
@@ -62,13 +67,9 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
             var modifiers = input.substring(end: index).trim()
             
             if (!node.parseModifiers(modifiers) && require) {
-                node.getInvalidModifiers(modifiers).forEach({
-                    SyntaxMessage.error("Invalid modifier '#_'", node, throwException: false)
-                })
+                var invalid = node.getInvalidModifiers(modifiers)
                 
-                if (require) {
-                    throw new SyntaxErrorException()
-                }
+                SyntaxMessage.errorIf("Invalid modifier#{invalid.count != 1 ? "s" : ""}: '#{invalid.join("', '")}'", node, require)
                 
                 return null
             }
@@ -79,34 +80,71 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
             if (end > start) {
                 node.name = input.substring(start, end)
                 
-                var extensions = input.substring(input.nextNonWhitespaceIndex(end + 1, defaultReturnValue: input.count))
-                var implementations = ""
-                
-                //if (extensions)
-                
-                if (extensions.containsWord("implements")) {
-                    implementations = extensions.substring(extensions.nextWhitespaceIndex(extensions.nextWordIndex("implements") + 10))
+                if (!node.name.isIdentifier) {
+                    SyntaxMessage.errorIf("Invalid class name '#node.name'", node, require)
                 }
                 
+                var extension = input.substring(input.nextNonWhitespaceIndex(end + 1, defaultReturnValue: input.count))
+                var implementations = ""
+                var implementsIndex = extension.nextWordIndex("implements")
                 
-                return node
+                if (implementsIndex >= 0) {
+                    implementations = extension.substring(start: implementsIndex).trim()
+                    extension       = extension.substring(end:   implementsIndex).trim()
+                }
+                
+                if (node.parseExtension(extension, require) && node.parseImplementations(implementations, require)) {
+                    return node
+                } else if (require) {
+                    SyntaxMessage.error("Invalid class declaration '#input'", node)
+                }
             }
         }
         
         return null
     }
     
-    parseExtension() -> Bool {
+    parseExtension(String extension, Bool require) -> Bool {
+        if (extension.startsWith(/extends\s+/)) {
+            extension = extension.substring("extends ".count).trim()
+            
+            if (!extension.isIdentifier) {
+                SyntaxMessage.errorIf("Extended class '#extension' is not a valid type", this, require)
+                
+                return false
+            }
+            
+            extendedClass = extension
+            
+            return true
+        }
         
-        
-        return true
+        return extension.count == 0
     }
     
-    parseImplementations() -> Bool {
+    parseImplementations(String implementations, Bool require) -> Bool {
+        if (implementations.startsWith(/implements\s+/)) {
+            implementedInterfaces = implementations.substring("implements ".count).splitCommas()
+            
+            if (implementedInterfaces.any(i -> { i.count == 0 || !i.isIdentifier })) {
+                if (implementedInterfaces.count == 1 && implementedInterfaces[0].count == 0) {
+                    SyntaxMessage.errorIf("Invalid interface implementations: '#implementations'", this, require)
+                } else {
+                    var invalid = implementedInterfaces.filter({ !_.isIdentifier })
+                    
+                    SyntaxMessage.errorIf("Invalid type#{invalid.count != 1 ? "s" : ""}: '#{invalid.join("', '")}'", this, require)
+                }
+                
+                return false
+            }
+            
+            return true
+        }
         
-        
-        return true
+        return implementations.count == 0
     }
+    
+    
     
     [Override]
     public parseModifier(String modifier) -> Bool {
@@ -119,9 +157,10 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     }
     
     public writeAbstract() => isAbstract ? "abstract " : ""
-    
     public writeModifiers() => super.writeModifiers() + writeAbstract()
+    public writeExtension() => extendedClass != null ? "extends #extendedClass" : ""
+    public writeImplementedInterfaces() => implementedInterfaces.count > 0 ? "implements #{implementedInterfaces.join(", ")}" : ""
     
     [Override]
-    public toString() => "#writeModifiers() class #name".replace(/\s+/, " ")
+    public toString() => "#writeModifiers() class #name #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ")
 }
