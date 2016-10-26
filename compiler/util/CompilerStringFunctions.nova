@@ -3,26 +3,29 @@ package "compiler/util"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/node/operations/UnaryOperation"
 import "compiler/tree/node/operations/Operator"
+import "compiler/tree/StatementIterator"
 
 extension CompilerStringFunctions {
-    static Char[] WHITESPACE = [ ' ', '\t', '\n', '\r' ]
+    static Char[] WHITESPACE = " \t\n\r".chars
     
-    static Char[] EITHER_STATEMENT_END_CHARS = [ '\n', ';', '{', '}' ]
+    static Char[] EITHER_STATEMENT_END_CHARS = "\n;{}".chars
     
-    static Char[] SYMBOLS_CHARS             = [ '-', '+', '~', '!', '=', '%', '^', '&', '|', '*', '/', '\\', '>', '<', ',', '"', '\'', '[', ']', '{', '}', ';', ':', '?', '(', ')' ]
-    static Char[] STMT_PRE_CONT_CHARS       = [ '-', '+', '~', '!', '=', '%', '^', '&', '|', '*', '/', '\\', '>', '<', ',', '.', '[' ]
-    static Char[] STMT_POST_CONT_CHARS      = [ '-', '+', '~', '!', '=', '%', '^', '&', '|', '*', '/', '\\', '>', '<', ',', '.', ']' ]
-    static Char[] INVALID_DECLARATION_CHARS = [ '-', '+', '~', '!', '=', '%', '^', '|', '/', '\\', '"', '\'', '{', '}', ';', '(', ')' ]
+    static Char[] SYMBOLS_CHARS             = "-+~!=%^&|*/\\><,\"'[]{};:?()".chars
+    static Char[] STMT_PRE_CONT_CHARS       = "-+~!=%^&|*/\\><,.[".chars
+    static Char[] STMT_POST_CONT_CHARS      = "-+~!=%^&|*/\\><,.]".chars
+    static Char[] INVALID_DECLARATION_CHARS = "-+~!=%^|/\"\\'{};()".chars
     
-    
-    public Bool String.isIdentifier {
-        get {
-            return matches(/[A-Za-z_][A-Za-z0-9_]*/)
-        }
-        
+    public Bool String.isIdentifier {//=> matches(/[A-Za-z_][A-Za-z0-9_]*/)
+        get { return matches(/[A-Za-z_][A-Za-z0-9_]*/) }
         no set
     }
     
+    public StatementIterator String.statements {//=> new StatementIterator(this)
+        get { return new StatementIterator(this) }
+        no set
+    }
+    
+    /// If contains given search string surrounded by whitespace
     public containsWord(String this, String search, Int start = 0) =>
         nextWordIndex(search, start) >= 0
     
