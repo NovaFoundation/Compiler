@@ -1,0 +1,5 @@
+package "compiler/tree/node/generics"
+
+class GenericTypeArgument {
+    
+}
