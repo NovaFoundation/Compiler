@@ -1,0 +1,39 @@
+package "compiler/tree"
+
+import "nova/datastruct/list/NoSuchElementException"
+import "nova/datastruct/list/Iterator"
+import "compiler/util/CompilerStringFunctions"
+
+class StatementIterator implements Iterator<String> {
+    visible String source
+    
+    visible Int position
+    
+    visible Bool hasNext => source.count > position
+    
+    visible String next {
+        get {
+            if (hasNext) {
+                var prev = position
+                position = source.calculateStatementEnd(position + 1, position + 1)
+                position = position < 0 ? source.count : position
+                
+                return source.substring(prev, position).trim()
+            }
+            
+            throw new NoSuchElementException()
+
+            return null
+        }
+        
+        no set
+    }
+    
+    public construct(String source) {
+        this.source = source.trim()
+        
+        reset()
+    }
+    
+    public reset() => this { position = 0 }
+}
