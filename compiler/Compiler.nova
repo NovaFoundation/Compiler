@@ -4,6 +4,7 @@ import "compiler/util/OS"
 import "compiler/util/FileUtils"
 import "compiler/tree/node/NovaClass"
 import "compiler/tree/node/Program"
+import "compiler/tree/StatementIterator"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -75,35 +76,36 @@ class Compiler {
             ]
             
             [KeepWhitespace indent: "baseline"]
-            var input =
-            "class Test {
-                Int x = 15
-                
-                public construct() {
-                    Console.writeLine(\"Constructed\")
-                }
-            }"
+            var input = "class Test {
+                             Int x = 15
+                             
+                             public construct() {
+                                 Console.writeLine(\"Constructed1\")
+                                 Console.writeLine(\"Constructed2\")
+                                 Console.writeLine(\"Constructed3\")
+                                 Console.writeLine(\"Constructed4\")
+                                 
+                                 Int x = 4;Int y = 4;
+                                 
+                                 
+                                 
+                                 x += 4                                 
+                             }
+                         }"
             
-            Console.writeLine("splitted commas: #{"hello, what(\"my func,hwith inner ,commas arg\"), does this work??".splitCommas()}")
+            for (statement in input.statements) {
+                Console.writeLine("STatement: #statement")
+            }
             
             var program = new Program(this)
             
             try {
-                NovaClass c = NovaClass.tryParse("private abstract class Something extends MyButt implements yo, what, up323s", program)
+                String[] declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
+                                          "class Something2",
+                                          "class Something3 extends MyButt",
+                                          "class Something4 implements Annotatable" ]
                 
-                Console.writeLine("Parsed #c")
-                
-                c = NovaClass.tryParse("class Something2", program)
-                
-                Console.writeLine("Parsed #c")
-                
-                c = NovaClass.tryParse("class Something3 extends MyButt", program)
-                
-                Console.writeLine("Parsed #c")
-                
-                c = NovaClass.tryParse("class Something4 implements Annotatable", program)
-                
-                Console.writeLine("Parsed #c")
+                declarations.forEach({ Console.writeLine("Parsed: #{NovaClass.tryParse(_, program)}") })
             } catch (SyntaxErrorException e) {
                 
             }
