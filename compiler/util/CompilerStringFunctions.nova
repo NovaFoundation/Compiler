@@ -634,4 +634,14 @@ extension CompilerStringFunctions {
         
         return null
     }
+    
+    /**
+     * Find the next available dot operator index within the given String.
+     * 
+     * @param str The String to find the dot operator within.
+     * @param start The index to start the search at.
+     * @return The index of the dot operator. If a dot operator is not
+     *      found, then -1 is returned instead.
+     */
+    public findDotOperatorIndex(String this, Int start = 0) => findCharInBaseScope('.', start)
 }
