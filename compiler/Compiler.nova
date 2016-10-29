@@ -85,7 +85,7 @@ class Compiler {
             var input = "class Test {
                              Int x = 15
                     
-                             public helloWorld() {
+                             public helloWorld(String x, Int y) {
                                  Console.writeLine(\"ASdfasdfads\")
                              }
                              
@@ -115,7 +115,7 @@ class Compiler {
                 for (statement in statements) {
                     Console.writeLine("'#statement'")
                     
-                    var node = parents.peek().tryParseChild(statement, require: false)
+                    var node = parents.peek().parseChild(statement, require: false)
                     
                     Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
                                        \tendsScope: '#statements.endsScope'\n
@@ -136,12 +136,16 @@ class Compiler {
                     }
                 }
                 
-                String[] declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
+                if (parents.peek() != file) {
+                    Console.writeLine("Missing ending brace")
+                }
+                
+                var declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
                                           "class Something2",
                                           "class Something3 extends MyButt",
                                           "class Something4 implements Annotatable" ]
                 
-                declarations.forEach({ Console.writeLine("Parsed: #{NovaClass.tryParse(_, program)}") })
+                declarations.forEach({ Console.writeLine("Parsed: #{NovaClass.parse(_, program)}") })
             } catch (SyntaxErrorException e) {
                 
             }
