@@ -1,8 +1,14 @@
 package "compiler"
 
+import "nova/io/File"
+import "nova/datastruct/list/Stack"
+
 import "compiler/util/OS"
 import "compiler/util/FileUtils"
+
 import "compiler/tree/node/NovaClass"
+import "compiler/tree/node/NovaFile"
+import "compiler/tree/node/Node"
 import "compiler/tree/node/Program"
 import "compiler/tree/StatementIterator"
 
@@ -13,9 +19,9 @@ class Compiler {
     
     visible static Bool testClasses = true
     
-    visible String[] errors = new Array()
-    visible String[] warnings = new Array()
-    visible String[] info = new Array()
+    visible String[] errors   = new String[]
+    visible String[] warnings = new String[]
+    visible String[] info     = new String[]
     
     public static main(String[] args) {
         var c = new Compiler()
@@ -78,6 +84,10 @@ class Compiler {
             [KeepWhitespace indent: "baseline"]
             var input = "class Test {
                              Int x = 15
+                    
+                             public helloWorld() {
+                                 Console.writeLine(\"ASdfasdfads\")
+                             }
                              
                              public construct() {
                                  Console.writeLine(\"Constructed1\")
@@ -92,14 +102,40 @@ class Compiler {
                                  x += 4                                 
                              }
                          }"
+                         
             
-            for (statement in input.statements) {
-                Console.writeLine("STatement: #statement")
-            }
+            var program    = new Program(this)
+            var file       = new NovaFile(new File("temp.nova"), program)
+            var parents    = new Stack<Node>()
+            var statements = input.statements
             
-            var program = new Program(this)
+            parents.push(file)
             
             try {
+                for (statement in statements) {
+                    Console.writeLine("'#statement'")
+                    
+                    var node = parents.peek().tryParseChild(statement, require: false)
+                    
+                    Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
+                                       \tendsScope: '#statements.endsScope'\n
+                                       \tparse: '#node'\n")
+                    
+                    if (statements.beginsScope) { // TODO: if null, then create something to replace it
+                        if (node == null) {
+                            SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
+                        } else {
+                            parents.push(node)
+                        }
+                    } else if (statements.endsScope) {
+                        repeat (statements.scopesEnded) {
+                            if (!parents.isEmpty) {
+                                parents.pop()
+                            }
+                        }
+                    }
+                }
+                
                 String[] declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
                                           "class Something2",
                                           "class Something3 extends MyButt",
