@@ -40,16 +40,11 @@ class StatementIterator implements Iterator<String> {
                 position = source.calculateStatementEnd(position)
                 position = position < 0 ? source.count : position
                 
-                var nextChar = source.nextNonWhitespaceChar(position)
+                var end = position
                 
-                beginsScope = position < source.count && nextChar == '{'
-                endsScope = position < source.count && nextChar == '}'
+                updateScopeProperties()
                 
-                var statement = source.substring(prev, position++).trim()
-                
-                updateScopesEnded()
-                
-                return statement
+                return source.substring(prev, end).trim()
             }
             
             throw new NoSuchElementException()
@@ -60,11 +55,16 @@ class StatementIterator implements Iterator<String> {
         no set
     }
     
-    updateScopesEnded() {
+    updateScopeProperties() {
+        var nextChar = source.nextNonWhitespaceChar(position)
+        
+        beginsScope = position < source.count && nextChar == '{'
+        endsScope   = position < source.count && nextChar == '}'
+        
         scopesEnded = 0
         
         if (endsScope) {
-            var current = source.nextNonWhitespaceIndex(position - 1)
+            var current = source.nextNonWhitespaceIndex(position)
             
             while (current > 0 && source[current] == '}') {
                 scopesEnded++
@@ -73,6 +73,8 @@ class StatementIterator implements Iterator<String> {
             }
             
             position = current < 0 ? source.count : current
+        } else {
+            position++
         }
     }
     
