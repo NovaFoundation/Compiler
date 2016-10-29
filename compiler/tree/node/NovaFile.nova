@@ -61,8 +61,8 @@ class NovaFile extends Node {
         addDefaultImports()
     }
 	
-    public tryParseChild(String statement, Bool require = true) -> Node {
-    	return NovaClass.tryParse(statement, this)
+    public parseChild(String statement, Bool require = true) -> Node {
+    	return NovaClass.parse(statement, this)
     }
     
     addDefaultImports() {
@@ -76,10 +76,12 @@ class NovaFile extends Node {
     public addImport(String location) -> Import {
         if (containsImport(location)) return null
         
-        return imports.add(Import.tryParse("import \"#location\"", this, this.location)).last
+        return imports.add(Import.parse("import \"#location\"", this, this.location)).last
     }
     
     public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
         return false
     }
+    
+    public toString() => "#{name}.nova"
 }
