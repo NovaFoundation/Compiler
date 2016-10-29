@@ -116,6 +116,10 @@ class Node implements Annotatable {
         this.location = location
     }
     
+    public tryParseChild(String statement, Bool require = true) -> Node {
+    	return null
+    }
+    
     [Override]
     public addAnnotation(Annotation annotation) {
         annotations = annotations ?: new Array()
