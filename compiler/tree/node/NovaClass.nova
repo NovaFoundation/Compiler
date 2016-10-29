@@ -4,6 +4,7 @@ import "compiler/SyntaxErrorException"
 import "compiler/SyntaxMessage"
 import "compiler/util/Location"
 import "compiler/tree/node/variables/InstanceDeclaration"
+import "compiler/tree/node/variables/FieldDeclaration"
 import "compiler/tree/node/functions/BodyFunction"
 import "nova/regex/Pattern"
 
@@ -39,15 +40,15 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
         scope = new Scope(this, location)
     }
     
-    public tryParseChild(String input, Bool require = true) -> Node {
+    public parseChild(String input, Bool require = true) -> Node {
         Node node = null
         
         until (node != null) {
-            node = BodyFunction.tryParse(input, this, require: require)
+            node = BodyFunction.parse(input, this, require: require)
+            node = FieldDeclaration.parse(input, this, require: require)
         }
         
         return node
-        //return NovaClass.tryParse(statement, this)
     }
     
     /// <summary>
@@ -69,52 +70,70 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed NovaClass node, if successful; null otherwise.</returns>
-    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaClass {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaClass {
         var index = input.nextWordIndex("class")
         
         if (index >= 0) {
             var node = new NovaClass(parent, location)
             
-            var modifiers = input.substring(end: index).trim()
-            
-            if (!node.parseModifiers(modifiers) && require) {
-                var invalid = node.getInvalidModifiers(modifiers)
-                
-                SyntaxMessage.errorIf("Invalid modifier#{invalid.count != 1 ? "s" : ""}: '#{invalid.join("', '")}'", node, require)
-                
+            if (!node.parseModifiers(input, index, require)) {
                 return null
             }
             
-            var start = input.nextNonWhitespaceIndex(index + 6)
-            var end   = input.nextWhitespaceIndex(start + 1)
+            var nameStartIndex = input.nextNonWhitespaceIndex(index + 6)
+            var nameEndIndex   = input.nextWhitespaceIndex(nameStartIndex + 1)
             
-            if (end > start) {
-                node.name = input.substring(start, end)
-                
-                if (!node.name.isIdentifier) {
-                    SyntaxMessage.errorIf("Invalid class name '#node.name'", node, require)
-                }
-                
-                var extension = input.substring(input.nextNonWhitespaceIndex(end + 1, defaultReturnValue: input.count))
-                var implementations = ""
-                var implementsIndex = extension.nextWordIndex("implements")
-                
-                if (implementsIndex >= 0) {
-                    implementations = extension.substring(start: implementsIndex).trim()
-                    extension       = extension.substring(end:   implementsIndex).trim()
-                }
-                
-                if (node.parseExtension(extension, require) && node.parseImplementations(implementations, require)) {
-                    return node
-                } else if (require) {
-                    SyntaxMessage.error("Invalid class declaration '#input'", node)
-                }
+            if (node.parseName(input, nameStartIndex, nameEndIndex, require) && node.parseInheritence(input, nameEndIndex, require)) {
+                return node
+            } else if (require) {
+                SyntaxMessage.error("Invalid class declaration '#input'", node)
             }
         } else if (require) {
             SyntaxMessage.error("Invalid class declaration '#input'", parent)
         }
         
         return null
+    }
+    
+    parseModifiers(String input, Int index, Bool require) -> Bool {
+        var modifiers = input.substring(end: index).trim()
+        
+        if (!parseModifiers(modifiers)) {
+            var invalid = getInvalidModifiers(modifiers)
+            
+            SyntaxMessage.errorIf("Invalid modifier#{invalid.count != 1 ? "s" : ""}: '#{invalid.join("', '")}'", this, require)
+            
+            return false
+        }
+        
+        return true
+    }
+    
+    parseName(String input, Int start, Int end, Bool require) -> Bool {
+        if (end > start) {
+            name = input.substring(start, end)
+            
+            if (name.isIdentifier) {
+                return true
+            } else {
+                SyntaxMessage.errorIf("Invalid class name '#name'", this, require)
+            }
+        }
+        
+        return false
+    }
+    
+    parseInheritence(String input, Int nameEndIndex, Bool require) -> Bool {
+        var extension       = input.substring(input.nextNonWhitespaceIndex(nameEndIndex + 1, defaultReturnValue: input.count))
+        var implementations = ""
+        var implementsIndex = extension.nextWordIndex("implements")
+        
+        if (implementsIndex >= 0) {
+            implementations = extension.substring(start: implementsIndex).trim()
+            extension       = extension.substring(end:   implementsIndex).trim()
+        }
+        
+        return parseExtension(extension, require) && parseImplementations(implementations, require)
     }
     
     parseExtension(String extension, Bool require) -> Bool {
@@ -137,16 +156,12 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     
     parseImplementations(String implementations, Bool require) -> Bool {
         if (implementations.startsWith(/implements\s+/)) {
-            implementedInterfaces = implementations.substring("implements ".count).splitCommas()
+            implementedInterfaces = implementations.substring("implements ".count).splitAtCommas()
             
-            if (implementedInterfaces.any(i -> { i.count == 0 || !i.isIdentifier })) {
-                if (implementedInterfaces.count == 1 && implementedInterfaces[0].count == 0) {
-                    SyntaxMessage.errorIf("Invalid interface implementations: '#implementations'", this, require)
-                } else {
-                    var invalid = implementedInterfaces.filter({ !_.isIdentifier })
-                    
-                    SyntaxMessage.errorIf("Invalid type#{invalid.count != 1 ? "s" : ""}: '#{invalid.join("', '")}'", this, require)
-                }
+            if (implementedInterfaces.any({ !_.isIdentifier })) {
+                var invalid = implementedInterfaces.filter({ !_.isIdentifier })
+                
+                SyntaxMessage.errorIf("Invalid interface type#{invalid.count != 1 ? "s" : ""}: '#{invalid.join("', '")}'", this, require)
                 
                 return false
             }
