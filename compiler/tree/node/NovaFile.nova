@@ -60,6 +60,10 @@ class NovaFile extends Node {
         
         addDefaultImports()
     }
+	
+    public tryParseChild(String statement, Bool require = true) -> Node {
+    	return NovaClass.tryParse(statement, this)
+    }
     
     addDefaultImports() {
         for (i in DEFAULT_IMPORTS) {
