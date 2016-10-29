@@ -116,7 +116,7 @@ class Node implements Annotatable {
         this.location = location
     }
     
-    public tryParseChild(String statement, Bool require = true) -> Node {
+    public parseChild(String statement, Bool require = true) -> Node {
     	return null
     }
     
@@ -193,5 +193,11 @@ class Node implements Annotatable {
      */
     public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
         
+    }
+    
+    public cloneTo(Node other) => other {
+        other.parent = parent
+        other.location = location
+        other.annotations = annotations
     }
 }
