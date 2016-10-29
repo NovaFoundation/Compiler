@@ -50,7 +50,7 @@ class ArrayAccess extends Node {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed ArrayAccess node, if successful; null otherwise.</returns>
-    public tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayAccess {
+    public parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayAccess {
         if (input.count >= 3 && input.chars.first == '[' && input.chars.last == ']') {
             ArrayAccess node = new ArrayAccess(parent, location)
             
