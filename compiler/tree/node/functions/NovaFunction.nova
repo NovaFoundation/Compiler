@@ -1,10 +1,44 @@
 package "compiler/tree/node/functions"
 
 import "compiler/tree/node/Node"
+import "compiler/tree/node/variables/InstanceDeclaration"
 import "compiler/util/Location"
 
-class NovaFunction extends Node {
+import "compiler/util/CompilerStringFunctions"
+
+class NovaFunction extends InstanceDeclaration {
     visible Bool isStatic
     visible Bool isInstance => !isStatic
     visible NovaFunction parentFunction => this
+    
+    public findSignature(String input) -> String {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return null
+        }
+        
+        var end = input.findEndingMatch(start, '(', ')')
+        
+        if (end < 0) {
+            return null
+        }
+        
+        return input.substring(end: start).trim() + " " + input.substring(start: end + 1).trim()
+    }
+    
+    public parseSignature(String signature) =>
+        signature.split(/\s+/).all((word, index, words) -> {
+            if (word.count > 0 && !parseModifier(word)) {
+                if (name == null && word.isIdentifier) {
+                   name = word
+                } else {
+                    return false
+                }
+            }
+            
+            return true
+        })
+    
+    public toString() => "#writeModifiers() #{name}()".replace(/\s+/, " ").trim()
 }
