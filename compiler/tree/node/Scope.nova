@@ -38,7 +38,7 @@ class Scope extends NodeList {
     	super(parent, location)
     }
     
-    public tryParseChild(String input, Bool require = true) -> Node {
+    public parseChild(String input, Bool require = true) -> Node {
         Node node = null
         
         until (node != null) {
@@ -48,14 +48,14 @@ class Scope extends NodeList {
         return node
     }
     
-    public tryParseAccessible(String input, Node parent = this, Bool require = true) -> Accessible {
+    public parseAccessible(String input, Node parent = this, Bool require = true) -> Accessible {
     	
     	
     	return null
     }
     
     parseIdentifierAccess(String input, Scope parent, Bool require = true) -> Node {
-    	Int prev = 0
+    	var prev = 0
     	var dot  = input.findDotOperatorIndex()
     	
     	var fragments = new String[]
@@ -70,12 +70,12 @@ class Scope extends NodeList {
     	if (prev > 0) {
     		fragments.add(input.substring(prev))
     		
-    		var root    = tryParseAccessible(fragments[0], require: require)
+    		var root    = parseAccessible(fragments[0], require: require)
     		var current = root
     		
     		if (current != null) {
     			if (fragments.skip(1).all({
-    				var accessed = tryParseAccessible(_, parent: null, require: require)
+    				var accessed = parseAccessible(_, parent: null, require: require)
     				
     				if (accessed != null) {
     					//current.accessedNode = (Identifier)accessed
