@@ -1,0 +1,68 @@
+package "compiler/tree/node/functions"
+
+import "compiler/tree/node/Node"
+import "compiler/tree/node/Scope"
+import "compiler/util/Location"
+import "compiler/SyntaxMessage"
+
+class BodyFunction extends NovaFunction {
+    public Scope scope
+    
+    /// <summary>
+    /// Create a new BodyFunction node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the BodyFunction node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        scope = new Scope(this, location)
+    }
+    
+    public tryParseChild(String statement, Bool require = true) -> Node {
+        Node node = null
+        
+        /*until (node != null) {
+            node = BodyFunction.tryParse(statement, this, require: require)
+        }*/
+        
+        return node
+    }
+    
+    /// <summary>
+    /// Decode the given input into a BodyFunction node. If the input cannot be parsed
+    /// into a BodyFunction node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a BodyFunction instance.</param>
+    /// <param name="parent">The parent of the BodyFunction node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed BodyFunction node, if successful; null otherwise.</returns>
+    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> BodyFunction {
+        var node = new BodyFunction(parent, location)
+        
+        var signature = node.findSignature(input)
+        Console.writeLine("!!#signature from #input")
+        if (signature != null) {            
+            if (node.parseSignature(signature)) {
+                return node
+            }
+        } else if (require) {
+            SyntaxMessage.error("Invalid function declaration '#input'", parent)
+        }
+        
+        return null
+    }
+}
