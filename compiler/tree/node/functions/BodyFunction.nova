@@ -21,7 +21,7 @@ class BodyFunction extends NovaFunction {
         scope = new Scope(this, location)
     }
     
-    public tryParseChild(String statement, Bool require = true) => scope.tryParseChild(statement, require)
+    public parseChild(String statement, Bool require = true) => scope.parseChild(statement, require)
     
     /// <summary>
     /// Decode the given input into a BodyFunction node. If the input cannot be parsed
@@ -42,14 +42,18 @@ class BodyFunction extends NovaFunction {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed BodyFunction node, if successful; null otherwise.</returns>
-    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> BodyFunction {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> BodyFunction {
         var node = new BodyFunction(parent, location)
         
         var signature = node.findSignature(input)
         
-        if (signature != null) {            
-            if (node.parseSignature(signature)) {
-                return node
+        if (signature != null) {
+            var parameters = node.findParameters(input)
+            
+            if (parameters != null) {
+                if (node.parseSignature(signature) && node.parseParameters(parameters)) {
+                    return node
+                }
             }
         } else if (require) {
             SyntaxMessage.error("Invalid function declaration '#input'", parent)
