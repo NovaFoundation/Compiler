@@ -12,6 +12,7 @@ class StatementIterator implements Iterator<String> {
     
     visible Bool beginsScope, endsScope
     
+    visible Int scopesEnded
     visible Int position
     
     visible Bool hasNext {
@@ -44,7 +45,11 @@ class StatementIterator implements Iterator<String> {
                 beginsScope = position < source.count && nextChar == '{'
                 endsScope = position < source.count && nextChar == '}'
                 
-                return source.substring(prev, position++).trim()
+                var statement = source.substring(prev, position++).trim()
+                
+                updateScopesEnded()
+                
+                return statement
             }
             
             throw new NoSuchElementException()
@@ -53,6 +58,22 @@ class StatementIterator implements Iterator<String> {
         }
         
         no set
+    }
+    
+    updateScopesEnded() {
+        scopesEnded = 0
+        
+        if (endsScope) {
+            var current = source.nextNonWhitespaceIndex(position - 1)
+            
+            while (current > 0 && source[current] == '}') {
+                scopesEnded++
+                
+                current = source.nextNonWhitespaceIndex(current + 1)
+            }
+            
+            position = current < 0 ? source.count : current
+        }
     }
     
     public construct(String source) {
