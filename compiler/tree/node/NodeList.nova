@@ -16,7 +16,7 @@ class NodeList<E extends Node> extends Node {
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
-        children = Array(4)
+        children = Array()
     }
     
     //public replaceWith(Node replacement) => parent.replace(this, replacement)
