@@ -1,7 +1,10 @@
 package "compiler/tree/node"
 
 import "nova/datastruct/Pair"
+import "nova/datastruct/list/List"
 import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
 
 /**
  * Node extension that represents a scope of code. In essence, a
@@ -33,5 +36,60 @@ class Scope extends NodeList {
     /// <param name="location">The location of the input text in the source file.</param>
     public construct(Node parent = null, Location location = Location.INVALID) {
     	super(parent, location)
+    }
+    
+    public tryParseChild(String input, Bool require = true) -> Node {
+        Node node = null
+        
+        until (node != null) {
+        	node = parseIdentifierAccess(input, this, require: require)
+        }
+        
+        return node
+    }
+    
+    public tryParseAccessible(String input, Node parent = this, Bool require = true) -> Accessible {
+    	
+    	
+    	return null
+    }
+    
+    parseIdentifierAccess(String input, Scope parent, Bool require = true) -> Node {
+    	Int prev = 0
+    	var dot  = input.findDotOperatorIndex()
+    	
+    	var fragments = new String[]
+    	
+    	while (dot > 0) {
+    		fragments.add(input.substring(prev, dot))
+    		
+    		prev = dot + 1
+    		dot  = input.findDotOperatorIndex(prev)
+    	}
+    	
+    	if (prev > 0) {
+    		fragments.add(input.substring(prev))
+    		
+    		var root    = tryParseAccessible(fragments[0], require: require)
+    		var current = root
+    		
+    		if (current != null) {
+    			if (fragments.skip(1).all({
+    				var accessed = tryParseAccessible(_, parent: null, require: require)
+    				
+    				if (accessed != null) {
+    					//current.accessedNode = (Identifier)accessed
+    					
+    					return true
+    				}
+    				
+    				return false
+    			})) {
+    				return root
+    			}
+    		}
+	    }
+    	
+    	return null
     }
 }
