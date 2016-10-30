@@ -60,6 +60,8 @@ class Identifier extends Value implements Accessible {
         return null
     }
     
+    public toString() => name
+    
     public cloneTo(Identifier other) => other {
         super.cloneTo(other)
         
