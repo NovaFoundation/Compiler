@@ -85,7 +85,7 @@ class Compiler {
             var input = "class Test {
                              Int x = 15
                     
-                             public helloWorld(String x, Int y) {
+                             public helloWorld(String x, Int y) -> Something {
                                  Console.writeLine(\"ASdfasdfads\")
                              }
                              
@@ -137,7 +137,7 @@ class Compiler {
                 }
                 
                 if (parents.peek() != file) {
-                    Console.writeLine("Missing ending brace")
+                    SyntaxMessage.error("Missing ending brace", file, throwException: false)
                 }
                 
                 var declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
