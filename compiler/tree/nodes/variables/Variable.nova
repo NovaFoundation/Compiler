@@ -1,0 +1,24 @@
+package "compiler/tree/nodes/variables"
+
+import "compiler/util/Location"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+
+class Variable extends Value {
+    public VariableDeclaration declaration
+    
+    public String type => declaration.type
+    
+    /// <summary>
+    /// Create a new Variable node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Variable node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID, VariableDeclaration declaration = null) {
+        super(parent, location)
+        
+        this.declaration = declaration
+    }
+}
