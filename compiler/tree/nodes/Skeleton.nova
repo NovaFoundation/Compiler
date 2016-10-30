@@ -47,7 +47,7 @@ class Skeleton extends Node {
     /// <returns>The parsed Skeleton node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Skeleton {
         if (true) {
-            Skeleton node = new Skeleton(parent, location)
+            var node = new Skeleton(parent, location)
             
             
             
