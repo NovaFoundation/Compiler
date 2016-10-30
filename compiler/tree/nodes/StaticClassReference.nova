@@ -1,5 +1,55 @@
 package "compiler/tree/nodes"
 
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
+
+/// <summary>
+/// <a href="compiler/tree/nodes/Node">Node</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
 class StaticClassReference extends Identifier {
+    /// <summary>
+    /// Create a new StaticClassReference node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the StaticClassReference node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID, String name = null) {
+        super(parent, location)
+        
+        this.name = name
+    }
     
+    /// <summary>
+    /// Decode the given input into a StaticClassReference node. If the input cannot be parsed
+    /// into a StaticClassReference node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a StaticClassReference instance.</param>
+    /// <param name="parent">The parent of the StaticClassReference node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed StaticClassReference node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> StaticClassReference {
+        if (parent.parentFile.imports.any({ _.className.equals(input) })) {
+            return new StaticClassReference(parent, location, input)
+        }
+        
+        return null
+    }
 }
