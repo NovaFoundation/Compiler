@@ -1,0 +1,7 @@
+package "compiler/tree/nodes/closures"
+
+import "compiler/tree/nodes/Node"
+
+class ClosureDeclaration extends Node {
+    
+}

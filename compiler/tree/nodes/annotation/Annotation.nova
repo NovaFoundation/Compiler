@@ -1,0 +1,19 @@
+package "compiler/tree/nodes/annotation"
+
+import "compiler/tree/nodes/Node"
+import "compiler/util/Location"
+
+/**
+ * {@link Node} extension that represents
+ * 
+ * @author    Braden Steffaniak
+ */
+class Annotation extends Node {
+    /**
+     * @see net.fathomsoft.nova.tree.Node#clone(Node, Location, boolean)
+     */
+    [Override]
+    public clone(Node temporaryParent, Location locationIn, Bool cloneChildren = true) -> Annotation {
+        return null
+    }
+}

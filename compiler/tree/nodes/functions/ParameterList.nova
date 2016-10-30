@@ -1,0 +1,22 @@
+package "compiler/tree/nodes/functions"
+
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/NodeList"
+import "compiler/util/Location"
+
+class ParameterList extends NodeList<Parameter> {
+    public Parameter[] parameters => (Parameter[])children
+    
+    /// <summary>
+    /// Create a new ParameterList node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the ParameterList node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    public toString() => "(#{parameters.join(", ")})"
+}

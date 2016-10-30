@@ -1,0 +1,30 @@
+package "compiler/tree/nodes/operations"
+
+import "nova/datastruct/HashMap"
+
+class UnaryOperation {
+    visible static Int LEFT = -1, EITHER = 0, RIGHT = 1
+    
+    // visible static HashMap<String, Int> SIDES
+    // visible static HashMap<String, Bool> REQUIRE_VARIABLE
+    
+    // /**
+    //  * Initialize the SIDES HashMap.
+    //  */
+    // static {
+    //     SIDES = new HashMap()
+    //     REQUIRE_VARIABLE = new HashMap()
+        
+    //     SIDES["-"]  = LEFT
+    //     SIDES["--"] = EITHER
+    //     SIDES["++"] = EITHER
+    //     SIDES["!"]  = LEFT
+    //     SIDES["~"]  = LEFT
+        
+    //     REQUIRE_VARIABLE["-"]  = false
+    //     REQUIRE_VARIABLE["--"] = true
+    //     REQUIRE_VARIABLE["++"] = true
+    //     REQUIRE_VARIABLE["!"]  = false
+    //     REQUIRE_VARIABLE["~"]  = false
+    // }
+}

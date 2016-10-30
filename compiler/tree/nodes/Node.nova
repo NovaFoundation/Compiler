@@ -1,0 +1,203 @@
+package "compiler/tree/nodes"
+
+import "compiler/Compiler"
+import "compiler/error/UnimplementedOperationException"
+import "compiler/tree/nodes/annotation/Annotatable"
+import "compiler/tree/nodes/annotation/Annotation"
+import "compiler/tree/nodes/exceptionhandling/Try"
+import "compiler/util/Location"
+import "compiler/error/UnimplementedOperationException"
+import "compiler/tree/nodes/functions/NovaFunction"
+
+import "nova/datastruct/Bounds"
+
+/**
+ * Class that is the parent of all Nodes on the Tree. Keeps the basic
+ * information of where the statement was in the source, and where it was
+ * output in the destination file. A Node can have any number of
+ * children, however some of the extensions of Node have default
+ * children at the start.
+ * 
+ * @author    Braden Steffaniak
+ * @since    v0.1 Jan 5, 2014 at 9:00:11 PM
+ * @version    v0.2.41 Dec 17, 2014 at 7:48:17 PM
+ */
+class Node implements Annotatable {
+    visible Location location
+    
+    visible Annotation[] annotations
+    
+    public Node parent/* {
+        set {
+            if (parent != value) { // Skip if already a child of this parent
+            	this.parent = value
+            	
+                value.addChild(this)
+            }
+        }
+    }*/
+    
+    visible String locationInfo {
+        get {
+            String info = ""
+            
+            if (parentFile != null) {
+                info += "in file #parentFile.name"
+            }
+            if (location != null) {
+                info += (info.count > 0 ? " " : "") + "on line number #location.lineNumber at offset #location.offset"
+            }
+            
+            return info
+        }
+        
+        no set
+    }
+    
+    
+    /**
+     * Get whether or not the specified Node is being decoded at
+     * the current moment.
+     * 
+     * @return Whether or not the specified Node is being decoded at
+     *         the current moment.
+     */
+    visible Bool isDecoding => false
+    visible Bool isValid => parent != null
+    visible Bool isUserMade => true
+    visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
+    visible Bool isWithinExternalContext => parent?.isWithinExternalContext
+    
+    visible Program program => parent?.program
+    
+    visible NovaFile parentFile => parent?.parentFile
+    visible Bool isWithinFile => parentFile != null
+    
+    visible NovaFunction parentFunction => parent?.parentFunction
+    visible Bool isWithinFunction => parentFunction != null
+    
+    visible Try parentTry => parent?.parentTry
+    visible Bool isWithinTry => parentTry != null
+    
+    visible NovaClass parentClass => parent?.parentClass
+    visible Bool isWithinClass => parentClass != null
+    
+    visible Scope parentScope => parent?.parentScope
+    visible Bool isWithinScope => parentScope != null
+    
+    visible Node next => getAdjacentNode(1)
+    visible Node previous => getAdjacentNode(-1)
+    
+    visible Int index {
+    	get { parentScope.children.indexOf(this) }
+        set { parentScope.children.swap(index, value) }
+    }
+    
+    public getAdjacentNode(Int offset) -> Node {
+        if (parent != null) {
+            Int index = this.index + offset
+            
+            if (index >= 0 && index < parentScope.children.count) {
+                return parentScope.children[index]
+            }
+        }
+        
+        return null
+    }
+    
+    /**
+     * Create a new Node. Initializes the data.
+     * 
+     * @param parent The Node to act as the parent temporarily.
+     * @param location The location of the Node in the source file.
+     */
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        this.parent = parent
+        this.location = location
+    }
+    
+    public parseChild(String statement, Bool require = true) -> Node {
+    	return null
+    }
+    
+    [Override]
+    public addAnnotation(Annotation annotation) {
+        annotations = annotations ?: new Array()
+        
+        annotations.add(annotation)
+        
+        annotation.parent = this
+    }
+    
+    /**
+     * Detach the specified node from its parent.
+     */
+    public detach() {
+        if (isDecoding) return
+        
+        detach(parent)
+    }
+    
+    /**
+     * Detach the specified Node from the given Node.
+     * 
+     * @param fromNode The Node to detach the specified Node from.
+     */
+    private detach(Node fromNode) {
+    	var p = parent
+    	
+        parent = null
+        
+        p.onChildDetached(this)
+        onRemoved(fromNode)
+    }
+    
+    public onAdded(Node parent) {}
+    public onRemoved(Node from) {}
+    
+    public onAfterDecoded() => true
+    public onNextStatementDecoded(Node next) => true
+    public onStackPopped() {}
+    public followedByScope(Bool scope) {}
+    public onChildReplaced(Node old, Node replacement) {}
+    public onReplaced(Node parent, Node replacement) {}
+    public onChildDetached(Node child) {}
+    
+    /**
+     * Validate the node to make last minute changes or error checking.
+     * 
+     * @param phase The phase that the node is being validated in.
+     * @return The Node to continue the validation off of.
+     */
+    public validate(Int phase) -> ValidationResult {
+        return annotations?.reverse().firstNonNull({
+            ValidationResult result = _.validate(phase)
+            
+            return result.skipValidation ? result : null
+        }) ?: new ValidationResult(this)
+        
+        /*return annotations?.reverse()
+            .firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
+            new ValidationResult(this)*/
+    }
+    
+    /**
+     * Return a new Node containing a copy of the values of the
+     * specified node, including clones of the children.
+     * 
+     * @param parent The Node to set as the parent.
+     * @param location The Location instance holding the information.
+     * @param cloneChildren Whether or not to clone the children of the
+     *         Node as well.
+     * @return A clone of the specified Node.
+     */
+    public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
+        
+    }
+    
+    public cloneTo(Node other) => other {
+        other.parent = parent
+        other.location = location
+        other.annotations = annotations
+    }
+}

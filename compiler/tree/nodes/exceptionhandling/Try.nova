@@ -1,0 +1,18 @@
+package "compiler/tree/nodes/exceptionhandling"
+
+/**
+ * ExceptionHandler extension that represents the declaration of a
+ * try node type. See {@link #decodeStatement(Node, String, Location, boolean)}
+ * for more details on what correct inputs look like.
+ * 
+ * @author    Braden Steffaniak
+ * @since    v0.1 Mar 22, 2014 at 4:01:38 PM
+ * @version    v0.2.38 Dec 6, 2014 at 5:19:17 PM
+ */
+class Try extends ExceptionHandler {
+    private Int[]    codes
+    
+    visible static String IDENTIFIER = "try"
+    
+    visible Try parentTry => this
+}

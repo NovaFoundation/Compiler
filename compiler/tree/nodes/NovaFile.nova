@@ -1,0 +1,87 @@
+package "compiler/tree/nodes"
+
+import "compiler/util/Location"
+import "compiler/tree/nodes/closures/ClosureContext"
+import "compiler/tree/nodes/closures/ClosureDeclaration"
+import "nova/io/File"
+
+class NovaFile extends Node {
+    visible NovaFile parentFile => this
+    
+    visible String name
+    
+    visible File file
+    
+    visible ImportList importList
+    
+    visible Package packageDeclaration
+    visible Import[] imports => importList.imports
+    
+    visible ClosureDeclaration[] closures = new Array()
+    visible ClosureContext[] contexts = new Array()
+    
+    public static String[] DEFAULT_IMPORTS = [
+        "nova/exception/ExceptionData",
+        "nova/exception/Exception",
+        "nova/exception/DivideByZeroException",
+        "nova/io/Console",
+        "nova/primitive/number/Number",
+        "nova/primitive/number/Byte",
+        "nova/primitive/number/Short",
+        "nova/primitive/number/Int",
+        "nova/primitive/number/Long",
+        "nova/primitive/number/Float",
+        "nova/primitive/number/Double",
+        "nova/primitive/Null",
+        "nova/primitive/number/Char",
+        "nova/primitive/Bool",
+        "nova/datastruct/list/Array",
+        "nova/datastruct/list/IntArray",
+        "nova/datastruct/list/CharArray",
+        "nova/datastruct/list/DoubleArray",
+        "nova/datastruct/list/IntRange",
+        "nova/thread/Thread",
+        "nova/thread/async/Async",
+        "nova/gc/GC",
+        "nova/math/Math",
+        "nova/Object",
+        "nova/String",
+        "nova/System",
+        "nova/Class",
+    ]
+    
+    public construct(File file, Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        this.file = file
+        
+        packageDeclaration = Package.generateDefaultPackage(this)
+        importList = new ImportList(this, location)
+        
+        addDefaultImports()
+    }
+	
+    public parseChild(String statement, Bool require = true) -> Node {
+    	return NovaClass.parse(statement, this)
+    }
+    
+    addDefaultImports() {
+        for (i in DEFAULT_IMPORTS) {
+            if (i.count > 0) {
+                addImport(i).used = true
+            }
+        }
+    }
+    
+    public addImport(String location) -> Import {
+        if (containsImport(location)) return null
+        
+        return imports.add(Import.parse("import \"#location\"", this, this.location)).last
+    }
+    
+    public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
+        return false
+    }
+    
+    public toString() => "#{name}.nova"
+}

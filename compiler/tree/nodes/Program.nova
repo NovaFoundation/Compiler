@@ -1,0 +1,19 @@
+package "compiler/tree/nodes"
+
+import "compiler/Compiler"
+
+class Program extends Node {
+    visible Program program => this
+    
+    visible Compiler compiler
+    
+    public construct(Compiler compiler) {
+        this.compiler = compiler
+    }
+    
+    public getClassDeclaration(String location) -> NovaClass {
+        
+    }
+    
+    public toString() => "Program"
+}

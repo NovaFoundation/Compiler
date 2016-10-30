@@ -1,0 +1,14 @@
+package "compiler/tree/nodes"
+
+class ValidationResult {
+    public Bool skipValidation {
+        get { return false }
+        no set
+    }
+    
+    visible Node node
+    
+    public construct(Node node) {
+        this.node = node
+    }
+}

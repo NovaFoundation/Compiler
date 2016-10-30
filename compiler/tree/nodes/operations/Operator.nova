@@ -1,0 +1,78 @@
+package "compiler/tree/nodes/operations"
+
+class Operator {
+    public String operator;
+    
+    // Logical operators
+    visible static String AND = "&&"
+    visible static String OR  = "||"
+    
+    // Math operators
+    visible static String DIVIDE             = "/"
+    visible static String MULTIPLY           = "*"
+    visible static String MODULO             = "%"
+    visible static String ADD                = "+"
+    visible static String SUBTRACT           = "-"
+    visible static String ASSIGN             = "="
+    visible static String BANG               = "!"
+    visible static String EQUALS             = "=="
+    visible static String NOT_EQUAL          = "!="
+    visible static String INCREMENT          = "++"
+    visible static String DECREMENT          = "--"
+    visible static String BITWISE_AND        = "&"
+    visible static String BITWISE_OR         = "|"
+    visible static String BITWISE_XOR        = "^"
+    visible static String BITWISE_COMPLEMENT = "~"
+    visible static String GREATER            = ">"
+    visible static String LESS               = "<"
+    visible static String GREATER_EQ         = ">="
+    visible static String LESS_EQ            = "<="
+    visible static String L_SHIFT            = "<<"
+    visible static String R_SHIFT            = ">>"
+    visible static String UR_SHIFT           = ">>>"
+    
+    visible static String SHORTHAND_DIVIDE             = "/="
+    visible static String SHORTHAND_MULTIPLY           = "*="
+    visible static String SHORTHAND_MODULO             = "%="
+    visible static String SHORTHAND_ADD                = "+="
+    visible static String SHORTHAND_SUBTRACT           = "-="
+    visible static String SHORTHAND_BITWISE_AND        = "&="
+    visible static String SHORTHAND_BITWISE_OR         = "|="
+    visible static String SHORTHAND_BITWISE_XOR        = "^="
+    visible static String SHORTHAND_L_SHIFT            = "<<="
+    visible static String SHORTHAND_R_SHIFT            = ">>="
+    visible static String SHORTHAND_UR_SHIFT           = ">>>="
+    
+    visible static String[] OPERATORS = [ SHORTHAND_ADD, SHORTHAND_SUBTRACT, SHORTHAND_MULTIPLY,
+                                          SHORTHAND_DIVIDE, SHORTHAND_MODULO, SHORTHAND_L_SHIFT,
+                                          SHORTHAND_R_SHIFT, SHORTHAND_BITWISE_AND, SHORTHAND_BITWISE_OR,
+                                          AND, OR, DIVIDE, MULTIPLY, MODULO, INCREMENT, DECREMENT,
+                                          EQUALS, BANG, ASSIGN, NOT_EQUAL, ADD, SUBTRACT,
+                                          L_SHIFT, UR_SHIFT, R_SHIFT, GREATER_EQ, LESS_EQ, GREATER, LESS,
+                                          BITWISE_AND, BITWISE_OR, BITWISE_XOR, BITWISE_COMPLEMENT ]
+    
+    visible static String[] UNARY_OPERATORS          = [ BANG, INCREMENT, DECREMENT, SUBTRACT, BITWISE_COMPLEMENT ]
+    visible static String[] UNARY_OPERATORS_NO_MINUS = [ BANG, INCREMENT, DECREMENT, BITWISE_COMPLEMENT ]
+    visible static String[] MINUS                    = [ SUBTRACT ]
+    
+    visible static String[] BINARY_OPERATORS = [ SHORTHAND_ADD, SHORTHAND_SUBTRACT, SHORTHAND_MULTIPLY,
+                                                 SHORTHAND_DIVIDE, SHORTHAND_MODULO, SHORTHAND_L_SHIFT,
+                                                 SHORTHAND_R_SHIFT, SHORTHAND_BITWISE_AND, SHORTHAND_BITWISE_OR,
+                                                 AND, OR, DIVIDE, MULTIPLY, MODULO, ADD, SUBTRACT,
+                                                 EQUALS, NOT_EQUAL, ASSIGN, GREATER_EQ, LESS_EQ, L_SHIFT,
+                                                 UR_SHIFT, R_SHIFT, GREATER, LESS, BITWISE_AND, BITWISE_OR,
+                                                 BITWISE_XOR ]
+    
+    visible static String[] LOGICAL_OPERATORS = [ SHORTHAND_ADD, SHORTHAND_SUBTRACT, SHORTHAND_MULTIPLY,
+                                                  SHORTHAND_DIVIDE, SHORTHAND_MODULO, SHORTHAND_L_SHIFT,
+                                                  SHORTHAND_R_SHIFT, SHORTHAND_BITWISE_AND, SHORTHAND_BITWISE_OR,
+                                                  AND, OR, DIVIDE, MULTIPLY, MODULO, ADD, SUBTRACT,
+                                                  EQUALS, NOT_EQUAL, GREATER_EQ, LESS_EQ, L_SHIFT,
+                                                  UR_SHIFT, R_SHIFT, GREATER, LESS, BITWISE_AND, BITWISE_OR, 
+                                                  BITWISE_XOR, BITWISE_COMPLEMENT ]
+                                                                
+    visible static String[] SHORTHAND_OPERATORS = [ SHORTHAND_ADD, SHORTHAND_SUBTRACT, SHORTHAND_MULTIPLY,
+                                                    SHORTHAND_DIVIDE, SHORTHAND_MODULO, SHORTHAND_L_SHIFT,
+                                                    SHORTHAND_R_SHIFT, SHORTHAND_BITWISE_AND, SHORTHAND_BITWISE_OR,
+                                                    SHORTHAND_UR_SHIFT, SHORTHAND_BITWISE_XOR ]
+}

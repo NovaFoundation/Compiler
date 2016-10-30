@@ -1,0 +1,5 @@
+package "compiler/tree/nodes"
+
+class NovaInterface extends NovaClass {
+    
+}

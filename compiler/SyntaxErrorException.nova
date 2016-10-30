@@ -1,7 +1,7 @@
 package "compiler"
 
-import "compiler/tree/node/Node"
-import "compiler/tree/node/Program"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Program"
 
 class SyntaxErrorException extends Exception {
     public construct() {}

@@ -1,8 +1,8 @@
 package "compiler/util"
 
 import "compiler/error/UnimplementedOperationException"
-import "compiler/tree/node/operations/UnaryOperation"
-import "compiler/tree/node/operations/Operator"
+import "compiler/tree/nodes/operations/UnaryOperation"
+import "compiler/tree/nodes/operations/Operator"
 import "compiler/tree/StatementIterator"
 
 extension CompilerStringFunctions {

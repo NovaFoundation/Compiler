@@ -1,6 +1,6 @@
 package "compiler"
 
-import "compiler/tree/node/Node"
+import "compiler/tree/nodes/Node"
 
 class SyntaxMessage {
     public static errorIf(String message, Node node, Bool condition, Bool throwException = true) {
