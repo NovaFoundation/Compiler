@@ -14,13 +14,15 @@ class Value extends Node {
     
     public String type
     
-    public writeType() => "#type".replace(/\s+/, " ").trim()
-    
-    public cloneTo(Value other) => other {
-        super.cloneTo(other)
-        
-        other.arrayAccess = arrayAccess
-        other.type = type
+    /// <summary>
+    /// Create a new Value node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Value node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
     }
     
     /// <summary>
@@ -51,7 +53,22 @@ class Value extends Node {
             }
         }
         
-        //node = Operation.parse(input, this, location, require)
-        return null
+        var node = null
+        
+        until (node != null) {
+            node = Literal.parse(input, parent, location, require)
+            node = Operation.parse(input, parent, location, require)
+        }
+        
+        return node
+    }
+    
+    public writeType() => "#type".replace(/\s+/, " ").trim()
+    
+    public cloneTo(Value other) => other {
+        super.cloneTo(other)
+        
+        other.arrayAccess = arrayAccess
+        other.type = type
     }
 }
