@@ -49,16 +49,30 @@ class VariableDeclaration extends Identifier {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed VariableDeclaration node, if successful; null otherwise.</returns>
-    public static tryParse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
-        if (true) {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
+        var nameStart = input.nextWhitespaceIndex(input.count - 2, -1)
+        
+        if (nameStart > 0) {
             VariableDeclaration node = new VariableDeclaration(parent, location)
             
+            node.name = input.substring(nameStart + 1)
             
-            
-            return node
+            if (node.name.isIdentifier && node.parseType(input)) {
+                return node
+            }
         }
         
         return null
+    }
+    
+    public parseType(String input) -> Bool {
+        type = input.nextWord()
+        
+        if (type != null) {
+            return type.isIdentifier
+        }
+        
+        return false
     }
     
     public parseModifier(String modifier) -> Bool {
@@ -70,4 +84,14 @@ class VariableDeclaration extends Identifier {
     
     public getInvalidModifiers(String modifiers) =>
         modifiers.split(/\s+/).filter(x -> { x.count > 0 && !parseModifier(x) })
+    
+    public writeModifiers() => ""
+    
+    public toString() => "#writeModifiers() #writeType() #name".replace(/\s+/, " ").trim()
+    
+    public cloneTo(VariableDeclaration other) => other {
+        super.cloneTo(other)
+        
+        
+    }
 }
