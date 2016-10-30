@@ -4,6 +4,7 @@ import "nova/datastruct/Pair"
 import "nova/datastruct/list/List"
 import "compiler/util/Location"
 import "compiler/tree/nodes/operations/Operation"
+import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -28,6 +29,8 @@ import "compiler/util/CompilerStringFunctions"
 class Scope extends NodeList {
     private Int id
     
+    visible VariableDeclaration[] declarations
+    
     /// <summary>
     /// Create a new Scope node.<br><br>
     /// <include id="example-inputs">
@@ -37,6 +40,8 @@ class Scope extends NodeList {
     /// <param name="location">The location of the input text in the source file.</param>
     public construct(Node parent = null, Location location = Location.INVALID) {
     	super(parent, location)
+        
+        declarations = new VariableDeclaration[]
     }
     
     public parseChild(String input, Bool require = true) -> Node {
@@ -44,7 +49,7 @@ class Scope extends NodeList {
         
         until (node != null) {
         	node = parseIdentifierAccess(input, this, require: require)
-            node = Operation.parse(input, this, location, require)
+            node = Value.parse(input, this, location, require)
         }
         
         return node
