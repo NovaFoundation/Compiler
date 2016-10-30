@@ -25,6 +25,16 @@ extension CompilerStringFunctions {
         no set
     }
     
+    public containsAllWhitespaceAfter(String this, Int index, Int direction = 1) -> Bool {
+        for (var i = index; i < count && i >= 0; i += direction) {
+            if (!WHITESPACE.contains(chars[i])) {
+                return false
+            }
+        }
+        
+        return true
+    }
+    
     /// If contains given search string surrounded by whitespace
     public containsWord(String this, String search, Int start = 0) =>
         nextWordIndex(search, start) >= 0
@@ -45,10 +55,10 @@ extension CompilerStringFunctions {
     }
     
     public nextWord(String this, Int start = 0, Int direction = 1, String defaultReturnValue = null) -> String {
-        Int wordStartIndex = nextNonWhitespaceIndex(start, direction: direction)
+        var wordStartIndex = nextNonWhitespaceIndex(start, direction: direction)
         
         if (wordStartIndex >= 0) {
-            Int wordEndIndex = nextWhitespaceIndex(wordStartIndex, direction: direction)
+            var wordEndIndex = nextWhitespaceIndex(wordStartIndex, direction: direction)
             
             if (direction < 0) {
                 var temp = wordStartIndex + 1
@@ -312,10 +322,14 @@ extension CompilerStringFunctions {
      * @return An array of Strings containing the Strings that were split.
      */
     public splitAtCommas(String this, Bool searchGenerics = false, Bool allowTrailing = false) -> String[] {
-        String[] strs = new Array<String>()
+        String[] strs = new String[]
         
-        Int oldIndex =  0
-        Int index    = -1
+        if (trim().count == 0) {
+            return strs
+        }
+        
+        var oldIndex =  0
+        var index    = -1
         
         while ((index = findCharInBaseScope(',', index + 1, searchGenerics)) >= 0) {
             strs.add(substring(oldIndex, index).trim())
@@ -410,8 +424,8 @@ extension CompilerStringFunctions {
             return currentEnd
         }
         
-        Int prevCharIndex = nextNonWhitespaceIndex(currentEnd - 1, -1)
-        Int nextCharIndex = nextNonWhitespaceIndex(currentEnd + 1)
+        var prevCharIndex = nextNonWhitespaceIndex(currentEnd - 1, -1)
+        var nextCharIndex = nextNonWhitespaceIndex(currentEnd + 1)
         
         return calculateReturnValue(statementEndIndex, currentEnd, nextCharIndex, prevCharIndex)
     }
@@ -445,7 +459,7 @@ extension CompilerStringFunctions {
         
         start = nextLetterIndex(start, direction, false, true)
         
-        Int index = nextLetterIndex(start + direction, direction, true, true)
+        var index = nextLetterIndex(start + direction, direction, true, true)
         
         if (direction < 0) {
             if (index == 0) {
@@ -481,7 +495,7 @@ extension CompilerStringFunctions {
      *      were no grouped chars, then an empty String is returned.
      */
     public findGroupedChars(String this, Char[] chars, Int start = 0, Int direction = 1) -> String {
-        Int index = start
+        var index = start
         
         while (index < count && index >= 0 && chars.contains(this.chars[index])) {
             index += direction
@@ -506,7 +520,7 @@ extension CompilerStringFunctions {
     public checkStatementContinuation(String this, Int prevCharIndex, Int nextCharIndex) -> Bool {
         Bounds prevWordBounds = nextWordBounds(prevCharIndex, -1)
         
-        Int nextNextCharIndex = nextNonWhitespaceIndex(nextWhitespaceIndex(nextCharIndex + 1))
+        var nextNextCharIndex = nextNonWhitespaceIndex(nextWhitespaceIndex(nextCharIndex + 1))
         
         // Whether or not the current statement needs the next line to complete the statement
         Bool pendingCompletion = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, -1)
@@ -552,8 +566,8 @@ extension CompilerStringFunctions {
             String unary = substring(bounds.start, bounds.end)
             
             // Get the propper sides
-            Int foundSide   = -direction
-            Int correctSide = -1//UnaryOperation.SIDES[unary]
+            var foundSide   = -direction
+            var correctSide = -1//UnaryOperation.SIDES[unary]
             
             return correctSide == foundSide || correctSide == UnaryOperation.EITHER
         }
@@ -625,10 +639,10 @@ extension CompilerStringFunctions {
     
     public searchGenericType(String this, Int start, Bool backwards = true) -> String {
         if (backwards) {
-            Int stack = 0
-            Int index = 0
+            var stack = 0
+            var index = 0
             
-            for (Int i = start; i >= 0; i--) {
+            for (var i = start; i >= 0; i--) {
                 String c = "#chars[i]"
                 
                 if (c.equals(">")) {
