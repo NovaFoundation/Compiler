@@ -1,0 +1,59 @@
+package "compiler/tree/nodes"
+
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+
+/// <summary>
+/// <a href="compiler/tree/nodes/Value">Value</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
+class Literal extends Value implements Accessible {
+    public String value
+    
+    /// <summary>
+    /// Create a new Literal node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Literal node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// <summary>
+    /// Decode the given input into a Literal node. If the input cannot be parsed
+    /// into a Literal node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a Literal instance.</param>
+    /// <param name="parent">The parent of the Literal node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed Literal node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Literal {
+        if (true) {
+            var node = new Literal(parent, location)
+            
+            
+            
+            return node
+        }
+        
+        return null
+    }
+}
