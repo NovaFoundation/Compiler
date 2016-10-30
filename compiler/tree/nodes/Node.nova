@@ -122,7 +122,7 @@ class Node implements Annotatable {
     
     [Override]
     public addAnnotation(Annotation annotation) {
-        annotations = annotations ?: new Array()
+        annotations = annotations ?: new Annotation[]
         
         annotations.add(annotation)
         
