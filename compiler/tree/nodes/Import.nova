@@ -1,7 +1,10 @@
 package "compiler/tree/nodes"
 
+import "compiler/SyntaxMessage"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
 
 class Import extends Node {
     public Bool used
@@ -9,6 +12,7 @@ class Import extends Node {
     public String alias, importLocation
     
     visible String parentLocation => importLocation.substring(0, importLocation.lastIndexOf("/", defaultReturnValue: 0))
+    visible String className => importLocation.substring(importLocation.lastIndexOf("/") + 1)
     
     public static String IDENTIFIER = "import"
     public static String ALIAS_IDENTIFIER = "as"
@@ -44,23 +48,26 @@ class Import extends Node {
     ///     be parsed.</param>
     /// <returns>The parsed ArrayAccess node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Import {
-        if (true) {//StringUtils.findNextWord(statement).equals(IDENTIFIER))
-            Import node = new Import(parent, location)
+        if (input.nextWordIndex(IDENTIFIER) == 0) {
+            var node = new Import(parent, location)
             
-            var quoteStart = 0//StringUtils.findNextNonWhitespaceIndex(statement, IDENTIFIER.length())
+            var quoteStart = input.nextNonWhitespaceIndex(IDENTIFIER.count)
             
-            if (quoteStart < 0 || input.chars[quoteStart] != '"') {
+            if (quoteStart < 0 || input[quoteStart] != '"') {
                 return null
             }
             
-            var quoteEnd = 0//StringUtils.findEndingChar(statement, '"', quoteStart, 1)
+            var quoteEnd = input.findEndingChar('"', quoteStart)
             
             if (quoteEnd < 0) {
-                //SyntaxMessage.error("Missing ending quotation for import statement", n)
+                SyntaxMessage.error("Missing ending quotation for import statement", node)
             }
             
             var importLocation = input.substring(quoteStart + 1, quoteEnd)
             var alias = input.substring(quoteEnd + 1).trim()
+            
+            node.importLocation = importLocation
+            node.alias = alias.count > 0 ? alias : null
             
             if (true) {//node.validateImportLocation(importLocation) && node.validateAlias(alias, require))
                 return node
@@ -69,4 +76,6 @@ class Import extends Node {
         
         return null
     }
+    
+    public toString() => "import \"#importLocation\""
 }
