@@ -2,9 +2,9 @@ package "compiler/tree/nodes/variables"
 
 import "compiler/util/Location"
 import "compiler/tree/nodes/Node"
-import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Identifier"
 
-class Variable extends Value {
+class Variable extends Identifier {
     public VariableDeclaration declaration
     
     public String type => declaration.type
