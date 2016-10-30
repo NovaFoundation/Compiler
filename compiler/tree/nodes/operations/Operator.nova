@@ -1,7 +1,10 @@
 package "compiler/tree/nodes/operations"
 
-class Operator {
-    public String operator;
+import "compiler/tree/nodes/Node"
+import "compiler/util/Location"
+
+class Operator extends Node {
+    public String operator
     
     // Logical operators
     visible static String AND = "&&"
@@ -75,4 +78,32 @@ class Operator {
                                                     SHORTHAND_DIVIDE, SHORTHAND_MODULO, SHORTHAND_L_SHIFT,
                                                     SHORTHAND_R_SHIFT, SHORTHAND_BITWISE_AND, SHORTHAND_BITWISE_OR,
                                                     SHORTHAND_UR_SHIFT, SHORTHAND_BITWISE_XOR ]
+                                                    
+    visible static Char[] OPERATOR_SYMBOLS = new Char[]
+    
+    static {
+        for (operator in OPERATORS) {
+            for (c in operator.chars) {
+                OPERATOR_SYMBOLS.addUnique(c)
+            }
+        }
+    }
+    
+    /*public isBoolOperator() =>
+        [EQUALS, NOT_EQUAL, BANG, AND, OR, LESS, GREATER, LESS_EQ, GREATER_EQ].contains(operator)*/
+    
+    /// <summary>
+    /// Create a new Operater node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Operater node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID, String operator = null) {
+        super(parent, location)
+        
+        this.operator = operator
+    }
+    
+    public toString() => operator
 }
