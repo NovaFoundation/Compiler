@@ -1,4 +1,4 @@
-package "compiler/tree/nodes/annotation"
+package "compiler/tree/nodes/annotations"
 
 /**
  * @author    Braden Steffaniak
