@@ -16,7 +16,7 @@ class NodeList<E extends Node> extends Node {
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
-        children = Array()
+        children = Node[]
     }
     
     //public replaceWith(Node replacement) => parent.replace(this, replacement)
@@ -78,7 +78,6 @@ class NodeList<E extends Node> extends Node {
         })
     
     public removeChild(Node node) => removeChild(children.indexOf(node))
-    
     public removeChild(Int index) -> Node {
         if (index < 0) return null
         

@@ -17,8 +17,8 @@ class NovaFile extends Node {
     visible Package packageDeclaration
     visible Import[] imports => importList.imports
     
-    visible ClosureDeclaration[] closures = new Array()
-    visible ClosureContext[] contexts = new Array()
+    visible ClosureDeclaration[] closures = new ClosureDeclaration[]
+    visible ClosureContext[] contexts = new ClosureContext[]
     
     public static String[] DEFAULT_IMPORTS = [
         "nova/exception/ExceptionData",
