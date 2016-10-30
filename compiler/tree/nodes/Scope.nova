@@ -3,6 +3,7 @@ package "compiler/tree/nodes"
 import "nova/datastruct/Pair"
 import "nova/datastruct/list/List"
 import "compiler/util/Location"
+import "compiler/tree/nodes/operations/Operation"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -43,6 +44,7 @@ class Scope extends NodeList {
         
         until (node != null) {
         	node = parseIdentifierAccess(input, this, require: require)
+            node = Operation.parse(input, this, location, require)
         }
         
         return node
