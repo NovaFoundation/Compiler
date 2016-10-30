@@ -15,8 +15,8 @@ extension CompilerStringFunctions {
     static Char[] STMT_POST_CONT_CHARS      = "-+~!=%^&|*/\\><,.]".chars
     static Char[] INVALID_DECLARATION_CHARS = "-+~!=%^|/\"\\'{};()".chars
     
-    public Bool String.isIdentifier {//=> matches(/[A-Za-z_][A-Za-z0-9_]*/)
-        get { return matches(/[A-Za-z_][A-Za-z0-9_]*/) }
+    public Bool String.isIdentifier {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
+        get { return count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/) }
         no set
     }
     
@@ -44,6 +44,24 @@ extension CompilerStringFunctions {
         return defaultReturnValue
     }
     
+    public nextWord(String this, Int start = 0, Int direction = 1, String defaultReturnValue = null) -> String {
+        Int wordStartIndex = nextNonWhitespaceIndex(start, direction: direction)
+        
+        if (wordStartIndex >= 0) {
+            Int wordEndIndex = nextWhitespaceIndex(wordStartIndex, direction: direction)
+            
+            if (direction < 0) {
+                var temp = wordStartIndex + 1
+                wordStartIndex = wordEndIndex + 1
+                wordEndIndex = temp
+            }
+            
+            return substring(wordStartIndex, wordEndIndex)
+        }
+        
+        return defaultReturnValue
+    }
+    
     public nextNonWhitespaceChar(String this, Int start = 0, Char defaultReturnValue = 0) -> Char {
         var index = nextNonWhitespaceIndex(start)
         
@@ -54,16 +72,16 @@ extension CompilerStringFunctions {
         return defaultReturnValue
     }
     
-    public nextNonWhitespaceIndex(String this, Int start = 0, Int defaultReturnValue = -1) =>
-        nextIndexThatContains(WHITESPACE, start, true, defaultReturnValue)
+    public nextNonWhitespaceIndex(String this, Int start = 0, Int direction = 1, Int defaultReturnValue = -1) =>
+        nextIndexThatContains(WHITESPACE, start, true, direction, defaultReturnValue)
     
-    public nextWhitespaceIndex(String this, Int start = 0, Int defaultReturnValue = -1) =>
-        nextIndexThatContains(WHITESPACE, start, false, defaultReturnValue)
+    public nextWhitespaceIndex(String this, Int start = 0, Int direction = 1, Int defaultReturnValue = -1) =>
+        nextIndexThatContains(WHITESPACE, start, false, direction, defaultReturnValue)
     
-    public nextIndexThatContains(String this, Char[] searchChars, Int start = 0, Bool opposite = false, Int defaultReturnValue = -1) -> Int {
-        while (start < count && searchChars.contains(chars[start]) == opposite) start++
+    public nextIndexThatContains(String this, Char[] searchChars, Int start = 0, Bool opposite = false, Int direction = 1, Int defaultReturnValue = -1) -> Int {
+        while (start < count && start >= 0 && searchChars.contains(chars[start]) == opposite) start += direction
         
-        if (start <= count) {
+        if (start <= count && start >= 0) {
             return start
         }
         
@@ -293,7 +311,7 @@ extension CompilerStringFunctions {
      * @param src The String to split the commas from.
      * @return An array of Strings containing the Strings that were split.
      */
-    public splitCommas(String this, Bool searchGenerics = false, Bool allowTrailing = false) -> String[] {
+    public splitAtCommas(String this, Bool searchGenerics = false, Bool allowTrailing = false) -> String[] {
         String[] strs = new Array<String>()
         
         Int oldIndex =  0
