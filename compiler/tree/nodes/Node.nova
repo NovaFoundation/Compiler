@@ -211,6 +211,10 @@ class Node implements Annotatable {
         return null
     }
     
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+        return parentWithScope?.parseStatement(input, parent, location, require)
+    }
+    
     /**
      * Return a new Node containing a copy of the values of the
      * specified node, including clones of the children.
