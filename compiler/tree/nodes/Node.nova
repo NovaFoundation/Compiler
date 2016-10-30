@@ -8,6 +8,7 @@ import "compiler/tree/nodes/exceptionhandling/Try"
 import "compiler/util/Location"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/functions/NovaFunction"
+import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "nova/datastruct/Bounds"
 
@@ -84,6 +85,19 @@ class Node implements Annotatable {
     
     visible Scope parentScope => parent?.parentScope
     visible Bool isWithinScope => parentScope != null
+    
+    visible Node parentWithScope {
+        get {
+            if (parent == null) return null
+            
+            return parent.containsScope ? parent.scope : parent.parentWithScope
+        }
+        
+        no set
+    }
+    
+    visible Scope scope => null
+    visible Bool containsScope => scope != null
     
     visible Node next => getAdjacentNode(1)
     visible Node previous => getAdjacentNode(-1)
@@ -179,6 +193,22 @@ class Node implements Annotatable {
         /*return annotations?.reverse()
             .firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
             new ValidationResult(this)*/
+    }
+    
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        if (containsScope) {
+            var declaration = scope.declarations.firstWhere({ _.name.equals(name) })
+            
+            if (declaration != null) {
+                return declaration
+            }
+        }
+        
+        if (searchAncestors) {
+            return parent.findVariableDeclaration(name, searchAncestors)
+        }
+        
+        return null
     }
     
     /**
