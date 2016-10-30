@@ -25,7 +25,7 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     public String extendedClass
     public String[] implementedInterfaces = new String[0]
     
-    public Scope scope
+    public Scope scope <=> scope
     
     /// <summary>
     /// Create a new NovaClass node.<br><br>

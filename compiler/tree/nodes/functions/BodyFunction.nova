@@ -6,7 +6,7 @@ import "compiler/util/Location"
 import "compiler/SyntaxMessage"
 
 class BodyFunction extends NovaFunction {
-    public Scope scope
+    public Scope scope <=> scope
     
     /// <summary>
     /// Create a new BodyFunction node.<br><br>
