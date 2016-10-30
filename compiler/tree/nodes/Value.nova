@@ -1,6 +1,11 @@
 package "compiler/tree/nodes"
 
+import "compiler/util/Location"
 import "compiler/tree/nodes/arrays/ArrayAccess"
+import "compiler/tree/nodes/operations/Operation"
+import "compiler/tree/nodes/variables/Variable"
+
+import "compiler/util/CompilerStringFunctions"
 
 class Value extends Node {
     visible static Byte VALUE = 1, POINTER = 2, REFERENCE = 3, DOUBLE_POINTER = 4
@@ -16,5 +21,37 @@ class Value extends Node {
         
         other.arrayAccess = arrayAccess
         other.type = type
+    }
+    
+    /// <summary>
+    /// Decode the given input into a Value node. If the input cannot be parsed
+    /// into a Value node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a Value instance.</param>
+    /// <param name="parent">The parent of the Value node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed Value node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value {
+        if (input.isIdentifier) {
+            var declaration = parent.findVariableDeclaration(input)
+            
+            if (declaration != null) {
+                return new Variable(parent, location, declaration)
+            }
+        }
+        
+        //node = Operation.parse(input, this, location, require)
+        return null
     }
 }
