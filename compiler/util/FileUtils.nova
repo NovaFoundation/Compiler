@@ -17,7 +17,7 @@ class FileUtils {
         if (OS.isWindows) {
             path = path.removeSurroundingQuotes()
             
-            return '"' + path + '"'
+            return "\"#path\""
         } else {
             return escapeSpaces(path)
         }
