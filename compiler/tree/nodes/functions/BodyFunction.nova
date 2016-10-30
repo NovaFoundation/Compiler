@@ -43,19 +43,15 @@ class BodyFunction extends NovaFunction {
     ///     be parsed.</param>
     /// <returns>The parsed BodyFunction node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> BodyFunction {
-        var node = new BodyFunction(parent, location)
+        var function = NovaFunction.parse(input, parent, location, require)
         
-        var signature = node.findSignature(input)
-        
-        if (signature != null) {
-            var parameters = node.findParameters(input)
+        if (function != null) {
+            var node = new BodyFunction(parent, location)
             
-            if (parameters != null) {
-                if (node.parseSignature(signature) && node.parseParameters(parameters)) {
-                    return node
-                }
-            }
-        } else if (require) {
+            return (BodyFunction)function.cloneTo(node)
+        }
+        
+        if (require) {
             SyntaxMessage.error("Invalid function declaration '#input'", parent)
         }
         
