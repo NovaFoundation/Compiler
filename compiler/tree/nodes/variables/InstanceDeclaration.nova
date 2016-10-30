@@ -13,6 +13,7 @@ import "compiler/util/Location"
 /// <version></version>
 class InstanceDeclaration extends VariableDeclaration {
     public Bool isStatic = false
+    visible Bool isInstance => !isStatic
     
     public String visibility = "private"
     
@@ -80,4 +81,11 @@ class InstanceDeclaration extends VariableDeclaration {
     public writeVisibility() => visibility != null ? "#visibility" : ""
     public writeStatic() => isStatic ? "static" : ""
     public writeModifiers() => "#writeVisibility() #writeStatic() "
+    
+    public cloneTo(InstanceDeclaration other) => other {
+        super.cloneTo(other)
+        
+        other.isStatic = isStatic
+        other.visibility = visibility
+    }
 }
