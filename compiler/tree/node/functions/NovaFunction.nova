@@ -11,6 +11,22 @@ class NovaFunction extends InstanceDeclaration {
     visible Bool isInstance => !isStatic
     visible NovaFunction parentFunction => this
     
+    visible ParameterList parameterList
+    visible Parameter[] parameters => parameterList.parameters
+    
+    /// <summary>
+    /// Create a new NovaFunction node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the NovaFunction node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        parameterList = new ParameterList(parent, location)
+    }
+    
     public findSignature(String input) -> String {
         var start = input.indexOf('(')
         
@@ -27,6 +43,22 @@ class NovaFunction extends InstanceDeclaration {
         return input.substring(end: start).trim() + " " + input.substring(start: end + 1).trim()
     }
     
+    public findParameters(String input) -> String {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return null
+        }
+        
+        var end = input.findEndingMatch(start, '(', ')')
+        
+        if (end < 0) {
+            return null
+        }
+        
+        return input.substring(start + 1, end).trim()
+    }
+    
     public parseSignature(String signature) =>
         signature.split(/\s+/).all((word, index, words) -> {
             if (word.count > 0 && !parseModifier(word)) {
@@ -39,6 +71,27 @@ class NovaFunction extends InstanceDeclaration {
             
             return true
         })
+        
+    public parseParameter(String parameter) -> Bool {
+        var param = Parameter.parse(parameter, parameterList, location, false)
+        
+        if (param != null) {
+            parameters.add(param)
+            
+            return true
+        }
+        
+        return false
+    }
     
-    public toString() => "#writeModifiers() #{name}()".replace(/\s+/, " ").trim()
+    public parseParameters(String parameters) =>
+        parameters.splitAtCommas().all((param, index, words) -> {
+            if (param.count > 0) {
+                return parseParameter(param)
+            }
+            
+            return true
+        })
+    
+    public toString() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList"
 }
