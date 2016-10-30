@@ -1,5 +1,6 @@
 package "compiler/tree/nodes/functions"
 
+import "compiler/SyntaxMessage"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/variables/InstanceDeclaration"
 import "compiler/util/Location"
@@ -7,8 +8,6 @@ import "compiler/util/Location"
 import "compiler/util/CompilerStringFunctions"
 
 class NovaFunction extends InstanceDeclaration {
-    visible Bool isStatic
-    visible Bool isInstance => !isStatic
     visible NovaFunction parentFunction => this
     
     visible ParameterList parameterList
@@ -27,7 +26,58 @@ class NovaFunction extends InstanceDeclaration {
         parameterList = new ParameterList(parent, location)
     }
     
-    public findSignature(String input) -> String {
+    /// <summary>
+    /// Decode the given input into a NovaFunction node. If the input cannot be parsed
+    /// into a NovaFunction node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a NovaFunction instance.</param>
+    /// <param name="parent">The parent of the NovaFunction node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed NovaFunction node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaFunction {
+        var signature  = findSignature(input)
+        var parameters = findParameters(input)
+        var returnType = findReturnType(input)
+        
+        if (signature != null && parameters != null && returnType != null) {
+            var node = new NovaFunction(parent, location)
+            
+            if (node.parseSignature(signature, require) &&
+                node.parseParameters(parameters, require) &&
+                (returnType.count == 0 || node.parseType(returnType))) {
+                return node
+            }
+        }
+        
+        if (require) {
+            SyntaxMessage.error("Invalid function declaration '#input'", parent)
+        }
+        
+        return null
+    }
+    
+    static findSignature(String input) -> String {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return null
+        }
+        
+        return input.substring(end: start).trim()
+    }
+    
+    static findReturnType(String input) -> String {
         var start = input.indexOf('(')
         
         if (start < 0) {
@@ -40,10 +90,20 @@ class NovaFunction extends InstanceDeclaration {
             return null
         }
         
-        return input.substring(end: start).trim() + " " + input.substring(start: end + 1).trim()
+        if (input.containsAllWhitespaceAfter(end + 1)) {
+            return ""
+        }
+        
+        end = input.nextWordIndex("->", end + 1)
+        
+        if (end < 0) {
+            return null
+        }
+        
+        return input.substring(start: end + 2).trim()
     }
     
-    public findParameters(String input) -> String {
+    static findParameters(String input) -> String {
         var start = input.indexOf('(')
         
         if (start < 0) {
@@ -59,20 +119,18 @@ class NovaFunction extends InstanceDeclaration {
         return input.substring(start + 1, end).trim()
     }
     
-    public parseSignature(String signature) =>
-        signature.split(/\s+/).all((word, index, words) -> {
-            if (word.count > 0 && !parseModifier(word)) {
-                if (name == null && word.isIdentifier) {
-                   name = word
-                } else {
-                    return false
-                }
+    public parseSignature(String signature, Bool require) =>
+        signature.split(/\s+/).filterEmpty().all((word, index, words) -> {
+            if (index == ((Array)words).count - 1) {
+                name = word
+                
+                return name.isIdentifier
             }
             
-            return true
+            return parseModifier(word)
         })
         
-    public parseParameter(String parameter) -> Bool {
+    public parseParameter(String parameter, Bool require = true) -> Bool {
         var param = Parameter.parse(parameter, parameterList, location, false)
         
         if (param != null) {
@@ -81,17 +139,21 @@ class NovaFunction extends InstanceDeclaration {
             return true
         }
         
+        SyntaxMessage.errorIf("Invalid parameter '#parameter'", this, require)
+        
         return false
     }
     
-    public parseParameters(String parameters) =>
-        parameters.splitAtCommas().all((param, index, words) -> {
-            if (param.count > 0) {
-                return parseParameter(param)
-            }
-            
-            return true
-        })
+    public parseParameters(String parameters, Bool require) =>
+        parameters.splitAtCommas().all({ parseParameter(_, require) })
     
-    public toString() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList"
+    public writeReturnType() => type != null ? " -> #type" : ""
+    
+    public toString() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList" + writeReturnType()
+    
+    public cloneTo(NovaFunction other) => other {
+        super.cloneTo(other)
+        
+        other.parameterList = parameterList
+    }
 }
