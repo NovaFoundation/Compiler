@@ -88,6 +88,9 @@ extension CompilerStringFunctions {
     public nextWhitespaceIndex(String this, Int start = 0, Int direction = 1, Int defaultReturnValue = -1) =>
         nextIndexThatContains(WHITESPACE, start, false, direction, defaultReturnValue)
     
+    public nextIndexThatDoesntContain(String this, Char[] searchChars, Int start = 0, Int direction = 1, Int defaultReturnValue = -1) =>
+        nextIndexThatContains(searchChars, start, true, direction, defaultReturnValue)
+        
     public nextIndexThatContains(String this, Char[] searchChars, Int start = 0, Bool opposite = false, Int direction = 1, Int defaultReturnValue = -1) -> Int {
         while (start < count && start >= 0 && searchChars.contains(chars[start]) == opposite) start += direction
         
@@ -364,6 +367,9 @@ extension CompilerStringFunctions {
         return findStringInBaseScope(array, start, searchGenerics)
     }
     
+    public findStringInBaseScope(String this, String needle, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) =>
+        findStringInBaseScope([needle], start, searchGenerics, defaultReturnValue)
+        
     public findStringInBaseScope(String this, String[] needles, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
         while (start < count) {
             var c = chars[start]
