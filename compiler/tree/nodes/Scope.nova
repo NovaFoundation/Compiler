@@ -4,6 +4,7 @@ import "nova/datastruct/Pair"
 import "nova/datastruct/list/List"
 import "compiler/util/Location"
 import "compiler/tree/nodes/operations/Operation"
+import "compiler/tree/nodes/functions/FunctionCall"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "compiler/util/CompilerStringFunctions"
@@ -44,7 +45,7 @@ class Scope extends NodeList {
         declarations = new VariableDeclaration[]
     }
     
-    public parseChild(String input, Bool require = true) -> Node {
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
         until (node != null) {
@@ -56,9 +57,14 @@ class Scope extends NodeList {
     }
     
     public parseAccessible(String input, Node parent = this, Bool require = true) -> Accessible {
+    	var node = null
+        
+        until (node != null) {
+            node = StaticClassReference.parse(input, parent, location, require)
+            node = FunctionCall.parse(input, parent, location, require)
+        }
     	
-    	
-    	return null
+    	return node
     }
     
     parseIdentifierAccess(String input, Scope parent, Bool require = true) -> Node {
@@ -79,12 +85,13 @@ class Scope extends NodeList {
     		
     		var root    = parseAccessible(fragments[0], require: require)
     		var current = root
-    		
+    		Console.writeLine("Parsed root: #{(Object)root}")
     		if (current != null) {
     			if (fragments.skip(1).all({
-    				var accessed = parseAccessible(_, parent: null, require: require)
+    				var accessed = parseAccessible(_, parent: (Node)current, require: require)
     				
     				if (accessed != null) {
+                        Console.writeLine("Parsed: #{(Object)accessed}")
     					//current.accessedNode = (Identifier)accessed
     					
     					return true
