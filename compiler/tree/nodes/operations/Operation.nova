@@ -1,0 +1,123 @@
+package "compiler/tree/nodes/operations"
+
+import "compiler/SyntaxErrorException"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Node"
+import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
+
+class Operation extends Value {
+    visible Operator[] operators
+    visible Value[] operands
+    
+    /// <summary>
+    /// Create a new Operation node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Operation node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        operators = new Operator[]
+        operands = new Value[]
+    }
+    
+    /// <summary>
+    /// Decode the given input into a Operation node. If the input cannot be parsed
+    /// into a Operation node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a Operation instance.</param>
+    /// <param name="parent">The parent of the Operation node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed Operation node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Operation {
+        var matches = findOperatorIndices(input)
+        
+        if (matches.count > 0) {
+            var node = new Operation(parent, location)
+            
+            if (node.parseOperators(input, matches) && node.parseOperands(input, matches)) {
+                return node
+            }
+        }
+        
+        return null
+    }
+    
+    static findOperatorIndices(String input) -> Int[] {
+        var matches = new Int[0]
+        
+        var symbols = Operator.OPERATOR_SYMBOLS
+        
+        var ops = Operator.BINARY_OPERATORS
+        
+        ops.forEach(operator -> {
+            var index = input.findStringInBaseScope(operator, start: 1)
+            
+            if (index > 0 && index < input.count - operator.count &&
+                !symbols.contains(input[index - 1]) && !symbols.contains(input[index + operator.count])) {
+                matches.add(index)
+            }
+        })
+        
+        return matches
+    }
+    
+    parseOperators(String input, Int[] matches) -> Bool {
+        var symbols = Operator.OPERATOR_SYMBOLS
+        
+        matches.forEach((start, i, starts) -> {
+            var end = input.nextIndexThatDoesntContain(symbols, start: start)
+            
+            var operator = new Operator(this, location, input.substring(start, end))
+            
+            operators.add(operator)
+        })
+        
+        return true
+    }
+    
+    parseOperands(String input, Int[] matches) -> Bool {
+        var operands = new String[]
+        
+        var symbols = Operator.OPERATOR_SYMBOLS
+        
+        var prev = 0
+        
+        matches.forEach((start, i, starts) -> {
+            operands.add(input.substring(prev, start).trim())
+            
+            prev = input.nextIndexThatDoesntContain(symbols, start: start)
+        })
+        
+        operands.add(input.substring(prev).trim())
+        
+        return true
+    }
+    
+    public toString() -> String {
+        var output = "operator #operators"
+        
+        // for (i in 0..operators.count) {
+        //     output += "#operands[i] #operators[i]"
+        // }
+        
+        // output += "#operands.last"
+        
+        return output
+    }
+}
