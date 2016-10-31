@@ -18,7 +18,9 @@ interface Accessible {
      * 
      * @return The next node that is accessed by the specified node.
      */
-    public Identifier accessedNode
+    public Identifier accessedNode => null {
+        set {}
+    }
     
     public Accessible accessingNode {
         get {
@@ -277,5 +279,12 @@ interface Accessible {
         }*/
         
         return n.parentClass
+    }
+    
+    public writeAccessedNodes() -> String {
+        Console.writeLine("doing it #doesAccess")
+        var x = doesAccess ? ".#{accessedNode}#{accessedNode.writeAccessedNodes()}" : ""
+        
+        return x
     }
 }
