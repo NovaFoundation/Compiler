@@ -21,7 +21,7 @@ class BodyFunction extends NovaFunction {
         scope = new Scope(this, location)
     }
     
-    public parseChild(String statement, Bool require = true) => scope.parseChild(statement, require)
+    public parseChild(String statement, Bool require = true) => scope.parseStatement(statement, this, location, require)
     
     /// <summary>
     /// Decode the given input into a BodyFunction node. If the input cannot be parsed
