@@ -11,8 +11,8 @@ import "compiler/util/Location"
 /// <since></since>
 /// <version></version>
 class Identifier extends Value implements Accessible {
-    public Bool safeNavigation
-    public Identifier accessedNode
+    public Bool safeNavigation <=> safeNavigation
+    public Identifier accessedNode <=> accessedNode
     
     public String name
     
@@ -60,7 +60,7 @@ class Identifier extends Value implements Accessible {
         return null
     }
     
-    public toString() => name
+    public toString() => name + writeAccessedNodes()
     
     public cloneTo(Identifier other) => other {
         super.cloneTo(other)
