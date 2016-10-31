@@ -45,11 +45,8 @@ class StaticClassReference extends Identifier {
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
     /// <returns>The parsed StaticClassReference node, if successful; null otherwise.</returns>
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> StaticClassReference {
-        if (parent.parentFile.imports.any({ _.className.equals(input) })) {
-            return new StaticClassReference(parent, location, input)
-        }
-        
-        return null
-    }
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
+        parent.parentFile.imports.any({ _.className.equals(input) }) ?
+            new StaticClassReference(parent, location, input) :
+            null
 }
