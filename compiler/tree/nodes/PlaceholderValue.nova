@@ -1,0 +1,52 @@
+package "compiler/tree/nodes"
+
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+
+/// <summary>
+/// <a href="compiler/tree/nodes/Value">Value</a> extension that represents 
+/// <summary>
+///
+/// <author>Braden Steffaniak</author>
+/// <since></since>
+/// <version></version>
+class PlaceholderValue extends Value {
+    public String value <=> type
+    
+    /// <summary>
+    /// Create a new PlaceholderValue node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the PlaceholderValue node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID, String value = null) {
+        super(parent, location)
+        
+        this.value = value
+    }
+    
+    /// <summary>
+    /// Decode the given input into a PlaceholderValue node. If the input cannot be parsed
+    /// into a PlaceholderValue node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a PlaceholderValue instance.</param>
+    /// <param name="parent">The parent of the PlaceholderValue node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed PlaceholderValue node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
+        new PlaceholderValue(parent, location, input)
+    
+    public toString() => "Placeholder for '#value'"
+}
