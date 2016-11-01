@@ -5,6 +5,7 @@ import "compiler/SyntaxMessage"
 import "compiler/util/Location"
 import "compiler/tree/nodes/variables/InstanceDeclaration"
 import "compiler/tree/nodes/variables/FieldDeclaration"
+import "compiler/tree/nodes/functions/FunctionDeclaration"
 import "compiler/tree/nodes/functions/BodyFunction"
 import "nova/regex/Pattern"
 
@@ -20,12 +21,15 @@ import "compiler/util/CompilerStringFunctions"
 class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     visible ClassDeclaration parentClass => this
     
-    public Bool isAbstract = false
+    public Bool isAbstract <=> isAbstract
     
     public String extendedClass
     public String[] implementedInterfaces = new String[0]
     
     public Scope scope <=> scope
+    
+    public FieldDeclaration[] fields
+    public FunctionDeclaration[] functions
     
     /// <summary>
     /// Create a new ClassDeclaration node.<br><br>
@@ -38,14 +42,16 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         super(parent, location)
         
         scope = new Scope(this, location)
+        fields = new FieldDeclaration[]
+        functions = new FunctionDeclaration[]
     }
     
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
         until (node != null) {
-            node = BodyFunction.parse(input, this, require: require)
-            node = FieldDeclaration.parse(input, this, require: require)
+            node = BodyFunction.parse(input, this, location, require)
+            node = FieldDeclaration.parse(input, this, location, require)
         }
         
         return node
@@ -172,8 +178,6 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         return implementations.count == 0
     }
     
-    
-    
     [Override]
     public parseModifier(String modifier) -> Bool {
         if (super.parseModifier(modifier)) return true
@@ -184,7 +188,10 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         return true
     }
     
-    public writeAbstract() => isAbstract ? "abstract " : ""
+    public validateTypes() =>
+        fields.all({ _.validateTypes() }, false) &&
+        functions.all({ _.validateTypes() }, false)
+    
     public writeModifiers() => super.writeModifiers() + writeAbstract()
     public writeExtension() => extendedClass != null ? "extends #extendedClass" : ""
     public writeImplementedInterfaces() => implementedInterfaces.count > 0 ? "implements #{implementedInterfaces.join(", ")}" : ""
