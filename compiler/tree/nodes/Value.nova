@@ -63,6 +63,9 @@ class Value extends Node {
         return node
     }
     
+    public static parse(PlaceholderValue placeholder, Bool require = true) =>
+        parse(placeholder.value, placeholder.parent, placeholder.location, require)
+    
     public writeType() => "#type".replace(/\s+/, " ").trim()
     
     public cloneTo(Value other) => other {
