@@ -17,7 +17,7 @@ class Import extends Node {
     public static String IDENTIFIER = "import"
     public static String ALIAS_IDENTIFIER = "as"
     
-    visible NovaClass classDeclaration => program.getClassDeclaration(importLocation)
+    visible ClassDeclaration classDeclaration => program.getClassDeclaration(importLocation)
     
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)

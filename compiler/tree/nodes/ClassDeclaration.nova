@@ -17,8 +17,8 @@ import "compiler/util/CompilerStringFunctions"
 /// <author>Braden Steffaniak</author>
 /// <since></since>
 /// <version></version>
-class NovaClass extends InstanceDeclaration implements Abstractable {
-    visible NovaClass parentClass => this
+class ClassDeclaration extends InstanceDeclaration implements Abstractable {
+    visible ClassDeclaration parentClass => this
     
     public Bool isAbstract = false
     
@@ -28,11 +28,11 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     public Scope scope <=> scope
     
     /// <summary>
-    /// Create a new NovaClass node.<br><br>
+    /// Create a new ClassDeclaration node.<br><br>
     /// <include id="example-inputs">
     /// </summary>
     /// 
-    /// <param name="parent">The parent of the NovaClass node.</param>
+    /// <param name="parent">The parent of the ClassDeclaration node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
@@ -52,8 +52,8 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     }
     
     /// <summary>
-    /// Decode the given input into a NovaClass node. If the input cannot be parsed
-    /// into a NovaClass node, null is returned.<br><br>
+    /// Decode the given input into a ClassDeclaration node. If the input cannot be parsed
+    /// into a ClassDeclaration node, null is returned.<br><br>
     /// <div id="example-inputs">
     ///     Example inputs:
     ///     <ul>
@@ -64,17 +64,17 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
     /// </div>
     /// </summary>
     /// 
-    /// <param name="input">The input string to decode into a NovaClass instance.</param>
-    /// <param name="parent">The parent of the NovaClass node.</param>
+    /// <param name="input">The input string to decode into a ClassDeclaration instance.</param>
+    /// <param name="parent">The parent of the ClassDeclaration node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
-    /// <returns>The parsed NovaClass node, if successful; null otherwise.</returns>
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaClass {
+    /// <returns>The parsed ClassDeclaration node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClassDeclaration {
         var index = input.nextWordIndex("class")
         
         if (index >= 0) {
-            var node = new NovaClass(parent, location)
+            var node = new ClassDeclaration(parent, location)
             
             if (!node.parseModifiers(input, index, require)) {
                 return null

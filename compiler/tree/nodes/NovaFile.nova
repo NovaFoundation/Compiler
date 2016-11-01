@@ -63,7 +63,7 @@ class NovaFile extends Node {
     }
 	
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
-    	NovaClass.parse(input, this, location, require)
+    	ClassDeclaration.parse(input, this, location, require)
     
     addDefaultImports() {
         for (i in DEFAULT_IMPORTS) {

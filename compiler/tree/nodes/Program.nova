@@ -11,7 +11,7 @@ class Program extends Node {
         this.compiler = compiler
     }
     
-    public getClassDeclaration(String location) -> NovaClass {
+    public getClassDeclaration(String location) -> ClassDeclaration {
         
     }
     

@@ -7,18 +7,18 @@ import "compiler/util/Location"
 
 import "compiler/util/CompilerStringFunctions"
 
-class NovaFunction extends InstanceDeclaration {
-    visible NovaFunction parentFunction => this
+class FunctionDeclaration extends InstanceDeclaration {
+    visible FunctionDeclaration parentFunction => this
     
     visible ParameterList parameterList
     visible Parameter[] parameters => parameterList.parameters
     
     /// <summary>
-    /// Create a new NovaFunction node.<br><br>
+    /// Create a new FunctionDeclaration node.<br><br>
     /// <include id="example-inputs">
     /// </summary>
     /// 
-    /// <param name="parent">The parent of the NovaFunction node.</param>
+    /// <param name="parent">The parent of the FunctionDeclaration node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
@@ -27,8 +27,8 @@ class NovaFunction extends InstanceDeclaration {
     }
     
     /// <summary>
-    /// Decode the given input into a NovaFunction node. If the input cannot be parsed
-    /// into a NovaFunction node, null is returned.<br><br>
+    /// Decode the given input into a FunctionDeclaration node. If the input cannot be parsed
+    /// into a FunctionDeclaration node, null is returned.<br><br>
     /// <div id="example-inputs">
     ///     Example inputs:
     ///     <ul>
@@ -39,19 +39,19 @@ class NovaFunction extends InstanceDeclaration {
     /// </div>
     /// </summary>
     /// 
-    /// <param name="input">The input string to decode into a NovaFunction instance.</param>
-    /// <param name="parent">The parent of the NovaFunction node.</param>
+    /// <param name="input">The input string to decode into a FunctionDeclaration instance.</param>
+    /// <param name="parent">The parent of the FunctionDeclaration node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     /// <param name="require">Whether or not to throw a syntax error if the input could not
     ///     be parsed.</param>
-    /// <returns>The parsed NovaFunction node, if successful; null otherwise.</returns>
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NovaFunction {
+    /// <returns>The parsed FunctionDeclaration node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> FunctionDeclaration {
         var signature  = findSignature(input)
         var parameters = findParameters(input)
         var returnType = findReturnType(input)
         
         if (signature != null && parameters != null && returnType != null) {
-            var node = new NovaFunction(parent, location)
+            var node = new FunctionDeclaration(parent, location)
             
             if (node.parseSignature(signature, require) &&
                 node.parseParameters(parameters, require) &&
@@ -151,7 +151,7 @@ class NovaFunction extends InstanceDeclaration {
     
     public toString() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList" + writeReturnType()
     
-    public cloneTo(NovaFunction other) => other {
+    public cloneTo(FunctionDeclaration other) => other {
         super.cloneTo(other)
         
         other.parameterList = parameterList

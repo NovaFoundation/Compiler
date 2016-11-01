@@ -6,7 +6,7 @@ import "nova/datastruct/list/Stack"
 import "compiler/util/OS"
 import "compiler/util/FileUtils"
 
-import "compiler/tree/nodes/NovaClass"
+import "compiler/tree/nodes/ClassDeclaration"
 import "compiler/tree/nodes/NovaFile"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Program"
@@ -149,7 +149,7 @@ class Compiler {
                                           "class Something3 extends MyButt",
                                           "class Something4 implements Annotatable" ]
                 
-                declarations.forEach({ Console.writeLine("Parsed: #{NovaClass.parse(_, program)}") })
+                declarations.forEach({ Console.writeLine("Parsed: #{ClassDeclaration.parse(_, program)}") })
             } catch (SyntaxErrorException e) {
                 
             }

@@ -7,7 +7,7 @@ import "compiler/tree/nodes/annotations/Annotation"
 import "compiler/tree/nodes/exceptionhandling/Try"
 import "compiler/util/Location"
 import "compiler/error/UnimplementedOperationException"
-import "compiler/tree/nodes/functions/NovaFunction"
+import "compiler/tree/nodes/functions/FunctionDeclaration"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "nova/datastruct/Bounds"
@@ -76,13 +76,13 @@ class Node implements Annotatable {
     visible NovaFile parentFile => parent?.parentFile
     visible Bool isWithinFile => parentFile != null
     
-    visible NovaFunction parentFunction => parent?.parentFunction
+    visible FunctionDeclaration parentFunction => parent?.parentFunction
     visible Bool isWithinFunction => parentFunction != null
     
     visible Try parentTry => parent?.parentTry
     visible Bool isWithinTry => parentTry != null
     
-    visible NovaClass parentClass => parent?.parentClass
+    visible ClassDeclaration parentClass => parent?.parentClass
     visible Bool isWithinClass => parentClass != null
     
     visible Scope parentScope => parent?.parentScope

@@ -5,7 +5,7 @@ import "compiler/tree/nodes/Scope"
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
 
-class BodyFunction extends NovaFunction {
+class BodyFunction extends FunctionDeclaration {
     public Scope scope <=> scope
     
     /// <summary>
@@ -44,7 +44,7 @@ class BodyFunction extends NovaFunction {
     ///     be parsed.</param>
     /// <returns>The parsed BodyFunction node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> BodyFunction {
-        var function = NovaFunction.parse(input, parent, location, require)
+        var function = FunctionDeclaration.parse(input, parent, location, require)
         
         if (function != null) {
             var node = new BodyFunction(parent, location)
