@@ -115,7 +115,7 @@ class Compiler {
                 for (statement in statements) {
                     Console.writeLine("'#statement'")
                     
-                    var node = parents.peek().parseChild(statement, require: false)
+                    var node = parents.peek().parseStatement(statement, require: false)
                     
                     Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
                                        \tendsScope: '#statements.endsScope'\n
