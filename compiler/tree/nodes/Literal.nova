@@ -46,14 +46,37 @@ class Literal extends Value implements Accessible {
     ///     be parsed.</param>
     /// <returns>The parsed Literal node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Literal {
-        if (false) {
+        var type = getLiteralType(input)
+        
+        if (type != null) {
             var node = new Literal(parent, location)
             
+            node.type = type
+            node.value = input
             
-            
-            return node
+            if (node.formatValue()) {
+                return node
+            }
         }
         
         return null
     }
+    
+    static getLiteralType(String input) -> String {
+        if (input.count >= 2 && input[0] == '"' && input.chars.last == '"') {
+            return "String"
+        }
+        
+        return null
+    }
+    
+    formatValue() -> Bool {
+        if (type.equals("String")) {
+            
+        }
+        
+        return true
+    }
+    
+    public toString() => value
 }
