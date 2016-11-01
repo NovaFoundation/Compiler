@@ -175,6 +175,8 @@ class Node implements Annotatable {
     public onReplaced(Node parent, Node replacement) {}
     public onChildDetached(Node child) {}
     
+    public addChild(Node child) {}
+    
     /**
      * Validate the node to make last minute changes or error checking.
      * 
@@ -226,6 +228,8 @@ class Node implements Annotatable {
     public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
         
     }
+    
+    public validateTypes() => true
     
     public cloneTo(Node other) => other {
         other.parent = parent
