@@ -98,13 +98,15 @@ class FunctionCall extends Variable {
     }
     
     parseArgument(String argument) -> Bool {
-        var statement = parseStatement(argument, this)
+        var statement = Value.parse(argument, this)
         
         if (statement != null) {
+            arguments.add(statement)
+            
             return true
         }
         
-        return true//false
+        return false
     }
     
     parseArguments(String[] arguments) =>
@@ -116,5 +118,5 @@ class FunctionCall extends Variable {
         return true//false
     }
     
-    public toString() => super.toString() + "()"
+    public toString() => super.toString() + "#argumentList"
 }
