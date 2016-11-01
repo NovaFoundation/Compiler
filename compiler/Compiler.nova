@@ -151,6 +151,10 @@ class Compiler {
                 
                 if (!file.classes.all({ _.validateTypes() }, false)) {
                     Console.writeLine("invalid types")
+                } else {
+                    if (!file.classes.all({ _.parsePlaceholders() }, false)) {
+                        Console.writeLine("failed to parse placeholders")
+                    }
                 }
                 
                 var declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
