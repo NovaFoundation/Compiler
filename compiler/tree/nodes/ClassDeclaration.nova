@@ -189,8 +189,12 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     }
     
     public validateTypes() =>
-        fields.all({ _.validateTypes() }, false) &&
+        fields.all({ _.validateTypes() }, false) &
         functions.all({ _.validateTypes() }, false)
+    
+    public parsePlaceholders() =>
+        fields.all({ _.parsePlaceholders() }, false) &
+        functions.all({ _.parsePlaceholders() }, false)
     
     public writeModifiers() => super.writeModifiers() + writeAbstract()
     public writeExtension() => extendedClass != null ? "extends #extendedClass" : ""
