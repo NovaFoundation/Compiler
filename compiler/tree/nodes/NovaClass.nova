@@ -40,7 +40,7 @@ class NovaClass extends InstanceDeclaration implements Abstractable {
         scope = new Scope(this, location)
     }
     
-    public parseChild(String input, Bool require = true) -> Node {
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
         until (node != null) {
