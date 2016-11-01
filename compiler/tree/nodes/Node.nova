@@ -130,10 +130,6 @@ class Node implements Annotatable {
         this.location = location
     }
     
-    public parseChild(String statement, Bool require = true) -> Node {
-    	return null
-    }
-    
     [Override]
     public addAnnotation(Annotation annotation) {
         annotations = annotations ?: new Annotation[]
@@ -234,4 +230,6 @@ class Node implements Annotatable {
         other.location = location
         other.annotations = annotations
     }
+    
+    public toString() => "{{Node}}"
 }
