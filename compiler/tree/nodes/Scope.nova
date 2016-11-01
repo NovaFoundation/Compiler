@@ -82,16 +82,15 @@ class Scope extends NodeList {
     	
     	if (prev > 0) {
     		fragments.add(input.substring(prev))
-    		Console.writeLine("Parsing #fragments[0]")
+    		
     		var root    = parseAccessible(fragments[0], require: require)
     		var current = root
-    		Console.writeLine("Parsed root: #{(Object)root}")
+    		
     		if (current != null) {
     			if (fragments.skip(1).all({
     				var accessed = parseAccessible(_, parent: (Node)current, require: require)
     				
     				if (accessed != null) {
-                        Console.writeLine("Parsed: #{(Object)accessed}")
     					current.accessedNode = (Identifier)accessed
     					
     					return true
