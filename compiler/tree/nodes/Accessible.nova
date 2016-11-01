@@ -281,10 +281,6 @@ interface Accessible {
         return n.parentClass
     }
     
-    public writeAccessedNodes() -> String {
-        Console.writeLine("doing it #doesAccess")
-        var x = doesAccess ? ".#{accessedNode}#{accessedNode.writeAccessedNodes()}" : ""
-        
-        return x
-    }
+    public writeAccessedNodes() -> String =>
+        doesAccess ? ".#{accessedNode}#{accessedNode.writeAccessedNodes()}" : ""
 }
