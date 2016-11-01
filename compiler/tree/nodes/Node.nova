@@ -71,6 +71,8 @@ class Node implements Annotatable {
     
     visible Program program => parent?.program
     
+    visible Byte phase => program.compiler.phase
+    
     visible NovaFile parentFile => parent?.parentFile
     visible Bool isWithinFile => parentFile != null
     

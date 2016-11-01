@@ -46,6 +46,10 @@ class Scope extends NodeList {
     }
     
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+        if (phase == 1) {
+            return PlaceholderValue.parse(input, this, location)
+        }
+        
         Node node = null
         
         until (node != null) {

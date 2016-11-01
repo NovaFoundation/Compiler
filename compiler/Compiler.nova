@@ -23,6 +23,8 @@ class Compiler {
     visible String[] warnings = new String[]
     visible String[] info     = new String[]
     
+    visible Byte phase
+    
     public static main(String[] args) {
         var c = new Compiler()
         
@@ -110,6 +112,8 @@ class Compiler {
             var statements = input.statements
             
             parents.push(file)
+            
+            phase = 1
             
             try {
                 for (statement in statements) {
