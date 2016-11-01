@@ -2,6 +2,7 @@ package "compiler"
 
 import "nova/io/File"
 import "nova/datastruct/list/Stack"
+import "nova/datastruct/list/List"
 
 import "compiler/util/OS"
 import "compiler/util/FileUtils"
@@ -125,6 +126,10 @@ class Compiler {
                                        \tendsScope: '#statements.endsScope'\n
                                        \tparse: '#node'\n")
                     
+                    if (node != null) {
+                        parents.peek().addChild(node)
+                    }
+                    
                     if (statements.beginsScope) { // TODO: if null, then create something to replace it
                         if (node == null) {
                             SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
@@ -142,6 +147,10 @@ class Compiler {
                 
                 if (parents.peek() != file) {
                     SyntaxMessage.error("Missing ending brace", file, throwException: false)
+                }
+                
+                if (!file.classes.all({ _.validateTypes() }, false)) {
+                    Console.writeLine("invalid types")
                 }
                 
                 var declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
