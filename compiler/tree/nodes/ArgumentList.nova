@@ -25,4 +25,6 @@ class ArgumentList extends NodeList<Value> {
         
         
     }
+    
+    public toString() => "(#{arguments.join(", ")})"
 }
