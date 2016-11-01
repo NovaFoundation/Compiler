@@ -21,6 +21,8 @@ class NovaFile extends Node {
     visible ClosureDeclaration[] closures = new ClosureDeclaration[]
     visible ClosureContext[] contexts = new ClosureContext[]
     
+    public ClassDeclaration[] classes
+    
     public static String[] DEFAULT_IMPORTS = [
         "nova/exception/ExceptionData",
         "nova/exception/Exception",
@@ -58,10 +60,13 @@ class NovaFile extends Node {
         
         packageDeclaration = Package.generateDefaultPackage(this)
         importList = new ImportList(this, location)
+        classes = new ClassDeclaration[]
         
         addDefaultImports()
     }
 	
+    public addChild(Node child) => classes.add((ClassDeclaration)child)
+    
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
     	ClassDeclaration.parse(input, this, location, require)
     
