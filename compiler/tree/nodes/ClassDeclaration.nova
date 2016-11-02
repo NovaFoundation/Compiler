@@ -46,6 +46,16 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         functions = new FunctionDeclaration[]
     }
     
+    public addChild(Node child) {
+        if (child.class.isOfType(FieldDeclaration)) {
+            fields.add((FieldDeclaration)child)
+        } else if (child.class.isOfType(FunctionDeclaration)) {
+            functions.add((FunctionDeclaration)child)
+        } else {
+            SyntaxMessage.error("Statement '#child' used in wrong context", child)
+        }
+    }
+    
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
