@@ -26,8 +26,6 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     public String extendedClass
     public String[] implementedInterfaces = new String[0]
     
-    public Scope scope <=> scope
-    
     public FieldDeclaration[] fields
     public FunctionDeclaration[] functions
     
@@ -41,7 +39,6 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
-        scope = new Scope(this, location)
         fields = new FieldDeclaration[]
         functions = new FunctionDeclaration[]
     }
@@ -53,6 +50,16 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
             functions.add((FunctionDeclaration)child)
         } else {
             SyntaxMessage.error("Statement '#child' used in wrong context", child)
+        }
+    }
+    
+    public replace(Node toReplace, Node replacement) -> Bool {
+        if (toReplace.class.isOfType(FieldDeclaration)) {
+            return fields.replace((FieldDeclaration)toReplace, (FieldDeclaration)replacement)
+        } else if (toReplace.class.isOfType(FunctionDeclaration)) {
+            return functions.replace((FunctionDeclaration)toReplace, (FunctionDeclaration)replacement)
+        } else {
+            return false
         }
     }
     
@@ -206,10 +213,17 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         fields.all({ _.parsePlaceholders() }, false) &
         functions.all({ _.parsePlaceholders() }, false)
     
+    public writeHeader() => "#writeModifiers() class #name #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
     public writeModifiers() => super.writeModifiers() + writeAbstract()
     public writeExtension() => extendedClass != null ? "extends #extendedClass" : ""
     public writeImplementedInterfaces() => implementedInterfaces.count > 0 ? "implements #{implementedInterfaces.join(", ")}" : ""
     
+    public toNova() =>
+        (writeHeader() + " {\n" +
+        fields.map({ _.toNova() }).join("\n") + "\n\n" +
+        functions.map({ _.toNova() }).join("\n") + "\n" +
+        "}").trim()
+    
     [Override]
-    public toString() => "#writeModifiers() class #name #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
+    public toString() => writeHeader()
 }
