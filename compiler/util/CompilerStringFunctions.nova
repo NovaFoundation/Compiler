@@ -19,6 +19,10 @@ extension CompilerStringFunctions {
         get { return count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/) }
         no set
     }
+    public Bool String.isNumber {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
+        get { return count > 0 && matches(/[0-9]+/) }
+        no set
+    }
     
     public StatementIterator String.statements {//=> new StatementIterator(this)
         get { return new StatementIterator(this) }
