@@ -23,7 +23,7 @@ class NovaFile extends Node {
     
     public ClassDeclaration[] classes
     
-    public static String[] DEFAULT_IMPORTS = [
+    visible static String[] DEFAULT_IMPORTS = [
         "nova/exception/ExceptionData",
         "nova/exception/Exception",
         "nova/exception/DivideByZeroException",
@@ -65,7 +65,13 @@ class NovaFile extends Node {
         addDefaultImports()
     }
 	
-    public addChild(Node child) => classes.add((ClassDeclaration)child)
+    public addChild(Node child) {
+        if (child.class.isOfType(ClassDeclaration)) {
+            classes.add((ClassDeclaration)child)
+        } else {
+            SyntaxMessage.error("Statement '#child' used in wrong context", child)
+        }
+    }
     
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
     	ClassDeclaration.parse(input, this, location, require)
@@ -95,6 +101,11 @@ class NovaFile extends Node {
     public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
         return false
     }
+    
+    public toNova() =>
+        (packageDeclaration.toNova() + "\n\n" +
+        imports.filter({ !_.isDefault }).map({ _.toNova() }).join("\n") + "\n" +
+        classes.map({ _.toNova() }).join("\n")).trim()
     
     public toString() => "#{name}.nova"
 }
