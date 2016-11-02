@@ -26,6 +26,12 @@ class Compiler {
     
     visible Byte phase
     
+    Stack<Node> parents
+    
+    Program program
+    
+    NovaFile[] files
+    
     public static main(String[] args) {
         var c = new Compiler()
         
@@ -85,7 +91,7 @@ class Compiler {
             ]
             
             [KeepWhitespace indent: "baseline"]
-            var input = "class Test {
+            var test = "class Test {
                              Int x = 15
                     
                              public helloWorld(String x, Int y) -> Something {
@@ -105,70 +111,33 @@ class Compiler {
                                  x += 4                                 
                              }
                          }"
-                         
             
-            var program    = new Program(this)
-            var file       = new NovaFile(new File("temp.nova"), program)
-            var parents    = new Stack<Node>()
-            var statements = input.statements
+            [KeepWhitespace indent: "baseline"]
+            var console = "class Console {
+                             public static writeLine(String data) {
+                                 
+                             }
+                         }"
             
-            parents.push(file)
+            var inputs = [test, console]
             
-            phase = 1
+            program = new Program(this)
+            parents = new Stack()
             
             try {
-                for (statement in statements) {
-                    Console.writeLine("'#statement'")
-                    
-                    var node = parents.peek().parseStatement(statement, require: false)
-                    
-                    Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
-                                       \tendsScope: '#statements.endsScope'\n
-                                       \tparse: '#node'\n")
-                    
-                    if (node != null) {
-                        parents.peek().addChild(node)
-                    }
-                    
-                    if (statements.beginsScope) { // TODO: if null, then create something to replace it
-                        if (node == null) {
-                            SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
-                        } else {
-                            parents.push(node)
-                        }
-                    } else if (statements.endsScope) {
-                        repeat (statements.scopesEnded) {
-                            if (!parents.isEmpty) {
-                                parents.pop()
-                            }
-                        }
-                    }
-                }
+                phase = 1
+                
+                files = inputs.map({ new NovaFile(new File("temp.nova"), program) })
+                
+                formTree(files, inputs)
                 
                 phase++
                 
-                if (parents.peek() != file) {
-                    SyntaxMessage.error("Missing ending brace", file, throwException: false)
-                }
-                
-                if (!file.classes.all({ _.validateTypes() }, false)) {
-                    Console.writeLine("invalid types")
-                }
+                validateTypes(files)
                 
                 phase++
                 
-                if (!file.classes.all({ _.parsePlaceholders() }, false)) {
-                    Console.writeLine("failed to parse placeholders")
-                }
-                
-                Console.writeLine("Nova:\n'#file.toNova()'")
-                
-                var declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
-                                          "class Something2",
-                                          "class Something3 extends MyButt",
-                                          "class Something4 implements Annotatable" ]
-                
-                declarations.forEach({ Console.writeLine("Parsed: #{ClassDeclaration.parse(_, program)}") })
+                parseStatements(files)
             } catch (SyntaxErrorException e) {
                 
             }
@@ -177,11 +146,70 @@ class Compiler {
             warnings.forEach({ Console.writeLine("Warning: #_") })
             info.forEach({ Console.writeLine("Info: #_") })
             
-            Console.writeLine("Args: #args")
+            //Console.writeLine("Args: #args")
         }
     }
     
     testClasses() {
         
+    }
+    
+    formTree(NovaFile[] files, String[] inputs) {
+        files.forEach((file, i) -> {
+            var statements = inputs[i].statements
+            
+            parents.push(file)
+            
+            for (statement in statements) {
+                Console.writeLine("'#statement'")
+                
+                var node = parents.peek().parseStatement(statement, require: false)
+                
+                Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
+                                   \tendsScope: '#statements.endsScope'\n
+                                   \tparse: '#node'\n")
+                
+                if (node != null) {
+                    parents.peek().addChild(node)
+                }
+                
+                if (statements.beginsScope) { // TODO: if null, then create something to replace it
+                    if (node == null) {
+                        SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
+                    } else {
+                        parents.push(node)
+                    }
+                }
+                if (statements.endsScope) {
+                    repeat (statements.scopesEnded) {
+                        if (!parents.isEmpty) {
+                            parents.pop()
+                        }
+                    }
+                }
+            }
+            
+            if (parents.peek() != file) {
+                SyntaxMessage.error("Missing ending brace", file, throwException: false)
+            }
+        })
+    }
+    
+    validateTypes(NovaFile[] files) {
+        files.forEach(file -> {
+            if (!file.classes.all({ _.validateTypes() }, false)) {
+                Console.writeLine("invalid types")
+            }
+        })
+    }
+    
+    parseStatements(NovaFile[] files) {
+        files.forEach(file -> {
+            if (!file.classes.all({ _.parsePlaceholders() }, false)) {
+                Console.writeLine("failed to parse placeholders")
+            }
+            
+            Console.writeLine("Nova:\n'#file.toNova()'")
+        })
     }
 }
