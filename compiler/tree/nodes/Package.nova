@@ -3,6 +3,8 @@ package "compiler/tree/nodes"
 import "compiler/util/Location"
 
 class Package extends Node {
+    public String location
+    
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
     }
@@ -10,4 +12,6 @@ class Package extends Node {
     public static generateDefaultPackage(Node parent = null, Location location = Location.INVALID) -> Package {
         return new Package(parent, location)
     }
+    
+    public toNova() => location != null ? "package \"#location\"" : ""
 }
