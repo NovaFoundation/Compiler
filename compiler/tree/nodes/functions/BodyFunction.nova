@@ -21,6 +21,10 @@ class BodyFunction extends FunctionDeclaration {
         scope = new Scope(this, location)
     }
     
+    public addChild(Node child) {
+        scope.children.add(child)
+    }
+    
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
         scope.parseStatement(input, this, location, require)
     
@@ -58,4 +62,11 @@ class BodyFunction extends FunctionDeclaration {
         
         return null
     }
+    
+    public parsePlaceholders() =>
+        scope.parsePlaceholders() &
+        super.parsePlaceholders()
+    
+    public toNova() =>
+        writeHeader() + " " + scope.toNova()
 }
