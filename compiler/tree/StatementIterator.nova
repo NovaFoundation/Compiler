@@ -56,12 +56,20 @@ class StatementIterator implements Iterator<String> {
     }
     
     updateScopeProperties() {
-        var nextChar = source.nextNonWhitespaceChar(position)
+        var nextIndex  = source.nextNonWhitespaceIndex(position)
+        var nextChar   = source[nextIndex]
+        var afterIndex = source.nextNonWhitespaceIndex(nextIndex + 1)
+        var charAfter  = source[afterIndex]
         
         beginsScope = position < source.count && nextChar == '{'
         endsScope   = position < source.count && nextChar == '}'
         
         scopesEnded = 0
+        
+        if (!endsScope && charAfter == '}') {
+            endsScope = true
+            position = afterIndex
+        }
         
         if (endsScope) {
             var current = source.nextNonWhitespaceIndex(position)
