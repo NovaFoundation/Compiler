@@ -118,5 +118,6 @@ class FunctionCall extends Variable {
         return true//false
     }
     
+    public toNova() => name + "#argumentList"
     public toString() => super.toString() + "#argumentList"
 }
