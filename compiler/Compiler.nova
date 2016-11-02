@@ -145,17 +145,23 @@ class Compiler {
                     }
                 }
                 
+                phase++
+                
                 if (parents.peek() != file) {
                     SyntaxMessage.error("Missing ending brace", file, throwException: false)
                 }
                 
                 if (!file.classes.all({ _.validateTypes() }, false)) {
                     Console.writeLine("invalid types")
-                } else {
-                    if (!file.classes.all({ _.parsePlaceholders() }, false)) {
-                        Console.writeLine("failed to parse placeholders")
-                    }
                 }
+                
+                phase++
+                
+                if (!file.classes.all({ _.parsePlaceholders() }, false)) {
+                    Console.writeLine("failed to parse placeholders")
+                }
+                
+                Console.writeLine("Nova:\n'#file.toNova()'")
                 
                 var declarations = [ "private abstract class Something extends MyButt implements yo, what, up323s",
                                           "class Something2",
