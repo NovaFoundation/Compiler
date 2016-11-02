@@ -109,4 +109,24 @@ class Scope extends NodeList {
     	
     	return null
     }
+    
+    public parsePlaceholders() =>
+        children.all(child -> {
+            if (child.class.isOfType(PlaceholderValue)) {
+                var placeholder = (PlaceholderValue)child
+                
+                var parsed = parseStatement(placeholder.value, child.parent, child.location, true)
+                
+                if (parsed != null) {
+                    return children.replace(child, parsed)
+                } else {
+                    return false
+                }
+            } else {
+                return true
+            }
+        }, false)
+    
+    public toNova() =>
+        "{\n" + children.map({ _.toNova() + "\n" }).join() + "}"
 }
