@@ -14,6 +14,8 @@ class Import extends Node {
     visible String parentLocation => importLocation.substring(0, importLocation.lastIndexOf("/", defaultReturnValue: 0))
     visible String className => importLocation.substring(importLocation.lastIndexOf("/") + 1)
     
+    visible Bool isDefault => NovaFile.DEFAULT_IMPORTS.any({ _.equals(importLocation) })
+    
     public static String IDENTIFIER = "import"
     public static String ALIAS_IDENTIFIER = "as"
     
