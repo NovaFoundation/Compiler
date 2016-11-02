@@ -3,6 +3,8 @@ package "compiler/tree/nodes"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
+import "compiler/util/CompilerStringFunctions"
+
 /// <summary>
 /// <a href="compiler/tree/nodes/Value">Value</a> extension that represents 
 /// <summary>
@@ -65,6 +67,8 @@ class Literal extends Value implements Accessible {
     static getLiteralType(String input) -> String {
         if (input.count >= 2 && input[0] == '"' && input.chars.last == '"') {
             return "String"
+        } else if (input.isNumber) {
+            return "Int"
         }
         
         return null
