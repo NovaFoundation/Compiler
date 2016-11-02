@@ -61,11 +61,13 @@ class FieldDeclaration extends InstanceDeclaration {
     }
     
     public parsePlaceholders() -> Bool {
-        if (initializationValue != null) {
-            //initializationValue.replaceWith(Value.parse(initializationValue))
+        if (initializationValue != null && initializationValue.class.isOfType(PlaceholderValue)) {
+            initializationValue = Value.parse((PlaceholderValue)initializationValue)
+            
+            return initializationValue != null
+        } else {
+            return true
         }
-        
-        return true
     }
     
     public toString() => super.toString() + (initializationValue != null ? " = #initializationValue" : "")
