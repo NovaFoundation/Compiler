@@ -147,9 +147,15 @@ class FunctionDeclaration extends InstanceDeclaration {
     public parseParameters(String parameters, Bool require) =>
         parameters.splitAtCommas().all({ parseParameter(_, require) })
     
+    public parsePlaceholders() =>
+        parameters.all({ _.parsePlaceholders() }, false) &
+        super.parsePlaceholders()
+    
+    public writeHeader() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList" + writeReturnType()
     public writeReturnType() => type != null ? " -> #type" : ""
     
-    public toString() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList" + writeReturnType()
+    public toNova() => writeHeader()
+    public toString() => writeHeader()
     
     public cloneTo(FunctionDeclaration other) => other {
         super.cloneTo(other)
