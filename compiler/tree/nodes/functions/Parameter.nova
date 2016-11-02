@@ -1,10 +1,14 @@
 package "compiler/tree/nodes/functions"
 
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/PlaceholderValue"
 import "compiler/tree/nodes/variables/LocalDeclaration"
 import "compiler/util/Location"
 
 class Parameter extends LocalDeclaration {
+    public Value defaultValue
+    
     /// <summary>
     /// Create a new Parameter node.<br><br>
     /// <include id="example-inputs">
@@ -45,5 +49,15 @@ class Parameter extends LocalDeclaration {
         }
         
         return null
+    }
+    
+    public parsePlaceholders() -> Bool {
+        if (defaultValue != null && defaultValue.class.isOfType(PlaceholderValue)) {
+            defaultValue = Value.parse((PlaceholderValue)defaultValue)
+            
+            return defaultValue != null
+        } else {
+            return true
+        }
     }
 }
