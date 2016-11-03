@@ -12,7 +12,10 @@ import "compiler/util/CompilerStringFunctions"
 /// <author>Braden Steffaniak</author>
 /// <since></since>
 /// <version></version>
-class StaticClassReference extends Identifier {
+class StaticClassReference extends Identifier implements Accessible {
+    public Bool safeNavigation <=> safeNavigation
+    public Accessible accessedNode <=> accessedNode
+    
     /// <summary>
     /// Create a new StaticClassReference node.<br><br>
     /// <include id="example-inputs">
@@ -49,4 +52,6 @@ class StaticClassReference extends Identifier {
         parent.parentFile.imports.any({ _.className.equals(input) }) ?
             new StaticClassReference(parent, location, input) :
             null
+    
+    public toNova() => super.toNova() + writeAccessedNodes()
 }
