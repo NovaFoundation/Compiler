@@ -91,7 +91,9 @@ class Compiler {
             ]
             
             [KeepWhitespace indent: "baseline"]
-            var test = "class Test {
+            var test = "import \"Something\"
+            
+                         class Test {
                              Int x = 15
                     
                              public helloWorld(String x, Int y) -> Something {
