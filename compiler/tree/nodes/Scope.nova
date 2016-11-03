@@ -95,7 +95,7 @@ class Scope extends NodeList {
     				var accessed = parseAccessible(_, parent: (Node)current, require: require)
     				
     				if (accessed != null) {
-    					current.accessedNode = (Identifier)accessed
+    					current.accessedNode = accessed
     					
     					return true
     				}
