@@ -10,10 +10,10 @@ import "compiler/util/Location"
 /// <author>Braden Steffaniak</author>
 /// <since></since>
 /// <version></version>
-class Identifier extends Value implements Accessible {
+class Identifier extends Value {/*
     public Bool safeNavigation <=> safeNavigation
     public Identifier accessedNode <=> accessedNode
-    
+    */
     public String name
     
     /// <summary>
@@ -60,13 +60,13 @@ class Identifier extends Value implements Accessible {
         return null
     }
     
-    public toString() => name + writeAccessedNodes()
+    public toString() => name// + writeAccessedNodes()
     
     public cloneTo(Identifier other) => other {
         super.cloneTo(other)
         
         other.name = name
-        other.safeNavigation = safeNavigation
-        other.accessedNode = accessedNode
+        /*other.safeNavigation = safeNavigation
+        other.accessedNode = accessedNode*/
     }
 }
