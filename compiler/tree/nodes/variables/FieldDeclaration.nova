@@ -60,6 +60,11 @@ class FieldDeclaration extends InstanceDeclaration {
         return null
     }
     
+    /*public parsePlaceholders() =>
+        initializationValue != null && initializationValue.class.isOfType(PlaceholderValue) ?
+            (initializationValue = Value.parse((PlaceholderValue)initializationValue)) != null :
+            true*/
+    
     public parsePlaceholders() -> Bool {
         if (initializationValue != null && initializationValue.class.isOfType(PlaceholderValue)) {
             initializationValue = Value.parse((PlaceholderValue)initializationValue)
