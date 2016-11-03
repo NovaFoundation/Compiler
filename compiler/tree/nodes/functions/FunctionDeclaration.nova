@@ -26,6 +26,10 @@ class FunctionDeclaration extends InstanceDeclaration {
         parameterList = new ParameterList(parent, location)
     }
     
+    public compatibleArguments(Value[] arguments) -> Bool {
+        return true
+    }
+    
     /// <summary>
     /// Decode the given input into a FunctionDeclaration node. If the input cannot be parsed
     /// into a FunctionDeclaration node, null is returned.<br><br>
