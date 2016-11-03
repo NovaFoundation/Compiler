@@ -5,6 +5,7 @@ import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/variables/Variable"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
+import "compiler/tree/nodes/Accessible"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -15,7 +16,7 @@ import "compiler/util/CompilerStringFunctions"
 /// <author>Braden Steffaniak</author>
 /// <since></since>
 /// <version></version>
-class FunctionCall extends Variable {
+class FunctionCall extends Variable implements Accessible {
     visible FunctionArgumentList argumentList
     
     visible Value[] arguments => argumentList.arguments
@@ -113,7 +114,7 @@ class FunctionCall extends Variable {
         arguments.all({ parseArgument(_) })
     
     searchDeclaration() -> Bool {
-        
+        //var ref = referenceClass
         
         return true//false
     }
