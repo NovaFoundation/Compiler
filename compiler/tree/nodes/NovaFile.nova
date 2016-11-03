@@ -68,13 +68,23 @@ class NovaFile extends Node {
     public addChild(Node child) {
         if (child.class.isOfType(ClassDeclaration)) {
             classes.add((ClassDeclaration)child)
+        } else if (child.class.isOfType(Import)) {
+            imports.add((Import)child)
         } else {
             SyntaxMessage.error("Statement '#child' used in wrong context", child)
         }
     }
     
-    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
-    	ClassDeclaration.parse(input, this, location, require)
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+    	var node = null
+        
+        until (node != null) {
+            node = ClassDeclaration.parse(input, this, location, require)
+            node = Import.parse(input, this, location, require)
+        }
+        
+        return node
+    }
     
     addDefaultImports() {
         for (i in DEFAULT_IMPORTS) {
