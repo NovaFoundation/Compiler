@@ -119,6 +119,6 @@ class FunctionCall extends Variable implements Accessible {
         return true//false
     }
     
-    public toNova() => name + "#argumentList"
+    public toNova() => name + "#argumentList" + writeAccessedNodes()
     public toString() => super.toString() + "#argumentList"
 }
