@@ -1,5 +1,6 @@
 package "compiler/tree/nodes"
 
+import "compiler/SyntaxMessage"
 import "compiler/util/Location"
 import "compiler/tree/nodes/arrays/ArrayAccess"
 import "compiler/tree/nodes/operations/Operation"
@@ -13,6 +14,10 @@ class Value extends Node {
     public ArrayAccess arrayAccess
     
     public String type
+    
+    visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
+    
+    visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(type) })
     
     /// <summary>
     /// Create a new Value node.<br><br>
@@ -65,6 +70,29 @@ class Value extends Node {
     
     public static parse(PlaceholderValue placeholder, Bool require = true) =>
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
+    
+    public parseType(String input) -> Bool {
+        if (input != null && input.isIdentifier) {
+            type = input
+            
+            return true
+        }
+        
+        return false
+    }
+    
+    public validateTypes() -> Bool {
+        if (type != null && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type) })) {
+            invalidTypeError(throwException: false)
+            
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    public invalidTypeError(String type = this.type, Bool throwException = true) =>
+        SyntaxMessage.error("Invalid type '#type'", this, throwException: throwException)
     
     public writeType() => "#type".replace(/\s+/, " ").trim()
     
