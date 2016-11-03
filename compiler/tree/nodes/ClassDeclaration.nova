@@ -4,6 +4,7 @@ import "compiler/SyntaxErrorException"
 import "compiler/SyntaxMessage"
 import "compiler/util/Location"
 import "compiler/tree/nodes/variables/InstanceDeclaration"
+import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/tree/nodes/variables/FieldDeclaration"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
 import "compiler/tree/nodes/functions/BodyFunction"
@@ -61,6 +62,22 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         } else {
             return false
         }
+    }
+    
+    public findCompatibleFunctions(String name, Value[] argumentTypes = null) =>
+        functions.filter(func -> {
+            func.name.equals(name) &&
+            (argumentTypes == null || func.compatibleArguments(argumentTypes))
+        })
+    
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        var field = fields.firstWhere({ _.name.equals(name) })
+        
+        if (field != null) {
+            return field
+        }
+        
+        return super.findVariableDeclaration(name, searchAncestors)
     }
     
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
