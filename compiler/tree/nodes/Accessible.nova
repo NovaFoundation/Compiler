@@ -18,7 +18,7 @@ interface Accessible {
      * 
      * @return The next node that is accessed by the specified node.
      */
-    public Identifier accessedNode => null {
+    public Accessible accessedNode => null {
         set {}
     }
     
@@ -26,7 +26,7 @@ interface Accessible {
         get {
             /*Node n = (Node)this
             
-            if (canAccess && n.parent instanceof Accessible && n.parent instanceof VariableDeclaration == false && !n.parent.containsScope) {
+            if (canAccess && n.parent.class.isOfType(Accessible) && !n.parent.class.isOfType(VariableDeclaration) && !n.parent.containsScope) {
                 Accessible id = (Accessible)n.parent
                 
                 if (!skipPriority && id instanceof Priority) {
@@ -49,11 +49,23 @@ interface Accessible {
                 }
             }*/
             
+            
+            
             return null
         }
         
         no set
     }
+    
+    /*public ClassDeclaration referenceClass {
+        get {
+            if (isAccessed) {
+                accessingNode
+            }
+        }
+        
+        no set
+    }*/
     
     /**
      * Get whether this specified identifier node was accessed through
@@ -191,8 +203,8 @@ interface Accessible {
      * @return The next accessed of the given types. If there is not a
      *      match, null is returned.
      */
-    public getNextAccessedOfType(Class[] types) -> Identifier {
-        Identifier current = accessedNode
+    public getNextAccessedOfType(Class[] types) -> Accessible {
+        Accessible current = accessedNode
         
         while (current != null && !SyntaxUtils.checkTypes(types, ((Object)current).class)) {
             current = current.accessedNode
