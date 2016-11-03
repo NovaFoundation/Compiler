@@ -6,6 +6,9 @@ import "compiler/tree/nodes/Identifier"
 import "compiler/tree/nodes/Accessible"
 
 class Variable extends Identifier implements Accessible {
+    public Bool safeNavigation <=> safeNavigation
+    public Accessible accessedNode <=> accessedNode
+    
     public VariableDeclaration declaration
     
     public String type => declaration.type
@@ -22,4 +25,6 @@ class Variable extends Identifier implements Accessible {
         
         this.declaration = declaration
     }
+    
+    public toNova() => super.toNova() + writeAccessedNodes()
 }
