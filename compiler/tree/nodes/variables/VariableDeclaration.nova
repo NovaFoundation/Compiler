@@ -57,22 +57,12 @@ class VariableDeclaration extends Identifier {
             
             node.name = input.substring(nameStart + 1)
             
-            if (node.name.isIdentifier && node.parseType(input)) {
+            if (node.name.isIdentifier && node.parseType(input.nextWord())) {
                 return node
             }
         }
         
         return null
-    }
-    
-    public parseType(String input) -> Bool {
-        type = input.nextWord()
-        
-        if (type != null) {
-            return type.isIdentifier
-        }
-        
-        return false
     }
     
     public parseModifier(String modifier) -> Bool {
