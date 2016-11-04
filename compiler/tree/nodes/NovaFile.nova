@@ -21,13 +21,15 @@ class NovaFile extends Node {
     visible ClosureDeclaration[] closures = new ClosureDeclaration[]
     visible ClosureContext[] contexts = new ClosureContext[]
     
+    public ClassDeclaration classDeclaration => classes.firstWhere({ _.name.equals(name) })
+    
     public ClassDeclaration[] classes
     
     visible static String[] DEFAULT_IMPORTS = [
         "nova/exception/ExceptionData",
         "nova/exception/Exception",
         "nova/exception/DivideByZeroException",
-        "nova/io/Console",
+        // "nova/io/Console",
         "nova/primitive/number/Number",
         "nova/primitive/number/Byte",
         "nova/primitive/number/Short",
