@@ -3,6 +3,8 @@ package "compiler/tree/nodes/functions"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/variables/Variable"
+import "compiler/tree/nodes/variables/VariableDeclaration"
+import "compiler/tree/nodes/ClassDeclaration"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 import "compiler/tree/nodes/Accessible"
@@ -16,7 +18,7 @@ import "compiler/util/CompilerStringFunctions"
 /// <author>Braden Steffaniak</author>
 /// <since></since>
 /// <version></version>
-class FunctionCall extends Variable implements Accessible {
+class FunctionCall extends Variable {
     visible FunctionArgumentList argumentList
     
     visible Value[] arguments => argumentList.arguments
@@ -114,9 +116,19 @@ class FunctionCall extends Variable implements Accessible {
         arguments.all({ parseArgument(_) })
     
     searchDeclaration() -> Bool {
-        //var ref = referenceClass
+        var ref = referenceClass
         
-        return true//false
+        if (ref != null) {
+            var func = ref.functions.firstWhere({ _.name.equals(name) })
+            
+            if (func != null) {
+                declaration = func
+                
+                return true
+            }
+        }
+        
+        return false
     }
     
     public toNova() => name + "#argumentList" + writeAccessedNodes()
