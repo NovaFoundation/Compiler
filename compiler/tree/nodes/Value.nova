@@ -15,6 +15,20 @@ class Value extends Node {
     
     public String type
     
+    public ClassDeclaration typeClass {
+        get {
+            var imp = parentFile.imports.firstWhere({ _.className.equals(type) })
+            
+            if (imp != null) {
+                return imp.classDeclaration
+            } else {
+                return null
+            }
+        }
+        
+        no set
+    }
+    
     visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
     
     visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(type) })
