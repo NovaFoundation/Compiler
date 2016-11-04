@@ -1,18 +1,31 @@
 package "compiler/tree/nodes"
 
 import "compiler/Compiler"
+import "compiler/SyntaxMessage"
 
-class Program extends Node {
+class Program extends NodeList<NovaFile> {
     visible Program program => this
+    
+    visible NovaFile[] files => (NovaFile[])children
     
     visible Compiler compiler
     
     public construct(Compiler compiler) {
+        super()
+        
         this.compiler = compiler
     }
     
+    public addChild(Node child) {
+        if (child.class.isOfType(NovaFile)) {
+            children.add((NovaFile)child)
+        } else {
+            SyntaxMessage.error("Invalid child '#child'", child)
+        }
+    }
+    
     public getClassDeclaration(String location) -> ClassDeclaration {
-        
+        return files.firstWhere({ _.classDeclaration.location.equals(location) }).classDeclaration
     }
     
     public toString() => "Program"
