@@ -92,6 +92,7 @@ class Compiler {
             
             [KeepWhitespace indent: "baseline"]
             var test = "import \"Something\"
+                        import \"Console\"
             
                          class Test {
                              Int x = 15
@@ -130,6 +131,14 @@ class Compiler {
                 phase = 1
                 
                 files = inputs.map({ new NovaFile(new File("temp.nova"), program) })
+                files.forEach((f, i) -> {
+                    match (i) {
+                        case 0 f.name = "Test"
+                        case 1 f.name = "Console"
+                    }
+                })
+                
+                files.forEach({ program.addChild(_) })
                 
                 formTree(files, inputs)
                 
@@ -140,6 +149,10 @@ class Compiler {
                 phase++
                 
                 parseStatements(files)
+                
+                var separator = "=============================================================="
+                var a = files.map({ "\n#{_.toNova()}\n#separator" }).join("")
+                Console.writeLine("#separator" + a)
             } catch (SyntaxErrorException e) {
                 
             }
@@ -210,8 +223,6 @@ class Compiler {
             if (!file.classes.all({ _.parsePlaceholders() }, false)) {
                 Console.writeLine("failed to parse placeholders")
             }
-            
-            Console.writeLine("Nova:\n'#file.toNova()'")
         })
     }
 }
