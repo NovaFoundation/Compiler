@@ -24,6 +24,12 @@ interface Accessible {
     
     public Accessible accessingNode {
         get {
+            var n = (Node)this
+            
+            if (n.parent.class.isOfType(Accessible)) {
+                return (Accessible)n.parent
+            }
+            
             /*Node n = (Node)this
             
             if (canAccess && n.parent.class.isOfType(Accessible) && !n.parent.class.isOfType(VariableDeclaration) && !n.parent.containsScope) {
@@ -57,15 +63,17 @@ interface Accessible {
         no set
     }
     
-    /*public ClassDeclaration referenceClass {
+    visible ClassDeclaration referenceClass {
         get {
             if (isAccessed) {
-                accessingNode
+                return ((Value)accessingNode).typeClass
             }
+            
+            return ((Node)this).parentClass
         }
         
         no set
-    }*/
+    }
     
     /**
      * Get whether this specified identifier node was accessed through
