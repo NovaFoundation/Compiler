@@ -22,6 +22,11 @@ import "compiler/util/CompilerStringFunctions"
 class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     visible ClassDeclaration parentClass => this
     
+    visible String location =>
+        parentFile.packageDeclaration.location != null ?
+            parentFile.packageDeclaration.location + "/" + name :
+            name
+    
     public Bool isAbstract <=> isAbstract
     
     public String extendedClass
