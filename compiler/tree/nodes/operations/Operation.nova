@@ -61,15 +61,12 @@ class Operation extends Value {
     static findOperatorIndices(String input) -> Int[] {
         var matches = new Int[0]
         
-        var symbols = Operator.OPERATOR_SYMBOLS
-        
         var ops = Operator.BINARY_OPERATORS
         
         ops.forEach(operator -> {
             var index = input.findStringInBaseScope(operator, start: 1)
             
-            if (index > 0 && index < input.count - operator.count &&
-                !symbols.contains(input[index - 1]) && !symbols.contains(input[index + operator.count])) {
+            if (input.isStrictlyOperator(operator, index)) {
                 matches.add(index)
             }
         })
@@ -91,6 +88,19 @@ class Operation extends Value {
         return true
     }
     
+    parseOperands(String[] operands) =>
+        operands.all({
+            var operand = Value.parse(_, this, location)
+            
+            if (operand != null) {
+                this.operands.add(operand)
+                
+                return true
+            } else {
+                return false
+            }
+        })
+    
     parseOperands(String input, Int[] matches) -> Bool {
         var operands = new String[]
         
@@ -106,17 +116,17 @@ class Operation extends Value {
         
         operands.add(input.substring(prev).trim())
         
-        return true
+        return parseOperands(operands)
     }
     
     public toString() -> String {
-        var output = "operator #operators"
+        var output = ""
         
-        // for (i in 0..operators.count) {
-        //     output += "#operands[i] #operators[i]"
-        // }
+        for (i in 0..operators.count) {
+            output += "#operands[i] #operators[i] "
+        }
         
-        // output += "#operands.last"
+        output += "#operands.last"
         
         return output
     }
