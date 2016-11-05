@@ -353,6 +353,15 @@ extension CompilerStringFunctions {
         return strs
     }
     
+    /// If is the given operator and not a sub-operator of another operator.
+    /// e.g. '=' is a sub-operator of '>='
+    public isStrictlyOperator(String this, Char operator, Int index) => isStrictlyOperator("#operator", index)
+    public isStrictlyOperator(String this, String operator, Int index) =>
+        index >= 0 &&
+        index < count - operator.count &&
+        !Operator.OPERATOR_SYMBOLS.contains(chars[index - 1]) &&
+        !Operator.OPERATOR_SYMBOLS.contains(chars[index + operator.count])
+    
     public findCharInBaseScope(String this, Char needle, Int start = 0, Bool searchGenerics = false) -> Int {
         String[] array = new Array(1)
         
