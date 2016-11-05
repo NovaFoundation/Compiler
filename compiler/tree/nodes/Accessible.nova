@@ -302,5 +302,5 @@ interface Accessible {
     }
     
     public writeAccessedNodes() -> String =>
-        doesAccess ? ".#{accessedNode}#{accessedNode.writeAccessedNodes()}" : ""
+        doesAccess ? ".#{((Node)accessedNode).toNova()}#{accessedNode.writeAccessedNodes()}" : ""
 }
