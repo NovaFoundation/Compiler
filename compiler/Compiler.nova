@@ -90,57 +90,22 @@ class Compiler {
 //				"-library",
             ]
             
-            [KeepWhitespace indent: "baseline"]
-            var test = "import \"Something\"
-                        import \"Console\"
-            
-                         class Test {
-                             Int x = 15
-                    
-                             public helloWorld(String x, Int y) -> Something {
-                                 Console.writeLine(\"ASdfasdfads\")
-                             }
-                             
-                             public construct() {
-                                 Console.writeLine(\"Constructed1\")
-                                 Console.writeLine(\"Constructed2\")
-                                 Console.writeLine(\"Constructed3\")
-                                 Console.writeLine(\"Constructed4\")
-                                 
-                                 Int x = 4;Int y = 4;
-                                 
-                                 
-                                 
-                                 x += 4                                 
-                             }
-                         }"
-            
-            [KeepWhitespace indent: "baseline"]
-            var console = "class Console {
-                             public static writeLine(String data) {
-                                 
-                             }
-                         }"
-            
-            var inputs = [test, console]
-            
             program = new Program(this)
             parents = new Stack()
+            
+            var parentDir = new File("../../../tempstd")
+            
+            files = parentDir.listFiles(parentDir.location).map({ new NovaFile(new File(parentDir.location + "/" + _)) })
             
             try {
                 phase = 1
                 
-                files = inputs.map({ new NovaFile(new File("temp.nova"), program) })
-                files.forEach((f, i) -> {
-                    match (i) {
-                        case 0 f.name = "Test"
-                        case 1 f.name = "Console"
-                    }
+                files.forEach(file -> {
+                    program.addChild(file)
+                    file.parent = program
                 })
                 
-                files.forEach({ program.addChild(_) })
-                
-                formTree(files, inputs)
+                formTree(files)
                 
                 phase++
                 
@@ -169,9 +134,9 @@ class Compiler {
         
     }
     
-    formTree(NovaFile[] files, String[] inputs) {
+    formTree(NovaFile[] files) {
         files.forEach((file, i) -> {
-            var statements = inputs[i].statements
+            var statements = file.source.statements
             
             parents.push(file)
             
