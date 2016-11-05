@@ -55,6 +55,16 @@ class Node implements Annotatable {
         no set
     }
     
+    public String nodeType {
+        get {
+            var name = this.class.name
+            
+            return name
+        }
+        
+        no set
+    }
+    
     
     /**
      * Get whether or not the specified Node is being decoded at
@@ -85,14 +95,14 @@ class Node implements Annotatable {
     visible ClassDeclaration parentClass => parent?.parentClass
     visible Bool isWithinClass => parentClass != null
     
-    visible Scope parentScope => parent?.parentScope
+    visible Scope parentScope => parentWithScope.scope
     visible Bool isWithinScope => parentScope != null
     
     visible Node parentWithScope {
         get {
             if (parent == null) return null
             
-            return parent.containsScope ? parent.scope : parent.parentWithScope
+            return parent.containsScope ? parent : parent.parentWithScope
         }
         
         no set
@@ -240,5 +250,5 @@ class Node implements Annotatable {
     }
     
     public toNova() => toString()
-    public toString() => "{{Node}}"
+    public toString() => "{{Node #this.class}}"
 }
