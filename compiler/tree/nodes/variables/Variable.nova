@@ -26,5 +26,6 @@ class Variable extends Identifier implements Accessible {
         this.declaration = declaration
     }
     
-    public toNova() => super.toNova() + writeAccessedNodes()
+    public toNova() => declaration.name + writeAccessedNodes()
+    public toString() => toNova()
 }
