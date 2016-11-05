@@ -23,6 +23,8 @@ class FunctionCall extends Variable {
     
     visible Value[] arguments => argumentList.arguments
     
+    public Bool isAssignable => false
+    
     /// <summary>
     /// Create a new FunctionCall node.<br><br>
     /// <include id="example-inputs">
@@ -132,5 +134,5 @@ class FunctionCall extends Variable {
     }
     
     public toNova() => name + "#argumentList" + writeAccessedNodes()
-    public toString() => super.toString() + "#argumentList"
+    public toString() => toNova()
 }

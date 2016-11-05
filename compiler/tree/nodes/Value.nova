@@ -15,6 +15,8 @@ class Value extends Node {
     
     public String type
     
+    public Bool isAssignable => true
+    
     public ClassDeclaration typeClass {
         get {
             var imp = parentFile.imports.firstWhere({ _.className.equals(type) })
