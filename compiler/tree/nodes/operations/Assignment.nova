@@ -1,0 +1,107 @@
+package "compiler/tree/nodes/operations"
+
+import "compiler/SyntaxMessage"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/variables/LocalDeclaration"
+import "compiler/tree/nodes/variables/VariableDeclaration"
+import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
+
+class Assignment extends Operation {
+    public Value assigned <=> operands[0]
+    public Value assignment <=> operands[1]
+    
+    /// <summary>
+    /// Create a new Assignment node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the Assignment node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        operands = new Value[2]
+    }
+    
+    /// <summary>
+    /// Decode the given input into a Assignment node. If the input cannot be parsed
+    /// into a Assignment node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a Assignment instance.</param>
+    /// <param name="parent">The parent of the Assignment node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed Assignment node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Assignment {
+        var assignmentIndex = input.findCharInBaseScope('=')
+        
+        if (input.isStrictlyOperator('=', assignmentIndex)) {
+            var node = new Assignment(parent, location)
+            
+            if (node.parseAssignedNode(findAssigned(input, assignmentIndex)) && node.parseAssignment(findAssignment(input, assignmentIndex))) {
+                node.operators.add(new Operator(node, location, "="))
+                
+                if (node.assigned.class.isOfType(VariableDeclaration)) {
+                    node.parentScope.declarations.add((VariableDeclaration)node.assigned)
+                }
+                
+                return node
+            }
+        }
+        
+        return null
+    }
+    
+    static findAssigned(String input, Int assignmentIndex) => input.substring(end: assignmentIndex).trim()
+    
+    parseAssignedNode(String input) -> Bool {
+        var declaration = LocalDeclaration.parse(input, this, location, require: false)
+        
+        if (declaration != null) {
+            assigned = declaration
+            
+            return true
+        } else {
+            var value = Value.parse(input, this, location, require: false)
+            
+            if (value != null) {
+                if (value.isAssignable) {
+                    assigned = value
+                    
+                    return true
+                } else {
+                    SyntaxMessage.error("#value.nodeType '#input' is not assignable", value)
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    static findAssignment(String input, Int assignmentIndex) => input.substring(assignmentIndex + 1).trim()
+    
+    parseAssignment(String input) -> Bool {
+        var value = Value.parse(input, this, location)
+        
+        if (value != null) {
+            assignment = value
+            
+            return true
+        } else {
+            return false
+        }
+    }
+}
