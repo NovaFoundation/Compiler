@@ -9,7 +9,7 @@ import "nova/io/File"
 class NovaFile extends Node {
     visible NovaFile parentFile => this
     
-    visible String name
+    visible String name, source
     
     visible File file
     
@@ -59,6 +59,7 @@ class NovaFile extends Node {
         super(parent, location)
         
         this.file = file
+        this.source = file.readAllContents()
         
         packageDeclaration = Package.generateDefaultPackage(this)
         importList = new ImportList(this, location)
@@ -70,8 +71,14 @@ class NovaFile extends Node {
     public addChild(Node child) {
         if (child.class.isOfType(ClassDeclaration)) {
             classes.add((ClassDeclaration)child)
+            
+            if (name == null) {
+                name = classes[0].name
+            }
         } else if (child.class.isOfType(Import)) {
             imports.add((Import)child)
+        } else if (child.class.isOfType(Package)) {
+            packageDeclaration = (Package)child
         } else {
             SyntaxMessage.error("Statement '#child' used in wrong context", child)
         }
@@ -83,6 +90,7 @@ class NovaFile extends Node {
         until (node != null) {
             node = ClassDeclaration.parse(input, this, location, require)
             node = Import.parse(input, this, location, require)
+            node = Package.parse(input, this, location, require)
         }
         
         return node
