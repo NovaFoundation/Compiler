@@ -81,7 +81,7 @@ class Node implements Annotatable {
     
     visible Program program => parent?.program
     
-    visible Byte phase => program.compiler.phase
+    visible Byte phase => program.tree.phase
     
     visible NovaFile parentFile => parent?.parentFile
     visible Bool isWithinFile => parentFile != null
@@ -185,7 +185,9 @@ class Node implements Annotatable {
     public onReplaced(Node parent, Node replacement) {}
     public onChildDetached(Node child) {}
     
-    public addChild(Node child) {}
+    public addChild(Node child) {
+        child.parent = this
+    }
     
     /**
      * Validate the node to make last minute changes or error checking.
