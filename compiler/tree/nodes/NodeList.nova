@@ -51,6 +51,8 @@ class NodeList<E extends Node> extends Node {
         
         node.onAdded(this)
         
+        super.addChild(node)
+        
         return node
     }
     
