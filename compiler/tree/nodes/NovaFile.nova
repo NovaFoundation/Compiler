@@ -60,7 +60,12 @@ class NovaFile extends Node {
         super(parent, location)
         
         this.file = file
-        this.source = new FileReader(file).readAllContents()
+        
+        var reader = new FileReader(file)
+        
+        this.source = reader.readAllContents()
+        
+        reader.close()
         
         packageDeclaration = Package.generateDefaultPackage(this)
         importList = new ImportList(this, location)
