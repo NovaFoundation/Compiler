@@ -5,6 +5,7 @@ import "compiler/SyntaxMessage"
 import "compiler/tree/nodes/closures/ClosureContext"
 import "compiler/tree/nodes/closures/ClosureDeclaration"
 import "nova/io/File"
+import "nova/io/FileReader"
 
 class NovaFile extends Node {
     visible NovaFile parentFile => this
@@ -59,7 +60,7 @@ class NovaFile extends Node {
         super(parent, location)
         
         this.file = file
-        this.source = file.readAllContents()
+        this.source = new FileReader(file).readAllContents()
         
         packageDeclaration = Package.generateDefaultPackage(this)
         importList = new ImportList(this, location)
