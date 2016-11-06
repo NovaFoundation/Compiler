@@ -1,0 +1,15 @@
+package "compiler/engines"
+
+import "compiler/Compiler"
+
+abstract class CodeGeneratorEngine {
+    visible Compiler controller
+    
+    
+    
+    public abstract writeFiles()
+    
+    /// Insert the main method into the correct file. Also set up the
+    /// initialization for the program within the main method.
+    public abstract insertMainMethod()
+}
