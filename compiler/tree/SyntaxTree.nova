@@ -1,9 +1,93 @@
 package "compiler/tree"
 
+import "nova/datastruct/list/Stack"
+import "nova/datastruct/list/List"
+
+import "compiler/SyntaxMessage"
+import "compiler/tree/nodes/Program"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/NovaFile"
+import "compiler/tree/nodes/ClassDeclaration"
+
+import "compiler/util/CompilerStringFunctions"
+
 class SyntaxTree {
-    public construct() {
+    visible Program root
+    
+    visible Byte phase
+    
+    Stack<Node> parents
+    
+    public construct(Program root) {
+        parents = new Stack()
         
+        phase = 1
+        
+        this.root = root
+        
+        root.tree = this
     }
     
+    public formTree() {
+        root.files.forEach((file, i) -> {
+            var statements = file.source.statements
+            
+            parents.push(file)
+            
+            for (statement in statements) {
+                Console.writeLine("'#statement'")
+                
+                var node = parents.peek().parseStatement(statement, require: false)
+                
+                Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
+                                   \tendsScope: '#statements.endsScope'\n
+                                   \tparse: '#node'\n")
+                
+                if (node != null) {
+                    parents.peek().addChild(node)
+                }
+                
+                if (statements.beginsScope) { // TODO: if null, then create something to replace it
+                    if (node == null) {
+                        SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
+                    } else {
+                        parents.push(node)
+                    }
+                }
+                if (statements.endsScope) {
+                    repeat (statements.scopesEnded) {
+                        if (!parents.isEmpty) {
+                            parents.pop()
+                        }
+                    }
+                }
+            }
+            
+            if (parents.peek() != file) {
+                SyntaxMessage.error("Missing ending brace", file, throwException: false)
+            }
+        })
+        
+        phase = 2
+    }
     
+    public validateTypes() {
+        root.files.forEach(file -> {
+            if (!file.classes.all({ _.validateTypes() }, false)) {
+                Console.writeLine("invalid types")
+            }
+        })
+        
+        phase = 3
+    }
+    
+    public parseStatements() {
+        root.files.forEach(file -> {
+            if (!file.classes.all({ _.parsePlaceholders() }, false)) {
+                Console.writeLine("failed to parse placeholders")
+            }
+        })
+        
+        phase = 4
+    }
 }

@@ -12,6 +12,7 @@ import "compiler/tree/nodes/NovaFile"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Program"
 import "compiler/tree/StatementIterator"
+import "compiler/tree/SyntaxTree"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -23,12 +24,6 @@ class Compiler {
     visible String[] errors   = new String[]
     visible String[] warnings = new String[]
     visible String[] info     = new String[]
-    
-    visible Byte phase
-    
-    Stack<Node> parents
-    
-    Program program
     
     NovaFile[] files
     
@@ -90,33 +85,25 @@ class Compiler {
 //				"-library",
             ]
             
-            program = new Program(this)
-            parents = new Stack()
+            var program = new Program()
             
             var parentDir = new File("../../../tempstd")
             
             files = parentDir.listFiles(parentDir.location).map({ new NovaFile(new File(parentDir.location + "/" + _)) })
             
             try {
-                phase = 1
-                
                 files.forEach(file -> {
                     program.addChild(file)
-                    file.parent = program
                 })
                 
-                formTree(files)
+                var tree = new SyntaxTree(program)
                 
-                phase++
-                
-                validateTypes(files)
-                
-                phase++
-                
-                parseStatements(files)
+                tree.formTree()
+                tree.validateTypes()
+                tree.parseStatements()
                 
                 var separator = "=============================================================="
-                var a = files.map({ "\n#{_.toNova()}\n#separator" }).join("")
+                var a = tree.root.files.map({ "\n#{_.toNova()}\n#separator" }).join("")
                 Console.writeLine("#separator" + a)
             } catch (SyntaxErrorException e) {
                 
@@ -134,60 +121,5 @@ class Compiler {
         
     }
     
-    formTree(NovaFile[] files) {
-        files.forEach((file, i) -> {
-            var statements = file.source.statements
-            
-            parents.push(file)
-            
-            for (statement in statements) {
-                Console.writeLine("'#statement'")
-                
-                var node = parents.peek().parseStatement(statement, require: false)
-                
-                Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
-                                   \tendsScope: '#statements.endsScope'\n
-                                   \tparse: '#node'\n")
-                
-                if (node != null) {
-                    parents.peek().addChild(node)
-                }
-                
-                if (statements.beginsScope) { // TODO: if null, then create something to replace it
-                    if (node == null) {
-                        SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
-                    } else {
-                        parents.push(node)
-                    }
-                }
-                if (statements.endsScope) {
-                    repeat (statements.scopesEnded) {
-                        if (!parents.isEmpty) {
-                            parents.pop()
-                        }
-                    }
-                }
-            }
-            
-            if (parents.peek() != file) {
-                SyntaxMessage.error("Missing ending brace", file, throwException: false)
-            }
-        })
-    }
     
-    validateTypes(NovaFile[] files) {
-        files.forEach(file -> {
-            if (!file.classes.all({ _.validateTypes() }, false)) {
-                Console.writeLine("invalid types")
-            }
-        })
-    }
-    
-    parseStatements(NovaFile[] files) {
-        files.forEach(file -> {
-            if (!file.classes.all({ _.parsePlaceholders() }, false)) {
-                Console.writeLine("failed to parse placeholders")
-            }
-        })
-    }
 }
