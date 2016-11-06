@@ -1,6 +1,7 @@
 package "compiler/tree/nodes"
 
 import "compiler/Compiler"
+import "compiler/tree/SyntaxTree"
 import "compiler/SyntaxMessage"
 
 class Program extends NodeList<NovaFile> {
@@ -8,19 +9,21 @@ class Program extends NodeList<NovaFile> {
     
     visible NovaFile[] files => (NovaFile[])children
     
-    visible Compiler compiler
+    public SyntaxTree tree
     
-    public construct(Compiler compiler) {
+    visible Compiler compiler => tree.compiler
+    
+    public construct(SyntaxTree tree = null) {
         super()
         
-        this.compiler = compiler
+        this.tree = tree
     }
     
     public addChild(Node child) {
-        if (child.class.isOfType(NovaFile)) {
-            children.add((NovaFile)child)
-        } else {
+        if (!child.class.isOfType(NovaFile)) {
             SyntaxMessage.error("Invalid child '#child'", child)
+        } else {
+            super.addChild(child)
         }
     }
     
