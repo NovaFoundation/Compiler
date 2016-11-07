@@ -89,7 +89,7 @@ class Compiler {
             
             var parentDir = new File("../../../tempstd")
             
-            files = parentDir.listFiles(parentDir.location).map({ new NovaFile(new File(parentDir.location + "/" + _)) })
+            files = parentDir.getChildFiles(true).map({ new NovaFile(_) })
             
             try {
                 files.forEach(file -> {
@@ -102,9 +102,9 @@ class Compiler {
                 tree.validateTypes()
                 tree.parseStatements()
                 
-                var separator = "=============================================================="
-                var a = tree.root.files.map({ "\n#{_.toNova()}\n#separator" }).join("")
-                Console.writeLine("#separator" + a)
+                var separator = "============================="
+                var a = tree.root.files.map(file -> { "#separator #file.name #separator\n#{file.toNova()}\n" }).join("")
+                Console.writeLine(a + separator + separator)
             } catch (SyntaxErrorException e) {
                 
             }
@@ -120,6 +120,4 @@ class Compiler {
     testClasses() {
         
     }
-    
-    
 }
