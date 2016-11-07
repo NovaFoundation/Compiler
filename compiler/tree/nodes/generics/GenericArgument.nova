@@ -1,0 +1,26 @@
+package "compiler/tree/nodes/generics"
+
+import "compiler/util/Location"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Type"
+
+class GenericArgument extends Value {
+    
+    
+    /// <summary>
+    /// Create a new GenericArgument node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the GenericArgument node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID, String type) {
+        super(parent, location)
+        
+        parseType(type)
+    }
+    
+    public toString() => toNova()
+    public toNova() => "#type.name"
+}
