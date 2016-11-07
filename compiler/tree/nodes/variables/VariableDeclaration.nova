@@ -50,14 +50,14 @@ class VariableDeclaration extends Identifier {
     ///     be parsed.</param>
     /// <returns>The parsed VariableDeclaration node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
-        var nameStart = input.nextWhitespaceIndex(input.count - 2, -1)
+        var words = input.splitValues()
         
-        if (nameStart > 0) {
+        if (words.count == 2) {
             VariableDeclaration node = new VariableDeclaration(parent, location)
             
-            node.name = input.substring(nameStart + 1)
+            node.name = words.last
             
-            if (node.name.isIdentifier && node.parseType(input.nextWord())) {
+            if (node.name.isIdentifier && node.parseType(words.first)) {
                 return node
             }
         }
@@ -70,7 +70,10 @@ class VariableDeclaration extends Identifier {
     }
     
     public parseModifiers(String modifiers) =>
-        modifiers.split(/\s+/).all(x -> { x.count == 0 || parseModifier(x) })
+        parseModifiers(modifiers.split(/\s+/))
+    
+    public parseModifiers(String[] modifiers) =>
+        modifiers.all(x -> { x.count == 0 || parseModifier(x) })
     
     public getInvalidModifiers(String modifiers) =>
         modifiers.split(/\s+/).filter(x -> { x.count > 0 && !parseModifier(x) })
