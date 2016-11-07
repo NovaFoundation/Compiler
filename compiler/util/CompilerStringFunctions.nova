@@ -1,5 +1,8 @@
 package "compiler/util"
 
+import "nova/regex/Regex"
+import "nova/regex/Match"
+
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/operations/UnaryOperation"
 import "compiler/tree/nodes/operations/Operator"
@@ -699,4 +702,42 @@ extension CompilerStringFunctions {
      *      found, then -1 is returned instead.
      */
     public findDotOperatorIndex(String this, Int start = 0) => findCharInBaseScope('.', start)
+    
+    public formatIndentation(String this) -> String {
+        var output = ""
+        var tabs   = ""
+        
+        var matches = Regex.getMatches("[\\}\\{\\)\\(\n]", this)
+        
+        Int  lastIndex = 0
+        Bool sameLine  = false
+        
+        matches.forEach(match -> {
+            var c = this.chars[match.start]
+            
+            if (c == '{' || c == '(') {
+                tabs += "\t"
+                
+                sameLine = true
+            } else if (c == '}' || c == ')') {
+                if (tabs.count > 0) {
+                    tabs = tabs.substring(1)
+                }
+                
+                if (output.count > 0 && !sameLine) {
+                    output = output.substring(end: output.count - 1)
+                }
+            } else if (c == '\n') {
+                output += this.substring(lastIndex, match.start) + "\n" + tabs
+                
+                lastIndex = match.start + 1
+                
+                sameLine = false
+            }
+        })
+        
+        output += tabs + substring(lastIndex)
+        
+        return output
+    }
 }

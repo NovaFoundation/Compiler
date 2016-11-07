@@ -103,7 +103,7 @@ class Compiler {
                 tree.parseStatements()
                 
                 var separator = "============================="
-                Console.writeLine(tree.root.files.map(file -> { "#separator #file.name #separator\n#{file.toNova()}" }).join("\n"))
+                Console.writeLine(tree.root.files.map(file -> { "#separator #file.name #separator\n#{file.toNova().formatIndentation()}" }).join("\n"))
             } catch (SyntaxErrorException e) {
                 
             }
