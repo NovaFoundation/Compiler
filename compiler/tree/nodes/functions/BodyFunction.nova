@@ -5,8 +5,12 @@ import "compiler/tree/nodes/Scope"
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
 
+import "compiler/util/CompilerStringFunctions"
+
 class BodyFunction extends FunctionDeclaration {
     public Scope scope <=> scope
+    
+    visible String inlineBody
     
     /// <summary>
     /// Create a new BodyFunction node.<br><br>
@@ -48,10 +52,19 @@ class BodyFunction extends FunctionDeclaration {
     ///     be parsed.</param>
     /// <returns>The parsed BodyFunction node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> BodyFunction {
+        String inlineBody = null
+        var inlineBodyIndex = findInlineBodyIndex(input)
+        
+        if (inlineBodyIndex > 0) {
+            inlineBody = input.substring(inlineBodyIndex + 2).trim()
+            input = input.substring(end: inlineBodyIndex).trim()
+        }
+        
         var function = FunctionDeclaration.parse(input, parent, location, require)
         
         if (function != null) {
             var node = new BodyFunction(parent, location)
+            node.inlineBody = inlineBody
             
             return (BodyFunction)function.cloneTo(node)
         }
@@ -61,6 +74,28 @@ class BodyFunction extends FunctionDeclaration {
         }
         
         return null
+    }
+    
+    static findInlineBodyIndex(String input, Int defaultReturnValue = -1) -> Int {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return defaultReturnValue
+        }
+        
+        var end = input.findEndingMatch(start, '(', ')')
+        
+        if (end < 0) {
+            return defaultReturnValue
+        }
+        
+        end = input.nextWordIndex("=>", end + 1)
+        
+        if (end < 0) {
+            return defaultReturnValue
+        } else {
+            return end
+        }
     }
     
     public parsePlaceholders() =>
