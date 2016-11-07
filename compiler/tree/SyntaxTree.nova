@@ -4,6 +4,7 @@ import "nova/datastruct/list/Stack"
 import "nova/datastruct/list/List"
 
 import "compiler/SyntaxMessage"
+import "compiler/Compiler"
 import "compiler/tree/nodes/Program"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/NovaFile"
@@ -18,11 +19,14 @@ class SyntaxTree {
     
     Stack<Node> parents
     
-    public construct(Program root) {
+    visible Compiler compiler
+    
+    public construct(Compiler compiler, Program root) {
         parents = new Stack()
         
         phase = 1
         
+        this.compiler = compiler
         this.root = root
         
         root.tree = this
@@ -35,6 +39,9 @@ class SyntaxTree {
             parents.push(file)
             
             for (statement in statements) {
+                if (parents.isEmpty) {
+                    break
+                }
                 // Console.writeLine("'#statement'")
                 
                 var node = parents.peek().parseStatement(statement, require: false)
@@ -49,7 +56,7 @@ class SyntaxTree {
                 
                 if (statements.beginsScope) { // TODO: if null, then create something to replace it
                     if (node == null) {
-                        SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek(), throwException: false)
+                        SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek() ?: root, throwException: false)
                     } else {
                         parents.push(node)
                     }

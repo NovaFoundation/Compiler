@@ -96,7 +96,7 @@ class Compiler {
                     program.addChild(file)
                 })
                 
-                var tree = new SyntaxTree(program)
+                var tree = new SyntaxTree(this, program)
                 
                 tree.formTree()
                 tree.validateTypes()
