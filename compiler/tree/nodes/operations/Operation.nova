@@ -61,9 +61,7 @@ class Operation extends Value {
     static findOperatorIndices(String input) -> Int[] {
         var matches = new Int[0]
         
-        var ops = Operator.BINARY_OPERATORS
-        
-        ops.forEach(operator -> {
+        Operator.BINARY_OPERATORS.forEach(operator -> {
             var index = input.findStringInBaseScope(operator, start: 1)
             
             if (input.isStrictlyOperator(operator, index)) {
@@ -74,19 +72,20 @@ class Operation extends Value {
         return matches
     }
     
-    parseOperators(String input, Int[] matches) -> Bool {
-        var symbols = Operator.OPERATOR_SYMBOLS
-        
-        matches.forEach((start, i, starts) -> {
-            var end = input.nextIndexThatDoesntContain(symbols, start: start)
+    parseOperators(String input, Int[] matches) =>
+        matches.all((start, i, starts) -> {
+            var end = input.nextIndexThatDoesntContain(Operator.OPERATOR_SYMBOLS, start: start)
             
             var operator = new Operator(this, location, input.substring(start, end))
             
-            operators.add(operator)
-        })
-        
-        return true
-    }
+            if (operator != null) {
+                operators.add(operator)
+                
+                return true
+            } else {
+                return false
+            }
+        }, false)
     
     parseOperands(String[] operands) =>
         operands.all({
@@ -104,14 +103,12 @@ class Operation extends Value {
     parseOperands(String input, Int[] matches) -> Bool {
         var operands = new String[]
         
-        var symbols = Operator.OPERATOR_SYMBOLS
-        
         var prev = 0
         
         matches.forEach((start, i, starts) -> {
             operands.add(input.substring(prev, start).trim())
             
-            prev = input.nextIndexThatDoesntContain(symbols, start: start)
+            prev = input.nextIndexThatDoesntContain(Operator.OPERATOR_SYMBOLS, start: start)
         })
         
         operands.add(input.substring(prev).trim())
