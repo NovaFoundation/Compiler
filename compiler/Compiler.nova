@@ -89,7 +89,7 @@ class Compiler {
             
             var parentDir = new File("../../../tempstd")
             
-            files = parentDir.getChildFiles(true).map({ new NovaFile(_) })
+            files = parentDir.getChildFiles(true).filter({ _.extension.toLowerCase().equals(".nova") }).map({ new NovaFile(_) })
             
             try {
                 files.forEach(file -> {
