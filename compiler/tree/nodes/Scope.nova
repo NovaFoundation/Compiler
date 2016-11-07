@@ -33,6 +33,24 @@ class Scope extends NodeList {
     
     visible VariableDeclaration[] declarations
     
+    visible Int depth {
+        get {
+            Node current = this
+            
+            var depth = 0
+            
+            while (current != null) {
+                depth++
+                
+                current = current.parentWithScope
+            }
+            
+            return depth
+        }
+        
+        no set
+    }
+    
     /// <summary>
     /// Create a new Scope node.<br><br>
     /// <include id="example-inputs">
