@@ -52,7 +52,10 @@ class FieldDeclaration extends InstanceDeclaration {
         
         if (declaration != null) {
             var node = new FieldDeclaration(parent, location)
-            node.initializationValue = PlaceholderValue.parse(initializationValue, node, location)
+            
+            if (initializationValue != null) {
+                node.initializationValue = PlaceholderValue.parse(initializationValue, node, location)
+            }
             
             return (FieldDeclaration)declaration.cloneTo(node)
         }
