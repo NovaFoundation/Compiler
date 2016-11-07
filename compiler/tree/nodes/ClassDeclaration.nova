@@ -242,8 +242,8 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     
     public toNova() =>
         (writeHeader() + " {\n" +
-        fields.map({ _.toNova() }).join("\n") + "\n\n" +
-        functions.map({ _.toNova() }).join("\n") + "\n" +
+        (fields.map({ _.toNova() }).join("\n") + "\n\n" +
+        functions.map({ _.toNova() }).join("\n\n")).trim() + "\n" +
         "}").trim()
     
     [Override]

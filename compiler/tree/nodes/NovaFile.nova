@@ -130,7 +130,7 @@ class NovaFile extends Node {
     
     public toNova() =>
         (packageDeclaration.toNova() + "\n\n" +
-        imports.filter({ !_.isDefault }).map({ _.toNova() }).join("\n") + "\n" +
+        imports.filter({ !_.isDefault }).map({ _.toNova() + "\n" }).join() + "\n" +
         classes.map({ _.toNova() }).join("\n")).trim()
     
     public toString() => "#{name}.nova"
