@@ -216,7 +216,7 @@ class Node implements Annotatable {
             }
         }
         
-        if (searchAncestors) {
+        if (searchAncestors && parent != null) {
             return parent.findVariableDeclaration(name, searchAncestors)
         }
         
