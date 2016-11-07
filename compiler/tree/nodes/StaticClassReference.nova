@@ -27,7 +27,7 @@ class StaticClassReference extends Identifier implements Accessible {
         super(parent, location)
         
         this.name = name
-        this.type = name
+        this.type = new Type(name)
     }
     
     /// <summary>

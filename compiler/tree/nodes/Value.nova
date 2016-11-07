@@ -13,13 +13,13 @@ class Value extends Node {
     
     public ArrayAccess arrayAccess
     
-    public String type
+    public Type type
     
     public Bool isAssignable => true
     
     public ClassDeclaration typeClass {
         get {
-            var imp = parentFile.imports.firstWhere({ _.className.equals(type) })
+            var imp = parentFile.imports.firstWhere({ _.className.equals(type.name) })
             
             if (imp != null) {
                 return imp.classDeclaration
@@ -33,7 +33,7 @@ class Value extends Node {
     
     visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
     
-    visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(type) })
+    visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(type.name) })
     
     /// <summary>
     /// Create a new Value node.<br><br>
@@ -89,7 +89,7 @@ class Value extends Node {
     
     public parseType(String input) -> Bool {
         if (input != null && input.isIdentifier) {
-            type = input
+            type = new Type(input)
             
             return true
         }
@@ -98,7 +98,7 @@ class Value extends Node {
     }
     
     public validateTypes() -> Bool {
-        if (type != null && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type) })) {
+        if (type != null && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type.name) })) {
             invalidTypeError(throwException: false)
             
             return false
@@ -107,10 +107,10 @@ class Value extends Node {
         }
     }
     
-    public invalidTypeError(String type = this.type, Bool throwException = true) =>
+    public invalidTypeError(Type type = this.type, Bool throwException = true) =>
         SyntaxMessage.error("Invalid type '#type'", this, throwException: throwException)
     
-    public writeType() => "#type".replace(/\s+/, " ").trim()
+    public writeType() => "#type.toNova()"
     
     public cloneTo(Value other) => other {
         super.cloneTo(other)

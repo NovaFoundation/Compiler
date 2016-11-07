@@ -1,0 +1,32 @@
+package "compiler/tree/nodes"
+
+import "compiler/tree/nodes/Node"
+import "compiler/util/Location"
+import "compiler/tree/nodes/generics/GenericArgument"
+
+import "compiler/util/CompilerStringFunctions"
+
+class Type {
+    public String name
+    
+    visible GenericArgument[] genericArguments = new GenericArgument[0]
+    
+    public construct(String name = null, Node parent = null, Location location = Location.INVALID) {
+        this.name = name
+        
+        var genericIndex = name.indexOf('<')
+        
+        if (genericIndex > 0) {
+            this.name = name.substring(end: genericIndex)
+            
+            var end = name.findEndingMatch(genericIndex, '<', '>')
+            
+            if (end > 0) {
+                genericArguments = name.substring(genericIndex + 1, end).splitAtCommas().map({ new GenericArgument(parent, location, _) })
+            }
+        }
+    }
+    
+    public toString() => toNova()
+    public toNova() => "#name" + (genericArguments.count > 0 ? "<#{genericArguments.join(", ")}>" : "")
+}

@@ -11,7 +11,7 @@ import "compiler/util/Location"
 /// <since></since>
 /// <version></version>
 class PlaceholderValue extends Value {
-    public String value <=> type
+    public String value
     
     /// <summary>
     /// Create a new PlaceholderValue node.<br><br>
