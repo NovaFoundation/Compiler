@@ -4,6 +4,8 @@ import "compiler/tree/nodes/Node"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
+import "compiler/util/CompilerStringFunctions"
+
 /// <summary>
 /// <a href="compiler/tree/nodes/VariableDeclaration">VariableDeclaration</a> extension that represents 
 /// <summary>
@@ -54,12 +56,16 @@ class InstanceDeclaration extends VariableDeclaration {
     ///     be parsed.</param>
     /// <returns>The parsed InstanceDeclaration node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> InstanceDeclaration {
-        var declaration = VariableDeclaration.parse(input, parent, location, require)
+        var words = input.splitValues()
+        
+        var declaration = VariableDeclaration.parse(words.takeLast(2).join(" "), parent, location, require)
         
         if (declaration != null) {
             var node = new InstanceDeclaration(parent, location)
             
-            return (InstanceDeclaration)declaration.cloneTo(node)
+            if (node.parseModifiers(words.take(words.count - 2))) {
+                return (InstanceDeclaration)declaration.cloneTo(node)
+            }
         }
         
         return null
@@ -72,6 +78,7 @@ class InstanceDeclaration extends VariableDeclaration {
         match (modifier)
             case "public"    fallthrough
             case "private"   fallthrough
+            case "visible"   fallthrough
             case "protected" visibility = modifier
             case "static"    isStatic   = true
             default return false
