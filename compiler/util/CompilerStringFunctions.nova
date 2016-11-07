@@ -20,7 +20,7 @@ extension CompilerStringFunctions {
         no set
     }
     public Bool String.isNumber {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
-        get { return count > 0 && matches(/[0-9]+/) }
+        get { return count > 0 && matches(/-?[0-9]+/) }
         no set
     }
     
@@ -319,6 +319,10 @@ extension CompilerStringFunctions {
         }
         
         return defaultReturnValue
+    }
+    
+    public splitValues(String this) -> String[] {
+        return split(/\s+/)
     }
     
     /**
