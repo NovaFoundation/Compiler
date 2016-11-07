@@ -35,13 +35,13 @@ class SyntaxTree {
             parents.push(file)
             
             for (statement in statements) {
-                Console.writeLine("'#statement'")
+                // Console.writeLine("'#statement'")
                 
                 var node = parents.peek().parseStatement(statement, require: false)
                 
-                Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
-                                   \tendsScope: '#statements.endsScope'\n
-                                   \tparse: '#node'\n")
+                // Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
+                //                    \tendsScope: '#statements.endsScope'\n
+                //                    \tparse: '#node'\n")
                 
                 if (node != null) {
                     parents.peek().addChild(node)
