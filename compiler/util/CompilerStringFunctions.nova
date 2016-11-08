@@ -469,7 +469,9 @@ extension CompilerStringFunctions {
             return -1
         }
         
-        if (chars[nextCharIndex] == '{') {
+        if (chars[currentEnd] == '{') {
+            return currentEnd
+        } else if (chars[nextCharIndex] == '{') {
             return nextCharIndex
         } else if (checkStatementContinuation(prevCharIndex, nextCharIndex)) {
             return calculateStatementEnd(currentEnd + 1, statementEndIndex)
