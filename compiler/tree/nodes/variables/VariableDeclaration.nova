@@ -53,7 +53,7 @@ class VariableDeclaration extends Identifier {
         var words = input.splitValues()
         
         if (words.count == 2) {
-            VariableDeclaration node = new VariableDeclaration(parent, location)
+            var node = new VariableDeclaration(parent, location)
             
             node.name = words.last
             
