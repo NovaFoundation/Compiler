@@ -1,0 +1,44 @@
+package "compiler/tree/nodes/functions"
+
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Scope"
+import "compiler/util/Location"
+import "compiler/SyntaxMessage"
+
+import "compiler/util/CompilerStringFunctions"
+
+class MutatorFunction extends PropertyFunction {
+    /// <summary>
+    /// Create a new MutatorFunction node.<br><br>
+    /// <include id="example-inputs">
+    /// </summary>
+    /// 
+    /// <param name="parent">The parent of the MutatorFunction node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    /// <summary>
+    /// Decode the given input into a MutatorFunction node. If the input cannot be parsed
+    /// into a MutatorFunction node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// </summary>
+    /// 
+    /// <param name="input">The input string to decode into a MutatorFunction instance.</param>
+    /// <param name="parent">The parent of the MutatorFunction node.</param>
+    /// <param name="location">The location of the input text in the source file.</param>
+    /// <param name="require">Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed MutatorFunction node, if successful; null otherwise.</returns>
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> MutatorFunction {
+        
+    }
+}
