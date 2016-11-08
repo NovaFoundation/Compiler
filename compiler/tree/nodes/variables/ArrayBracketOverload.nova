@@ -1,0 +1,56 @@
+package "compiler/tree/nodes/variables"
+
+import "compiler/tree/nodes/Node"
+import "compiler/SyntaxErrorException"
+import "compiler/util/Location"
+import "compiler/tree/nodes/Identifier"
+
+import "compiler/util/CompilerStringFunctions"
+
+class ArrayBracketOverload extends Node {
+    
+    
+    /// Create a new ArrayBracketOverload node.<br><br>
+    /// <include id="example-inputs">
+    /// 
+    /// <param parent>The parent of the ArrayBracketOverload node.
+    /// <param location>The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// Decode the given input into a ArrayBracketOverload node. If the input cannot be parsed
+    /// into a ArrayBracketOverload node, null is returned.<br><br>
+    /// <div id="example-inputs">
+    ///     Example inputs:
+    ///     <ul>
+    ///         <li></li>
+    ///         <li></li>
+    ///         <li></li>
+    ///     </ul>
+    /// </div>
+    /// 
+    /// <param input>The input string to decode into a ArrayBracketOverload instance.
+    /// <param parent>The parent of the ArrayBracketOverload node.
+    /// <param location>The location of the input text in the source file.
+    /// <param require>Whether or not to throw a syntax error if the input could not
+    ///     be parsed.</param>
+    /// <returns>The parsed ArrayBracketOverload node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayBracketOverload {
+        var bracketIndex = input.indexOf('[')
+        
+        if (bracketIndex > 0) {
+            var end = input.findEndingMatch(bracketIndex, '[', ']')
+            
+            if (end > bracketIndex) {
+                var node = new ArrayBracketOverload(parent, location)
+                
+                return node
+            }
+        }
+        
+        return null
+    }
+}
