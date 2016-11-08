@@ -11,19 +11,35 @@ class Type {
     
     visible GenericArgument[] genericArguments = new GenericArgument[0]
     
-    public construct(String name = null, Node parent = null, Location location = Location.INVALID) {
+    public construct(String name = null) {
         this.name = name
+    }
+    
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Type {
+        var node = new Type()
         
-        var genericIndex = name.indexOf('<')
+        node.name = input
+        
+        var genericIndex = input.indexOf('<')
         
         if (genericIndex > 0) {
-            this.name = name.substring(end: genericIndex)
+            node.name = input.substring(end: genericIndex)
             
-            var end = name.findEndingMatch(genericIndex, '<', '>')
+            var end = input.findEndingMatch(genericIndex, '<', '>')
             
             if (end > 0) {
-                genericArguments = name.substring(genericIndex + 1, end).splitAtCommas().map({ new GenericArgument(parent, location, _) })
+                node.genericArguments = input.substring(genericIndex + 1, end).splitAtCommas().map({ new GenericArgument(parent, location, _) })
+                
+                if (node.genericArguments.any({ _ == null })) { // if any generic arguments didnt parse
+                    return null
+                }
             }
+        }
+        
+        if (node.name.isIdentifier) {
+            return node
+        } else {
+            return null
         }
     }
     

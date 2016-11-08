@@ -89,9 +89,9 @@ class Value extends Node {
     
     public parseType(String input) -> Bool {
         if (input != null && input.isIdentifier) {
-            type = new Type(input)
+            type = Type.parse(input)
             
-            return true
+            return type != null
         }
         
         return false

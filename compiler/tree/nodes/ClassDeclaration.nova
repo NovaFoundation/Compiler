@@ -185,7 +185,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         if (extension.startsWith(/extends\s+/)) {
             extension = extension.substring("extends ".count).trim()
             
-            extendedClass = new Type(extension)
+            extendedClass = Type.parse(extension)
             
             if (!extendedClass.name.isIdentifier) {
                 SyntaxMessage.errorIf("Extended class '#extension' is not a valid type", this, require)
@@ -201,7 +201,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     
     parseImplementations(String implementations, Bool require) -> Bool {
         if (implementations.startsWith(/implements\s+/)) {
-            implementedInterfaces = implementations.substring("implements ".count).splitAtCommas(searchGenerics: true).map({ new Type(_) })
+            implementedInterfaces = implementations.substring("implements ".count).splitAtCommas(searchGenerics: true).map({ Type.parse(_) })
             
             if (implementedInterfaces.any({ !_.name.isIdentifier })) {
                 var invalid = implementedInterfaces.filter({ !_.name.isIdentifier })

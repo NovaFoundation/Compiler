@@ -53,7 +53,7 @@ class Literal extends Value implements Accessible {
         if (type != null) {
             var node = new Literal(parent, location)
             
-            node.type = new Type(type)
+            node.type = Type.parse(type)
             node.value = input
             
             if (node.formatValue()) {
