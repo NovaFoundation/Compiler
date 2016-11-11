@@ -1,0 +1,2 @@
+language: nova
+mainClassLocation: compiler/Compiler.nova
