@@ -88,7 +88,7 @@ class Value extends Node {
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
     
     public parseType(String input) -> Bool {
-        if (input != null && input.isIdentifier) {
+        if (input != null) {
             type = Type.parse(input)
             
             return type != null
