@@ -51,10 +51,8 @@ class Scope extends NodeList {
         no set
     }
     
-    /// <summary>
     /// Create a new Scope node.<br><br>
     /// <include id="example-inputs">
-    /// </summary>
     /// 
     /// <param name="parent">The parent of the Scope node.</param>
     /// <param name="location">The location of the input text in the source file.</param>

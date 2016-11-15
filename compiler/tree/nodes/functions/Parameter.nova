@@ -9,10 +9,8 @@ import "compiler/util/Location"
 class Parameter extends LocalDeclaration {
     public Value defaultValue
     
-    /// <summary>
     /// Create a new Parameter node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// #exampleInputs
     /// 
     /// <param name="parent">The parent of the Parameter node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
@@ -20,18 +18,13 @@ class Parameter extends LocalDeclaration {
         super(parent, location)
     }
     
-    /// <summary>
     /// Decode the given input into a Parameter node. If the input cannot be parsed
     /// into a Parameter node, null is returned.<br><br>
-    /// <div id="example-inputs">
+    /// #exampleInputs:
     ///     Example inputs:
-    ///     <ul>
-    ///         <li></li>
-    ///         <li></li>
-    ///         <li></li>
-    ///     </ul>
-    /// </div>
-    /// </summary>
+    ///      * 
+    ///      * 
+    ///      * 
     /// 
     /// <param name="input">The input string to decode into a Parameter instance.</param>
     /// <param name="parent">The parent of the Parameter node.</param>
