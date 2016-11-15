@@ -116,7 +116,7 @@ class Operation extends Value {
         return parseOperands(operands)
     }
     
-    public toString() -> String {
+    public toNova() -> String {
         var output = ""
         
         for (i in 0..operators.count) {

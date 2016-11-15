@@ -48,5 +48,5 @@ class PlaceholderValue extends Value {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
         new PlaceholderValue(parent, location, input)
     
-    public toString() => "Placeholder for '#value'"
+    public toNova() => "Placeholder for '#value'"
 }
