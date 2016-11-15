@@ -251,6 +251,6 @@ class Node implements Annotatable {
         other.annotations = annotations
     }
     
-    public toNova() => toString()
-    public toString() => "{{Node #this.class}}"
+    public toNova() => "{{#this.class}}"
+    public toString() => toNova()
 }
