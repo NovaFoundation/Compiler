@@ -19,7 +19,7 @@ class ArrayAccess extends Node {
     /// 
     /// #exampleInputs
     /// 
-    /// input:    The input string to decode into a ArrayAccess instance.
+    /// input:    The input string to parse into a ArrayAccess instance.
     /// parent:   The parent of the ArrayAccess node.
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
@@ -28,7 +28,7 @@ class ArrayAccess extends Node {
         //dimensions = new Dimensions(this, location)
     }
     
-    /// Decode the given input into a ArrayAccess node. If the input cannot be parsed
+    /// Parse the given input into a ArrayAccess node. If the input cannot be parsed
     /// into a ArrayAccess node, null is returned.
     /// 
     /// #exampleInputs
@@ -37,7 +37,7 @@ class ArrayAccess extends Node {
     ///      * [10 + x * (y - z)]
     ///      * [Math.round(4.7) + "hello, world".count]
     /// 
-    /// input:    The input string to decode into a ArrayAccess instance.
+    /// input:    The input string to parse into a ArrayAccess instance.
     /// parent:   The parent of the ArrayAccess node.
     /// location: The location of the input text in the source file.
     /// require:  Whether or not to throw a syntax error if the input could not

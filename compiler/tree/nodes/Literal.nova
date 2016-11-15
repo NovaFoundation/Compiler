@@ -29,7 +29,7 @@ class Literal extends Value implements Accessible {
     }
     
     /// <summary>
-    /// Decode the given input into a Literal node. If the input cannot be parsed
+    /// Parse the given input into a Literal node. If the input cannot be parsed
     /// into a Literal node, null is returned.<br><br>
     /// <div id="example-inputs">
     ///     Example inputs:
@@ -41,7 +41,7 @@ class Literal extends Value implements Accessible {
     /// </div>
     /// </summary>
     /// 
-    /// <param name="input">The input string to decode into a Literal instance.</param>
+    /// <param name="input">The input string to parse into a Literal instance.</param>
     /// <param name="parent">The parent of the Literal node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     /// <param name="require">Whether or not to throw a syntax error if the input could not

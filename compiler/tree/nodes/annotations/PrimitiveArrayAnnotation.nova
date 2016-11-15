@@ -21,7 +21,7 @@ class PrimitiveArrayAnnotation extends Annotation {
         super(parent, location)
     }
     
-    /// Decode the given input into a PrimitiveArrayAnnotation node. If the input cannot be parsed
+    /// Parse the given input into a PrimitiveArrayAnnotation node. If the input cannot be parsed
     /// into a PrimitiveArrayAnnotation node, null is returned.
     /// 
     /// #exampleInputs:
@@ -30,7 +30,7 @@ class PrimitiveArrayAnnotation extends Annotation {
     ///     * 
     ///     * 
     /// 
-    /// input:    The input string to decode into a PrimitiveArrayAnnotation instance.
+    /// input:    The input string to parse into a PrimitiveArrayAnnotation instance.
     /// parent:   The parent of the PrimitiveArrayAnnotation node.
     /// location: The location of the input text in the source file.
     /// require:  Whether or not to throw a syntax error if the input could not

@@ -18,7 +18,7 @@ class Parameter extends LocalDeclaration {
         super(parent, location)
     }
     
-    /// Decode the given input into a Parameter node. If the input cannot be parsed
+    /// Parse the given input into a Parameter node. If the input cannot be parsed
     /// into a Parameter node, null is returned.<br><br>
     /// #exampleInputs:
     ///     Example inputs:
@@ -26,7 +26,7 @@ class Parameter extends LocalDeclaration {
     ///      * 
     ///      * 
     /// 
-    /// <param name="input">The input string to decode into a Parameter instance.</param>
+    /// <param name="input">The input string to parse into a Parameter instance.</param>
     /// <param name="parent">The parent of the Parameter node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     /// <param name="require">Whether or not to throw a syntax error if the input could not

@@ -31,7 +31,7 @@ class BodyFunction extends FunctionDeclaration {
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
         scope.parseStatement(input, this, location, require)
     
-    /// Decode the given input into a BodyFunction node. If the input cannot be parsed
+    /// Parse the given input into a BodyFunction node. If the input cannot be parsed
     /// into a BodyFunction node, null is returned.
     /// 
     /// #exampleInputs:
@@ -40,7 +40,7 @@ class BodyFunction extends FunctionDeclaration {
     ///      * 
     ///      * 
     /// 
-    /// input:    The input string to decode into a BodyFunction instance.
+    /// input:    The input string to parse into a BodyFunction instance.
     /// parent:   The parent of the BodyFunction node.
     /// location: The location of the input text in the source file.
     /// require:  Whether or not to throw a syntax error if the input could not

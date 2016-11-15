@@ -339,7 +339,9 @@ extension CompilerStringFunctions {
         return defaultReturnValue
     }
     
-    public splitValues(String this) => split(/\s+/)
+    public splitValues(String this) -> String[] {
+        return split(/\s+/)
+    }
     
     /**
      * Split the src by the commas. Makes sure not to split commas that

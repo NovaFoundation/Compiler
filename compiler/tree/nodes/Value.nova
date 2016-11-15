@@ -47,7 +47,7 @@ class Value extends Node {
     }
     
     /// <summary>
-    /// Decode the given input into a Value node. If the input cannot be parsed
+    /// Parse the given input into a Value node. If the input cannot be parsed
     /// into a Value node, null is returned.<br><br>
     /// <div id="example-inputs">
     ///     Example inputs:
@@ -59,7 +59,7 @@ class Value extends Node {
     /// </div>
     /// </summary>
     /// 
-    /// <param name="input">The input string to decode into a Value instance.</param>
+    /// <param name="input">The input string to parse into a Value instance.</param>
     /// <param name="parent">The parent of the Value node.</param>
     /// <param name="location">The location of the input text in the source file.</param>
     /// <param name="require">Whether or not to throw a syntax error if the input could not

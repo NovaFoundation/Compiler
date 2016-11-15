@@ -22,7 +22,7 @@ class ArrayBracketOverload extends Node {
         
     }
     
-    /// Decode the given input into a ArrayBracketOverload node. If the input cannot be parsed
+    /// Parse the given input into a ArrayBracketOverload node. If the input cannot be parsed
     /// into a ArrayBracketOverload node, null is returned.
     /// 
     /// #exampleInputs:
@@ -31,7 +31,7 @@ class ArrayBracketOverload extends Node {
     ///      * 
     ///      * 
     /// 
-    /// input:    The input string to decode into a ArrayBracketOverload instance.
+    /// input:    The input string to parse into a ArrayBracketOverload instance.
     /// parent:   The parent of the ArrayBracketOverload node.
     /// location: The location of the input text in the source file.
     /// require:  Whether or not to throw a syntax error if the input could not

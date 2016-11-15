@@ -26,7 +26,7 @@ class TargetAnnotation extends Annotation {
         super(parent, location)
     }
     
-    /// Decode the given input into a TargetAnnotation node. If the input cannot be parsed
+    /// Parse the given input into a TargetAnnotation node. If the input cannot be parsed
     /// into a TargetAnnotation node, null is returned.
     /// 
     /// #exampleInputs:
@@ -35,7 +35,7 @@ class TargetAnnotation extends Annotation {
     ///     * 
     ///     * 
     /// 
-    /// input:    The input string to decode into a TargetAnnotation instance.
+    /// input:    The input string to parse into a TargetAnnotation instance.
     /// parent:   The parent of the TargetAnnotation node.
     /// location: The location of the input text in the source file.
     /// require:  Whether or not to throw a syntax error if the input could not
