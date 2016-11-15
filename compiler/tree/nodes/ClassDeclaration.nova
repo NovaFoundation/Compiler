@@ -35,6 +35,9 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     public FieldDeclaration[] fields
     public FunctionDeclaration[] functions
     
+    visible Bool isPrivate => visibility.count > 0 && super.isPrivate
+    visible Bool isPublic => visibility.count == 0 || super.isPublic
+    
     /// <summary>
     /// Create a new ClassDeclaration node.<br><br>
     /// <include id="example-inputs">
