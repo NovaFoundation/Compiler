@@ -17,10 +17,10 @@ class InstanceDeclaration extends VariableDeclaration {
     public Bool isStatic = false
     visible Bool isInstance => !isStatic
     
-    public String visibility = "private"
+    public String visibility = ""
     
-    public Bool isPublic    => visibility.equals("public")
-    public Bool isPrivate   => visibility.equals("private")
+    public Bool isPublic => visibility.equals("public")
+    public Bool isPrivate => visibility.count == 0 || visibility.equals("private")
     public Bool isProtected => visibility.equals("protected")
     
     /// <summary>
@@ -32,8 +32,6 @@ class InstanceDeclaration extends VariableDeclaration {
     /// <param name="location">The location of the input text in the source file.</param>
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
-        
-        
     }
     
     /// <summary>
