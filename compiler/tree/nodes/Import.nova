@@ -79,5 +79,5 @@ class Import extends Node {
         return null
     }
     
-    public toString() => "import \"#importLocation\""
+    public toNova() => "import \"#importLocation\""
 }
