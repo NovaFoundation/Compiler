@@ -6,46 +6,64 @@ import "compiler/tree/nodes/PlaceholderValue"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
+import "compiler/util/CompilerStringFunctions"
+
 class FieldDeclaration extends InstanceDeclaration {
     public Value initializationValue
     
-    /// <summary>
-    /// Create a new FieldDeclaration node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    visible Value accessorValue
+    
+    visible Bool isTwoWayAccessor = false
+    
+    /// Create a new FieldDeclaration node.
+    /// #exampleInputs
     /// 
-    /// <param name="parent">The parent of the FieldDeclaration node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// parent:   The parent of the FieldDeclaration node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
     }
     
-    /// <summary>
     /// Decode the given input into a FieldDeclaration node. If the input cannot be parsed
-    /// into a FieldDeclaration node, null is returned.<br><br>
-    /// <div id="example-inputs">
-    ///     Example inputs:
-    ///     <ul>
-    ///         <li></li>
-    ///         <li></li>
-    ///         <li></li>
-    ///     </ul>
-    /// </div>
-    /// </summary>
+    /// into a FieldDeclaration node, null is returned.
     /// 
-    /// <param name="input">The input string to decode into a FieldDeclaration instance.</param>
-    /// <param name="parent">The parent of the FieldDeclaration node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
-    /// <param name="require">Whether or not to throw a syntax error if the input could not
-    ///     be parsed.</param>
-    /// <returns>The parsed FieldDeclaration node, if successful; null otherwise.</returns>
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to decode into a FieldDeclaration instance.
+    /// parent:   The parent of the FieldDeclaration node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed FieldDeclaration node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> FieldDeclaration {
         String initializationValue = null
-        var initializationValueIndex = input.indexOf('=')
+        String accessorValue = null
         
-        if (initializationValueIndex > 0 && input.count > initializationValueIndex + 1 && input[initializationValueIndex + 1] != '>') {
-            initializationValue = input.substring(initializationValueIndex + 1).trim()
-            input = input.substring(end: initializationValueIndex).trim()
+        var twoWay = false
+        
+        var accessorIndex = findAccessorIndex(input)
+        
+        if (accessorIndex > 0) {
+            accessorValue = input.substring(accessorIndex + 2).trim()
+            
+            if (input[accessorIndex - 1] == '<') {
+                accessorIndex--
+                
+                twoWay = true
+            }
+            
+            input = input.substring(end: accessorIndex).trim()
+        } else {
+            var initializationValueIndex = input.indexOf('=')
+            
+            if (initializationValueIndex > 0) {
+                initializationValue = input.substring(initializationValueIndex + 1).trim()
+                input = input.substring(end: initializationValueIndex).trim()
+            }
         }
         
         var declaration = InstanceDeclaration.parse(input, parent, location, require)
@@ -53,7 +71,10 @@ class FieldDeclaration extends InstanceDeclaration {
         if (declaration != null) {
             var node = new FieldDeclaration(parent, location)
             
-            if (initializationValue != null) {
+            if (accessorValue != null) {
+                node.accessorValue = PlaceholderValue.parse(accessorValue, node, location)
+                node.isTwoWayAccessor = twoWay
+            } else if (initializationValue != null) {
                 node.initializationValue = PlaceholderValue.parse(initializationValue, node, location)
             }
             
@@ -63,13 +84,27 @@ class FieldDeclaration extends InstanceDeclaration {
         return null
     }
     
+    static findAccessorIndex(String input, Int defaultReturnValue = -1) -> Int {
+        var index = input.nextWordIndex("=>")
+        
+        if (index < 0) {
+            return defaultReturnValue
+        } else {
+            return index
+        }
+    }
+    
     /*public parsePlaceholders() =>
         initializationValue != null && initializationValue.class.isOfType(PlaceholderValue) ?
             (initializationValue = Value.parse((PlaceholderValue)initializationValue)) != null :
             true*/
     
     public parsePlaceholders() -> Bool {
-        if (initializationValue != null && initializationValue.class.isOfType(PlaceholderValue)) {
+        if (accessorValue != null && accessorValue.class.isOfType(PlaceholderValue)) {
+            accessorValue = Value.parse((PlaceholderValue)accessorValue)
+            
+            return accessorValue != null
+        } else if (initializationValue != null && initializationValue.class.isOfType(PlaceholderValue)) {
             initializationValue = Value.parse((PlaceholderValue)initializationValue)
             
             return initializationValue != null
@@ -78,5 +113,11 @@ class FieldDeclaration extends InstanceDeclaration {
         }
     }
     
-    public toString() => super.toString() + (initializationValue != null ? " = #initializationValue" : "")
+    public writeInitializationValue() => initializationValue != null ? " = #initializationValue.toNova()" : ""
+    public writeAccessorValue() =>
+        accessorValue != null ?
+            (isTwoWayAccessor ? " <=> " : " => ") + accessorValue.toNova() :
+            ""
+    
+    public toNova() => super.toNova() + writeInitializationValue() + writeAccessorValue()
 }
