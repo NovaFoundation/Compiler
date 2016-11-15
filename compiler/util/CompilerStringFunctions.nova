@@ -8,6 +8,8 @@ import "compiler/tree/nodes/operations/UnaryOperation"
 import "compiler/tree/nodes/operations/Operator"
 import "compiler/tree/StatementIterator"
 
+import "compiler/util/Bounds"
+
 extension CompilerStringFunctions {
     static Char[] WHITESPACE = " \t\n\r".chars
     
@@ -40,6 +42,19 @@ extension CompilerStringFunctions {
         }
         
         return true
+    }
+    
+    public substring(String this, Bounds bounds) =>
+        substring(bounds.start, bounds.end)
+    
+    public nextWordBounds(String this, Int start = 0) -> Bounds {
+        var index = nextWhitespaceIndex(start)
+        
+        if (index > 0) {
+            return new Bounds(start, index)
+        }
+        
+        return Bounds.EMPTY
     }
     
     /// If contains given search string surrounded by whitespace
@@ -324,9 +339,7 @@ extension CompilerStringFunctions {
         return defaultReturnValue
     }
     
-    public splitValues(String this) -> String[] {
-        return split(/\s+/)
-    }
+    public splitValues(String this) => split(/\s+/)
     
     /**
      * Split the src by the commas. Makes sure not to split commas that
