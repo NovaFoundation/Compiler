@@ -1,5 +1,6 @@
 package "compiler/tree/nodes"
 
+import "compiler/SyntaxMessage"
 import "compiler/tree/nodes/Node"
 import "compiler/util/Location"
 import "compiler/tree/nodes/generics/GenericArgument"
@@ -8,6 +9,8 @@ import "compiler/util/CompilerStringFunctions"
 
 class Type {
     public String name
+    
+    visible Int arrayDimensions = 0
     
     visible GenericArgument[] genericArguments = new GenericArgument[0]
     
@@ -36,11 +39,45 @@ class Type {
             }
         }
         
-        if (node.name.isIdentifier) {
+        if (node.parseArray(parent, require) && node.name.isIdentifier) {
             return node
         } else {
             return null
         }
+    }
+    
+    parseArray(Node parent, Bool require) -> Bool {
+        var start = name.indexOf('[')
+        
+        if (start > 0) {
+            var first = start
+            var end = name.findEndingMatch(start, '[', ']')
+            var last = end
+            
+            while (end > start) {
+                last = end
+                
+                arrayDimensions++
+                
+                if (name.substring(start + 1, end).trim().count > 0) {
+                    SyntaxMessage.errorIf("Type declaration '#name' cannot have contents within the array brackets", parent, condition: require)
+                    
+                    return false
+                }
+                
+                start = name.indexOf('[', end + 1)
+                
+                if (start < 0) break
+                
+                end = name.findEndingMatch(start, '[', ']')
+            }
+            
+            if (last > first) {
+                name = (name.substring(0, first) + name.substring(last + 1)).trim()
+            }
+        }
+        
+        return true
     }
     
     public toString() => toNova()
