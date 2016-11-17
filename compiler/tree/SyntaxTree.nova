@@ -43,8 +43,8 @@ class SyntaxTree {
             
             for (statement in statements) {
                 if (parents.isEmpty) break
-                
-                Console.writeLine("'#statement'")
+                    
+                var full = statement
                 
                 Node node = null
                 
@@ -57,9 +57,12 @@ class SyntaxTree {
                 if (statement.count > 0) {
                     node = parents.peek().parseStatement(statement, require: false)
                     
-                    Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
-                                       \tendsScope: '#statements.endsScope'\n
-                                       \tparse: '#node'\n")
+                    if (node == null) {
+                        Console.writeLine("'#full'")
+                        Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
+                                           \tendsScope: '#statements.endsScope'\n
+                                           \tparse: '#node'\n")
+                    }
                     
                     if (node != null) {
                         while (!pendingAnnotations.isEmpty) {
