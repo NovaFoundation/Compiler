@@ -107,7 +107,7 @@ class Operation extends Value {
         
         var prev = 0
         
-        if (!matches.all((start, i, starts) -> {
+        if (!matches.all(start -> {
             if (prev > start) {
                 return false
             } else {
