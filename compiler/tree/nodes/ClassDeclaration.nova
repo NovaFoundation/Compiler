@@ -99,6 +99,10 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         return node
     }
     
+    public generateTemporaryScopeNode() -> Node {
+        return new BodyFunction(this)
+    }
+    
     /// <summary>
     /// Parse the given input into a ClassDeclaration node. If the input cannot be parsed
     /// into a ClassDeclaration node, null is returned.<br><br>

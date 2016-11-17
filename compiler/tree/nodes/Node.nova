@@ -227,6 +227,10 @@ class Node implements Annotatable {
         return parentWithScope?.parseStatement(input, parent, location, require)
     }
     
+    public generateTemporaryScopeNode() -> Node {
+        return null
+    }
+    
     /**
      * Return a new Node containing a copy of the values of the
      * specified node, including clones of the children.
