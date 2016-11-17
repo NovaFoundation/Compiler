@@ -84,9 +84,11 @@ class SyntaxTree {
                 if (statements.beginsScope) { // TODO: if null, then create something to replace it
                     if (node == null) {
                         SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek() ?: root, throwException: false)
-                    } else {
-                        parents.push(node)
+                        
+                        node = parents.peek().generateTemporaryScopeNode()
                     }
+                    
+                    parents.push(node)
                 }
                 if (statements.endsScope) {
                     repeat (statements.scopesEnded) {
