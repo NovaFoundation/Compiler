@@ -68,17 +68,17 @@ class SyntaxTree {
                         while (!pendingAnnotations.isEmpty) {
                             node.addAnnotation(pendingAnnotations.pop())
                             
-                            Console.writeLine("Added annotation '#node.annotations.last'")
+                            // Console.writeLine("Added annotation '#node.annotations.last'")
                             
-                            if (pendingAnnotations.isEmpty) {
-                                Console.writeLine()
-                            }
+                            // if (pendingAnnotations.isEmpty) {
+                            //     Console.writeLine()
+                            // }
                         }
                         
                         parents.peek().addChild(node)
                     }
                 } else {
-                    Console.writeLine("Only parsed annotation\n")
+                    // Console.writeLine("Only parsed annotation\n")
                 }
                 
                 if (statements.beginsScope) { // TODO: if null, then create something to replace it
@@ -134,7 +134,7 @@ class SyntaxTree {
             result.annotations.add(annotation)
             result.remainingStatement = statement
             
-            Console.writeLine("Parsed Annotation #annotation")
+            // Console.writeLine("Parsed Annotation #annotation")
             
             if (statement.count > 0) annotation = Annotation.parse(statement)
         }
