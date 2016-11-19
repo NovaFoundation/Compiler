@@ -13,6 +13,8 @@ import "compiler/util/Location"
 class PlaceholderValue extends Value {
     public String value
     
+    visible Scope scope <=> scope
+    
     /// <summary>
     /// Create a new PlaceholderValue node.<br><br>
     /// <include id="example-inputs">
@@ -24,6 +26,14 @@ class PlaceholderValue extends Value {
         super(parent, location)
         
         this.value = value
+    }
+    
+    public addChild(Node child) {
+        scope = scope ?: new Scope(this, location)
+        
+        scope.children.add(child)
+        
+        super.addChild(child)
     }
     
     /// <summary>
@@ -48,5 +58,10 @@ class PlaceholderValue extends Value {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
         new PlaceholderValue(parent, location, input)
     
-    public toNova() => "Placeholder for '#value'"
+    public writeScope() =>
+        scope != null ?
+            " #scope.toNova()" :
+            ""
+    
+    public toNova() => "Placeholder for '#{value}#{writeScope()}'"
 }
