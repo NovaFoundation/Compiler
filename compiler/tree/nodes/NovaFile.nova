@@ -2,8 +2,8 @@ package "compiler/tree/nodes"
 
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
-import "compiler/tree/nodes/closures/ClosureContext"
-import "compiler/tree/nodes/closures/ClosureDeclaration"
+import "compiler/tree/nodes/functions/closures/ClosureContext"
+import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
 import "nova/io/File"
 import "nova/io/FileReader"
 

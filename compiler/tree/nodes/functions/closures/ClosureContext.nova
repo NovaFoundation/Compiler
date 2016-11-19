@@ -1,4 +1,4 @@
-package "compiler/tree/nodes/closures"
+package "compiler/tree/nodes/functions/closures"
 
 import "compiler/util/Location"
 import "compiler/tree/nodes/Node"
