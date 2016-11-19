@@ -566,7 +566,7 @@ extension CompilerStringFunctions {
         var nextNextCharIndex = nextNonWhitespaceIndex(nextWhitespaceIndex(nextCharIndex + 1))
         
         // Whether or not the current statement needs the next line to complete the statement
-        Bool pendingCompletion = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, -1)
+        Bool pendingCompletion = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, direction: -1)
         
         if (pendingCompletion && chars[prevCharIndex] == '>') {
             if (substring(prevCharIndex - 1, prevCharIndex + 1).equals("=>")) {
@@ -666,9 +666,7 @@ extension CompilerStringFunctions {
                 for (Int i = 0; i < str.count && start + i < count; i++) {
                     if (chars[start + i] != str[i]) {
                         break
-                    }
-                    
-                    if (i == str.count - 1) {
+                    } else if (i == str.count - 1) {
                         return new Bounds(start, start + str.count)
                     }
                 }
