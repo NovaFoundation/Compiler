@@ -5,6 +5,7 @@ import "nova/datastruct/list/List"
 
 import "compiler/SyntaxMessage"
 import "compiler/Compiler"
+import "compiler/SyntaxErrorException"
 import "compiler/tree/nodes/Program"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/NovaFile"
@@ -55,7 +56,11 @@ class SyntaxTree {
                 statement = annotations.remainingStatement
                 
                 if (statement.count > 0) {
-                    node = parents.peek().parseStatement(statement, require: false)
+                    try {
+                        node = parents.peek().parseStatement(statement, require: false)
+                    } catch (SyntaxErrorException e) {
+                        Console.log(e)
+                    }
                     
                     if (node == null) {
                         Console.writeLine("'#full'")
