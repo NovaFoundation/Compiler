@@ -94,24 +94,19 @@ class FieldDeclaration extends InstanceDeclaration {
         }
     }
     
-    /*public parsePlaceholders() =>
-        initializationValue != null && initializationValue.class.isOfType(PlaceholderValue) ?
-            (initializationValue = Value.parse((PlaceholderValue)initializationValue)) != null :
-            true*/
+    public parseAccessorValue() =>
+        accessorValue.class.isOfType(PlaceholderValue) ?
+            (accessorValue = Value.parse((PlaceholderValue)accessorValue)) != null :
+            true
     
-    public parsePlaceholders() -> Bool {
-        if (accessorValue != null && accessorValue.class.isOfType(PlaceholderValue)) {
-            accessorValue = Value.parse((PlaceholderValue)accessorValue)
-            
-            return accessorValue != null
-        } else if (initializationValue != null && initializationValue.class.isOfType(PlaceholderValue)) {
-            initializationValue = Value.parse((PlaceholderValue)initializationValue)
-            
-            return initializationValue != null
-        } else {
-            return true
-        }
-    }
+    public parseInitializationValue() =>
+        initializationValue.class.isOfType(PlaceholderValue) ?
+            (initializationValue = Value.parse((PlaceholderValue)initializationValue)) != null :
+            true
+    
+    public parsePlaceholders() =>
+        parseAccessorValue() &
+        parseInitializationValue()
     
     public writeInitializationValue() => initializationValue != null ? " = #initializationValue.toNova()" : ""
     public writeAccessorValue() =>
