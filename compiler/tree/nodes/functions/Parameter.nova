@@ -6,6 +6,8 @@ import "compiler/tree/nodes/PlaceholderValue"
 import "compiler/tree/nodes/variables/LocalDeclaration"
 import "compiler/util/Location"
 
+import "compiler/util/CompilerStringFunctions"
+
 class Parameter extends LocalDeclaration {
     public Value defaultValue
     
@@ -33,10 +35,23 @@ class Parameter extends LocalDeclaration {
     ///     be parsed.</param>
     /// <returns>The parsed Parameter node, if successful; null otherwise.</returns>
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Parameter {
+        String defaultValue = null
+        var assignmentIndex = input.indexOf('=')
+        
+        if (assignmentIndex > 0 && input.isStrictlyOperator('=', assignmentIndex)) {
+            defaultValue = input.substring(assignmentIndex + 1).trim()
+            
+            input = input.substring(end: assignmentIndex).trim()
+        }
+        
         var declaration = LocalDeclaration.parse(input, parent, location, require)
         
         if (declaration != null) {
             var node = new Parameter(parent, location)
+            
+            if (defaultValue != null) {
+                node.defaultValue = PlaceholderValue.parse(defaultValue, node, location, require)
+            }
             
             return (Parameter)declaration.cloneTo(node)
         }
