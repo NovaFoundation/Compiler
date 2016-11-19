@@ -2,6 +2,7 @@ package "compiler/tree/nodes/functions"
 
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Scope"
+import "compiler/tree/nodes/PlaceholderValue"
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
 
@@ -10,7 +11,7 @@ import "compiler/util/CompilerStringFunctions"
 class BodyFunction extends FunctionDeclaration {
     public Scope scope <=> scope
     
-    visible String inlineBody
+    visible Node inlineBody
     
     /// Create a new BodyFunction node.
     /// 
@@ -59,7 +60,10 @@ class BodyFunction extends FunctionDeclaration {
         
         if (function != null) {
             var node = new BodyFunction(parent, location)
-            node.inlineBody = inlineBody
+            
+            if (inlineBody != null) {
+                node.inlineBody = PlaceholderValue.parse(inlineBody, node, location, require)
+            }
             
             return (BodyFunction)function.cloneTo(node)
         }
@@ -93,10 +97,21 @@ class BodyFunction extends FunctionDeclaration {
         }
     }
     
+    parseInlineBody() =>
+        inlineBody.class.isOfType(PlaceholderValue) ?
+            (inlineBody = scope.parseStatement(((PlaceholderValue)inlineBody).value, this, location, true)) != null :
+            true
+    
     public parsePlaceholders() =>
+        parseInlineBody() &
         scope.parsePlaceholders() &
         super.parsePlaceholders()
     
+    public writeBody() =>
+        inlineBody != null ?
+            "=> " + inlineBody.toNova() :
+            scope.toNova()
+    
     public toNova() =>
-        writeHeader() + " " + scope.toNova()
+        writeHeader() + " " + writeBody()
 }
