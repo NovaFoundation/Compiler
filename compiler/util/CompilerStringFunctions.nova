@@ -610,7 +610,7 @@ extension CompilerStringFunctions {
             
             // Get the propper sides
             var foundSide   = -direction
-            var correctSide = -1//UnaryOperation.SIDES[unary]
+            var correctSide = UnaryOperation.RIGHT//UnaryOperation.SIDES[unary]
             
             return correctSide == foundSide || correctSide == UnaryOperation.EITHER
         }
