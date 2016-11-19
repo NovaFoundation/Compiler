@@ -94,12 +94,12 @@ class FieldDeclaration extends InstanceDeclaration {
         }
     }
     
-    public parseAccessorValue() =>
+    parseAccessorValue() =>
         accessorValue.class.isOfType(PlaceholderValue) ?
             (accessorValue = Value.parse((PlaceholderValue)accessorValue)) != null :
             true
     
-    public parseInitializationValue() =>
+    parseInitializationValue() =>
         initializationValue.class.isOfType(PlaceholderValue) ?
             (initializationValue = Value.parse((PlaceholderValue)initializationValue)) != null :
             true
