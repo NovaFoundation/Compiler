@@ -59,13 +59,8 @@ class Parameter extends LocalDeclaration {
         return null
     }
     
-    public parsePlaceholders() -> Bool {
-        if (defaultValue != null && defaultValue.class.isOfType(PlaceholderValue)) {
-            defaultValue = Value.parse((PlaceholderValue)defaultValue)
-            
-            return defaultValue != null
-        } else {
-            return true
-        }
-    }
+    public parsePlaceholders() =>
+        defaultValue.class.isOfType(PlaceholderValue) ?
+            (defaultValue = Value.parse((PlaceholderValue)defaultValue)) != null :
+            true
 }
