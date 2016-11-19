@@ -92,13 +92,11 @@ class Operator extends Node {
     /*public isBoolOperator() =>
         [EQUALS, NOT_EQUAL, BANG, AND, OR, LESS, GREATER, LESS_EQ, GREATER_EQ].contains(operator)*/
     
-    /// <summary>
-    /// Create a new Operater node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new Operater node.
     /// 
-    /// <param name="parent">The parent of the Operater node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// parent:   The parent of the Operater node.
+    /// location: The location of the input text in the source file.
+    /// operator: The operator to set as the initial value
     public construct(Node parent = null, Location location = Location.INVALID, String operator = null) {
         super(parent, location)
         

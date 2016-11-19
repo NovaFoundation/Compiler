@@ -12,17 +12,15 @@ import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "nova/datastruct/Bounds"
 
-/**
- * Class that is the parent of all Nodes on the Tree. Keeps the basic
- * information of where the statement was in the source, and where it was
- * output in the destination file. A Node can have any number of
- * children, however some of the extensions of Node have default
- * children at the start.
- * 
- * @author    Braden Steffaniak
- * @since    v0.1 Jan 5, 2014 at 9:00:11 PM
- * @version    v0.2.41 Dec 17, 2014 at 7:48:17 PM
- */
+/// Class that is the parent of all Nodes on the Tree. Keeps the basic
+/// information of where the statement was in the source, and where it was
+/// output in the destination file. A Node can have any number of
+/// children, however some of the extensions of Node have default
+/// children at the start.
+/// 
+/// author:  Braden Steffaniak
+/// since:   v0.1 Jan 5, 2014 at 9:00:11 PM
+/// version: v0.2.41 Dec 17, 2014 at 7:48:17 PM
 class Node implements Annotatable {
     visible Location location
     
@@ -66,13 +64,11 @@ class Node implements Annotatable {
     }
     
     
-    /**
-     * Get whether or not the specified Node is being decoded at
-     * the current moment.
-     * 
-     * @return Whether or not the specified Node is being decoded at
-     *         the current moment.
-     */
+    /// Get whether or not the specified Node is being decoded at
+    /// the current moment.
+    /// 
+    /// return: Whether or not the specified Node is being decoded at
+    ///         the current moment.
     visible Bool isDecoding => false
     visible Bool isValid => parent != null
     visible Bool isUserMade => true
@@ -131,12 +127,10 @@ class Node implements Annotatable {
         return null
     }
     
-    /**
-     * Create a new Node. Initializes the data.
-     * 
-     * @param parent The Node to act as the parent temporarily.
-     * @param location The location of the Node in the source file.
-     */
+    /// Create a new Node. Initializes the data.
+    /// 
+    /// parent:   The Node to act as the parent temporarily.
+    /// location: The location of the Node in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         this.parent = parent
         this.location = location
@@ -151,20 +145,16 @@ class Node implements Annotatable {
         annotation.parent = this
     }
     
-    /**
-     * Detach the specified node from its parent.
-     */
+    /// Detach the specified node from its parent.
     public detach() {
         if (isDecoding) return
         
         detach(parent)
     }
     
-    /**
-     * Detach the specified Node from the given Node.
-     * 
-     * @param fromNode The Node to detach the specified Node from.
-     */
+    /// Detach the specified Node from the given Node.
+    ///
+    /// fromNode: The Node to detach the specified Node from.
     private detach(Node fromNode) {
     	var p = parent
     	
@@ -189,12 +179,10 @@ class Node implements Annotatable {
         child.parent = this
     }
     
-    /**
-     * Validate the node to make last minute changes or error checking.
-     * 
-     * @param phase The phase that the node is being validated in.
-     * @return The Node to continue the validation off of.
-     */
+    /// Validate the node to make last minute changes or error checking.
+    /// 
+    /// phase:  The phase that the node is being validated in.
+    /// return: The Node to continue the validation off of.
     public validate(Int phase) -> ValidationResult {
         return annotations?.reverse().firstNonNull({
             ValidationResult result = _.validate(phase)
@@ -231,16 +219,14 @@ class Node implements Annotatable {
         return null
     }
     
-    /**
-     * Return a new Node containing a copy of the values of the
-     * specified node, including clones of the children.
-     * 
-     * @param parent The Node to set as the parent.
-     * @param location The Location instance holding the information.
-     * @param cloneChildren Whether or not to clone the children of the
-     *         Node as well.
-     * @return A clone of the specified Node.
-     */
+    /// Return a new Node containing a copy of the values of the
+    /// specified node, including clones of the children.
+    /// 
+    /// parent:        The Node to set as the parent.
+    /// location:      The Location instance holding the information.
+    /// cloneChildren: Whether or not to clone the children of the
+    ///                Node as well.
+    /// return:        A clone of the specified Node.
     public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
         
     }

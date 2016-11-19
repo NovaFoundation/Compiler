@@ -11,29 +11,31 @@ import "compiler/util/CompilerStringFunctions"
 class Parameter extends LocalDeclaration {
     public Value defaultValue
     
-    /// Create a new Parameter node.<br><br>
+    /// Create a new Parameter node.
+    /// 
     /// #exampleInputs
     /// 
-    /// <param name="parent">The parent of the Parameter node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// parent:   The parent of the Parameter node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
     }
     
     /// Parse the given input into a Parameter node. If the input cannot be parsed
-    /// into a Parameter node, null is returned.<br><br>
+    /// into a Parameter node, null is returned.
+    /// 
     /// #exampleInputs:
     ///     Example inputs:
     ///      * 
     ///      * 
     ///      * 
     /// 
-    /// <param name="input">The input string to parse into a Parameter instance.</param>
-    /// <param name="parent">The parent of the Parameter node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
-    /// <param name="require">Whether or not to throw a syntax error if the input could not
-    ///     be parsed.</param>
-    /// <returns>The parsed Parameter node, if successful; null otherwise.</returns>
+    /// input:    The input string to parse into a Parameter instance.
+    /// parent:   The parent of the Parameter node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed Parameter node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Parameter {
         String defaultValue = null
         var assignmentIndex = input.indexOf('=')

@@ -5,11 +5,9 @@ import "compiler/util/Location"
 
 import "compiler/util/CompilerStringFunctions"
 
-/**
- * @Node extension that represents
- * 
- * author: Braden Steffaniak
- */
+/// @Node extension that represents
+/// 
+/// author: Braden Steffaniak
 class PrimitiveArrayAnnotation extends Annotation {
     /// Create a new PrimitiveArrayAnnotation node.
     /// 

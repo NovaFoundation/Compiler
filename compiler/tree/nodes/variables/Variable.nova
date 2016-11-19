@@ -13,13 +13,12 @@ class Variable extends Identifier implements Accessible {
     
     public String type => declaration.type
     
-    /// <summary>
-    /// Create a new Variable node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new Variable node.
     /// 
-    /// <param name="parent">The parent of the Variable node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the Variable node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID, VariableDeclaration declaration = null) {
         super(parent, location)
         

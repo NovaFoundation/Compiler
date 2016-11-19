@@ -6,13 +6,10 @@ class NodeList<E extends Node> extends Node {
     visible Node[] children
     visible Bool isEmpty => children.count == 0
     
-    /// <summary>
-    /// Create a new NodeList node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new NodeList node.
     /// 
-    /// <param name="parent">The parent of the NodeList node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// parent:   The parent of the NodeList node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
@@ -56,24 +53,20 @@ class NodeList<E extends Node> extends Node {
         return node
     }
     
-    /**
-     * Get whether or not the given Node is a child of the specified
-     * Node.
-     * 
-     * @param child The Node to check whether is a child or not.
-     * @return Whether or not the given Node is a child.
-     */
+    /// Get whether or not the given Node is a child of the specified
+    /// Node.
+    /// 
+    /// child:  The Node to check whether is a child or not.
+    /// return: Whether or not the given Node is a child.
     public containsChild(Node child, Bool recursive = false) =>
             children.contains(child)// || (recursive && children.any({ _.containsChild(child, true) }))
     
-    /**
-     * Give the specified node the given nodes children. This removes the
-     * children from the given oldParent node.
-     * 
-     * @param oldParent The parent to inherit the children from.
-     * @param clone Whether or not to clone the children and not remove
-     *         them from the previous owner.
-     */
+    /// Give the specified node the given nodes children. This removes the
+    /// children from the given oldParent node.
+    /// 
+    /// oldParent: The parent to inherit the children from.
+    /// clone:     Whether or not to clone the children and not remove
+    ///            them from the previous owner.
     public inheritChildren(NodeList oldParent, Bool clone = false) =>
         oldParent.children.forEach(child -> {
             addChild(clone ? child.clone(this, child.location, true) : child)

@@ -4,7 +4,7 @@ import "compiler/tree/nodes/Node"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
-/// <a href="compiler/tree/nodes/Node">Value</a> extension that keeps track
+/// @Value extension that keeps track
 /// of any time an array is being accessed. For example, the statement: "[34]"
 /// is an array access. Obviously the previous code segment does nothing, however
 /// these nodes will be intertwined with method calls, assignments, if statements, etc.

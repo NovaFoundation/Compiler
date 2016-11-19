@@ -5,21 +5,18 @@ import "compiler/tree/nodes/ArgumentList"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
-/// <summary>
-/// <a href="compiler/tree/nodes/ArgumentList">ArgumentList</a> extension that represents 
-/// <summary>
+/// @ArgumentList extension that represents 
 ///
-/// <author>Braden Steffaniak</author>
-/// <since></since>
-/// <version></version>
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
 class FunctionArgumentList extends ArgumentList {
-    /// <summary>
-    /// Create a new FunctionArgumentList node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new FunctionArgumentList node.
     /// 
-    /// <param name="parent">The parent of the FunctionArgumentList node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the FunctionArgumentList node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         

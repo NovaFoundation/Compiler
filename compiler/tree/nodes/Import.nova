@@ -30,25 +30,21 @@ class Import extends Node {
     public getClassLocation(Bool aliased = false) =>
     	aliased && alias != null ? "#parentLocation/#alias" : importLocation
     
-    /// <summary>
     /// Parse the given input into a Import node. If the input cannot be parsed
-    /// into a Import node, null is returned.<br><br>
-    /// <div id="example-inputs">
-    ///     Example inputs:
-    ///     <ul>
-    ///         <li>import "nova/datastruct/list/Array" as MyArray</li>
-    ///         <li>import "nova/datastruct/Tree"</li>
-    ///         <li>import "nova/Object"</li>
-    ///     </ul>
-    /// </div>
-    /// </summary>
+    /// into a Import node, null is returned.
     /// 
-    /// <param name="input">The input string to parse into a Import instance.</param>
-    /// <param name="parent">The parent of the Import node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
-    /// <param name="require">Whether or not to throw a syntax error if the input could not
-    ///     be parsed.</param>
-    /// <returns>The parsed Import node, if successful; null otherwise.</returns>
+    /// #exampleInputs
+    ///     Example inputs:
+    ///      * import "nova/datastruct/list/Array" as MyArray
+    ///      * import "nova/datastruct/Tree"
+    ///      * import "nova/Object"
+    /// 
+    /// input:    The input string to parse into a Import instance.
+    /// parent:   The parent of the Import node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed Import node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Import {
         if (input.nextWordIndex(IDENTIFIER) == 0) {
             var node = new Import(parent, location)

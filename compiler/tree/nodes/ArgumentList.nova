@@ -3,23 +3,18 @@ package "compiler/tree/nodes"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
-/// <summary>
-/// <a href="compiler/tree/nodes/NodeList">NodeList</a> extension that represents 
-/// <summary>
+/// @NodeList extension that represents 
 ///
-/// <author>Braden Steffaniak</author>
-/// <since></since>
-/// <version></version>
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
 class ArgumentList extends NodeList<Value> {
     visible Value[] arguments => (Value[])children
     
-    /// <summary>
-    /// Create a new ArgumentList node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new ArgumentList node.
     /// 
-    /// <param name="parent">The parent of the ArgumentList node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// parent:   The parent of the ArgumentList node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         

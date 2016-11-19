@@ -7,13 +7,12 @@ import "compiler/util/Location"
 class ParameterList extends NodeList<Parameter> {
     public Parameter[] parameters => (Parameter[])children
     
-    /// <summary>
-    /// Create a new ParameterList node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new ParameterList node.
     /// 
-    /// <param name="parent">The parent of the ParameterList node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the ParameterList node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
     }

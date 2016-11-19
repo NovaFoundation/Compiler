@@ -6,15 +6,12 @@ import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/Type"
 
 class GenericArgument extends Value {
-    
-    
-    /// <summary>
-    /// Create a new GenericArgument node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new GenericArgument node.
     /// 
-    /// <param name="parent">The parent of the GenericArgument node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the GenericArgument node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID, String type) {
         super(parent, location)
         

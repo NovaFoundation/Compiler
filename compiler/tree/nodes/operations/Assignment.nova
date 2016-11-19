@@ -13,38 +13,33 @@ class Assignment extends Operation {
     public Value assigned <=> operands[0]
     public Value assignment <=> operands[1]
     
-    /// <summary>
-    /// Create a new Assignment node.<br><br>
-    /// <include id="example-inputs">
-    /// </summary>
+    /// Create a new Assignment node.
     /// 
-    /// <param name="parent">The parent of the Assignment node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// #exampleInputs
+    /// 
+    /// parent: The parent of the Assignment node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
         operands = new Value[2]
     }
     
-    /// <summary>
     /// Parse the given input into a Assignment node. If the input cannot be parsed
-    /// into a Assignment node, null is returned.<br><br>
-    /// <div id="example-inputs">
-    ///     Example inputs:
-    ///     <ul>
-    ///         <li></li>
-    ///         <li></li>
-    ///         <li></li>
-    ///     </ul>
-    /// </div>
-    /// </summary>
+    /// into a Assignment node, null is returned.
     /// 
-    /// <param name="input">The input string to parse into a Assignment instance.</param>
-    /// <param name="parent">The parent of the Assignment node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
-    /// <param name="require">Whether or not to throw a syntax error if the input could not
-    ///     be parsed.</param>
-    /// <returns>The parsed Assignment node, if successful; null otherwise.</returns>
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a Assignment instance.
+    /// parent:   The parent of the Assignment node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed Assignment node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Assignment {
         var assignmentIndex = input.findCharInBaseScope('=')
         

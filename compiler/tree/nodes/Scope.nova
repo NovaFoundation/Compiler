@@ -10,24 +10,24 @@ import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "compiler/util/CompilerStringFunctions"
 
-/**
- * Node extension that represents a scope of code. In essence, a
- * collection of statements within a pair of curly braces.<br>
- * <br>
- * For example:
- * <blockquote><pre>
- * {
- *     ...
- * 
- *     // Statements within here...
- * 
- *     ...
- * }</pre></blockquote>
- * 
- * @author    Braden Steffaniak
- * @since    v0.1 Apr 5, 2014 at 10:54:20 PM
- * @version    v0.2.41 Dec 17, 2014 at 7:48:17 PM
- */
+/// @Node extension that represents a scope of code. In essence, a
+/// collection of statements within a pair of curly braces.
+/// 
+/// #example:
+///     For example:
+///     <code>
+///     {
+///         ...
+///         
+///         // Statements within here...
+///         
+///         ...
+///     }
+///     </code>
+/// 
+/// author:  Braden Steffaniak
+/// since:   v0.1 Apr 5, 2014 at 10:54:20 PM
+/// version: v0.2.41 Dec 17, 2014 at 7:48:17 PM
 class Scope extends NodeList {
     private Int id
     
@@ -51,11 +51,12 @@ class Scope extends NodeList {
         no set
     }
     
-    /// Create a new Scope node.<br><br>
-    /// <include id="example-inputs">
+    /// Create a new Scope node.
     /// 
-    /// <param name="parent">The parent of the Scope node.</param>
-    /// <param name="location">The location of the input text in the source file.</param>
+    /// #example
+    /// 
+    /// parent:   The parent of the Scope node.
+    /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
     	super(parent, location)
         
