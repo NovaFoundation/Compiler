@@ -42,4 +42,10 @@ class LocalDeclaration extends VariableDeclaration {
         
         return null
     }
+    
+    public cloneTo(LocalDeclaration other) => other {
+        super.cloneTo(other)
+        
+        
+    }
 }
