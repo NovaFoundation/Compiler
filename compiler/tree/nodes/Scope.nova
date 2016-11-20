@@ -72,6 +72,7 @@ class Scope extends NodeList {
         
         until (node != null) {
         	node = parseIdentifierAccess(input, parent, require: require)
+            node = Return.parse(input, parent, location, require)
             node = Assignment.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
             node = Value.parse(input, parent, location, require)
