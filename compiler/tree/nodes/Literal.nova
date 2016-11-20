@@ -75,5 +75,5 @@ class Literal extends Value implements Accessible {
         return true
     }
     
-    public toString() => value
+    public toNova() => value
 }
