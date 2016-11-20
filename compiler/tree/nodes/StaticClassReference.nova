@@ -30,7 +30,7 @@ class StaticClassReference extends Identifier implements Accessible {
     /// Parse the given input into a StaticClassReference node. If the input cannot be parsed
     /// into a StaticClassReference node, null is returned.
     /// 
-    /// #exampleInputs
+    /// #exampleInputs:
     ///     Example inputs:
     ///      * 
     ///      * 
