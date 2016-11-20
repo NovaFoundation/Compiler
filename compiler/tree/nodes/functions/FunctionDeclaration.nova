@@ -10,11 +10,10 @@ import "compiler/util/Location"
 
 import "compiler/util/CompilerStringFunctions"
 
-class FunctionDeclaration extends InstanceDeclaration {
+class FunctionDeclaration extends InstanceDeclaration implements CallableFunction {
     visible FunctionDeclaration parentFunction => this
     
-    visible ParameterList parameterList = new ParameterList(this)
-    visible Parameter[] parameters => parameterList.parameters
+    visible ParameterList parameterList <=> parameterList
     
     /// Create a new FunctionDeclaration node.
     /// 
@@ -24,6 +23,8 @@ class FunctionDeclaration extends InstanceDeclaration {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+        
+        parameterList = new ParameterList(this)
     }
     
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
@@ -34,10 +35,6 @@ class FunctionDeclaration extends InstanceDeclaration {
         }
         
         return super.findVariableDeclaration(name, searchAncestors)
-    }
-    
-    public compatibleArguments(Value[] arguments) -> Bool {
-        return true
     }
     
     /// Parse the given input into a FunctionDeclaration node. If the input cannot be parsed
@@ -139,31 +136,12 @@ class FunctionDeclaration extends InstanceDeclaration {
             
             return parseModifier(word)
         })
-        
-    public parseParameter(String parameter, Bool require = true) -> Bool {
-        var annotations = SyntaxTree.searchAnnotations(parameter)
-        var param = Parameter.parse(annotations.remainingStatement, parameterList, location, false)
-        
-        if (param != null) {
-            parameters.add(param)
-            annotations.addTo(param)
-            
-            return true
-        }
-        
-        SyntaxMessage.errorIf("Invalid parameter '#parameter'", this, require)
-        
-        return false
-    }
-    
-    public parseParameters(String parameters, Bool require) =>
-        parameters.splitAtCommas().all({ parseParameter(_, require) }, false)
     
     public parsePlaceholders() =>
         parameters.all({ _.parsePlaceholders() }, false) &
         super.parsePlaceholders()
     
-    public writeHeader() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList" + writeReturnType()
+    public writeHeader() => "#writeModifiers() #name".replace(/\s+/, " ").trim() + "#parameterList.toNova()" + writeReturnType()
     public writeReturnType() => type != null ? " -> #type" : ""
     
     public toNova() => writeHeader()

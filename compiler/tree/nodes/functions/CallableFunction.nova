@@ -1,5 +1,39 @@
 package "compiler/tree/nodes/functions"
 
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/annotations/Annotation"
+import "compiler/tree/AnnotationSearchResult"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/SyntaxTree"
+import "compiler/SyntaxMessage"
+
+import "compiler/util/CompilerStringFunctions"
+
 interface CallableFunction {
+    visible ParameterList parameterList => null
+    visible Parameter[] parameters => parameterList.parameters
     
+    public parseParameter(String parameter, Bool require = true) =>
+        Parameter.parse(parameter, parameterList, ((Node)this).location)
+    
+    public parseParameterAndAnnotations(String parameter, Bool require = true) -> Bool {
+        var annotations = SyntaxTree.searchAnnotations(parameter)
+        var param = parseParameter(annotations.remainingStatement, require)
+        
+        if (param != null) {
+            parameters.add(param)
+            annotations.addTo(param)
+        } else {
+            SyntaxMessage.errorIf("Invalid parameter '#parameter'", (Node)this, require)
+        }
+        
+        return param != null
+    }
+    
+    public parseParameters(String parameters, Bool require) =>
+        parameters.splitAtCommas().all({ parseParameterAndAnnotations(_, require) }, false)
+    
+    public compatibleArguments(Value[] arguments) -> Bool {
+        return true
+    }
 }
