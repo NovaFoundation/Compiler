@@ -4,12 +4,16 @@ import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/PlaceholderValue"
 import "compiler/tree/nodes/variables/LocalDeclaration"
+import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
 import "compiler/util/Location"
 
 import "compiler/util/CompilerStringFunctions"
 
 class Parameter extends LocalDeclaration {
     public Value defaultValue
+    
+    visible ParameterList parentParameterList =>
+        parent.class.isOfType(ParameterList) ? (ParameterList)parent : null
     
     /// Create a new Parameter node.
     /// 
@@ -37,6 +41,12 @@ class Parameter extends LocalDeclaration {
     ///           be parsed.
     /// return:   The parsed Parameter node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Parameter {
+        var closure = ClosureDeclaration.parse(input, parent, location, require)
+        
+        if (closure != null) {
+            return closure
+        }
+        
         String defaultValue = null
         var assignmentIndex = input.indexOf('=')
         
@@ -65,4 +75,10 @@ class Parameter extends LocalDeclaration {
         defaultValue.class.isOfType(PlaceholderValue) ?
             (defaultValue = Value.parse((PlaceholderValue)defaultValue)) != null :
             true
+    
+    public cloneTo(Parameter other) => other {
+        super.cloneTo(other)
+        
+        other.defaultValue = defaultValue
+    }
 }
