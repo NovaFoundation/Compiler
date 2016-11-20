@@ -49,15 +49,28 @@ class ClosureDeclaration extends Parameter implements CallableFunction {
                 var name = input.substring(end: parenIndex).trim()
                 
                 if (name.isIdentifier) {
-                    var node   = new ClosureDeclaration(parent, location)
+                    var node = new ClosureDeclaration(parent, location)
+                    var type = findType(input, endIndex)
                     
-                    if (node.parseParameters(input.substring(parenIndex + 1, endIndex).trim(), true)) {
+                    if (node.parseType(type) && node.parseParameters(input.substring(parenIndex + 1, endIndex).trim(), true)) {
                         node.name = name
                         
                         return node
                     }
                 }
             }
+        }
+        
+        return null
+    }
+    
+    public parseType(String type) => type == null || super.parseType(type)
+    
+    static findType(String input, Int endIndex) -> String {
+        var typeIndex = input.indexOf("->", start: endIndex + 1)
+        
+        if (typeIndex > endIndex) {
+            return input.substring(typeIndex + 2).trim()
         }
         
         return null
