@@ -1,15 +1,16 @@
 package "compiler/tree/nodes/functions/closures"
 
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Type"
 import "compiler/tree/nodes/functions/Parameter"
 import "compiler/tree/nodes/functions/ParameterList"
+import "compiler/tree/nodes/functions/CallableFunction"
 import "compiler/util/Location"
 
 import "compiler/util/CompilerStringFunctions"
 
-class ClosureDeclaration extends Parameter {
-    visible ParameterList parameterList = new ParameterList(this)
-    visible Parameter[] parameters => parameterList.parameters
+class ClosureDeclaration extends Parameter implements CallableFunction {
+    visible ParameterList parameterList <=> parameterList
     
     /// Create a new ClosureDeclaration node.
     /// 
@@ -19,6 +20,8 @@ class ClosureDeclaration extends Parameter {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+        
+        parameterList = new ParameterList(this)
     }
     
     /// Parse the given input into a ClosureDeclaration node. If the input cannot be parsed
@@ -47,15 +50,27 @@ class ClosureDeclaration extends Parameter {
                 
                 if (name.isIdentifier) {
                     var node   = new ClosureDeclaration(parent, location)
-                    var params = input.substring(parenIndex + 1, endIndex).trim()
                     
-                    
-                    
-                    return node
+                    if (node.parseParameters(input.substring(parenIndex + 1, endIndex).trim(), true)) {
+                        node.name = name
+                        
+                        return node
+                    }
                 }
             }
         }
         
         return null
     }
+    
+    /// @CallableFunction.parseParameter override that allows nameless parameters. 
+    public parseParameter(String parameter, Bool require = true) =>
+        ClosureParameter.parse(parameter, parameterList, require: require)
+    
+    public writeType() =>
+        type != null ?
+            "-> #type.toNova()" :
+            ""
+    
+    public toNova() => ("#{name}#parameterList.toNova() " + writeType()).trim()
 }
