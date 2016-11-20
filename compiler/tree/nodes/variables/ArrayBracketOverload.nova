@@ -1,14 +1,15 @@
 package "compiler/tree/nodes/variables"
 
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Identifier"
+import "compiler/tree/nodes/variables/LocalDeclaration"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
-import "compiler/tree/nodes/Identifier"
 
 import "compiler/util/CompilerStringFunctions"
 
 class ArrayBracketOverload extends Node {
-    
+    visible LocalDeclaration index
     
     /// Create a new ArrayBracketOverload node.
     /// 
@@ -18,8 +19,6 @@ class ArrayBracketOverload extends Node {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
-        
-        
     }
     
     /// Parse the given input into a ArrayBracketOverload node. If the input cannot be parsed
@@ -27,7 +26,7 @@ class ArrayBracketOverload extends Node {
     /// 
     /// #exampleInputs:
     ///     Example inputs:
-    ///      * 
+    ///      * this[Int index] <=> chars[index]
     ///      * 
     ///      * 
     /// 
@@ -40,11 +39,12 @@ class ArrayBracketOverload extends Node {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayBracketOverload {
         var bracketIndex = input.indexOf('[')
         
-        if (bracketIndex > 0) {
+        if (bracketIndex > 0 && input.substring(end: bracketIndex).trim().equals("this")) {
             var end = input.findEndingMatch(bracketIndex, '[', ']')
             
             if (end > bracketIndex) {
                 var node = new ArrayBracketOverload(parent, location)
+                node.index = LocalDeclaration.parse(input, node)
                 
                 return node
             }
@@ -52,4 +52,6 @@ class ArrayBracketOverload extends Node {
         
         return null
     }
+    
+    public toNova() => "this[#{index}]"
 }
