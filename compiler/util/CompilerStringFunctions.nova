@@ -28,6 +28,10 @@ extension CompilerStringFunctions {
         get { return count > 0 && matches(/-?[0-9]+/) }
         no set
     }
+    public Bool String.isBool {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
+        get { return this.equals("true") || this.equals("false") }
+        no set
+    }
     
     public StatementIterator String.statements {//=> new StatementIterator(this)
         get { return new StatementIterator(this) }
