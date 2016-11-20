@@ -1,7 +1,10 @@
 package "compiler/tree/nodes/functions"
 
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Type"
 import "compiler/tree/nodes/Scope"
+import "compiler/tree/nodes/Return"
+import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/PlaceholderValue"
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
@@ -12,6 +15,8 @@ class BodyFunction extends FunctionDeclaration {
     public Scope scope <=> scope
     
     visible Node inlineBody
+    
+    visible Bool implicitType = false
     
     /// Create a new BodyFunction node.
     /// 
@@ -97,15 +102,35 @@ class BodyFunction extends FunctionDeclaration {
         }
     }
     
-    parseInlineBody() =>
-        inlineBody.class.isOfType(PlaceholderValue) ?
-            (inlineBody = scope.parseStatement(((PlaceholderValue)inlineBody).value, this, location, true)) != null :
-            true
+    parseInlineBody() => true {
+        if (inlineBody.class.isOfType(PlaceholderValue)) {
+            inlineBody = scope.parseStatement(((PlaceholderValue)inlineBody).value, inlineBody.parent)
+            
+            if (inlineBody == null) {
+                return false
+            } else if (inlineBody.class.isOfType(Value)) {
+                var type = ((Value)inlineBody).type
+                
+                if (this.type == null) {
+                    this.type = type
+                    
+                    implicitType = true
+                } /*else if (incompatibletype) {
+                    
+                }*/
+            }
+        }
+    }
     
     public parsePlaceholders() =>
         parseInlineBody() &
         scope.parsePlaceholders() &
         super.parsePlaceholders()
+    
+    public writeReturnType() =>
+        implicitType ?
+            "" :
+            super.writeReturnType()
     
     public writeBody() =>
         inlineBody != null ?
