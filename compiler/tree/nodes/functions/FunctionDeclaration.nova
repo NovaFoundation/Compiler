@@ -15,6 +15,8 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     
     visible ParameterList parameterList <=> parameterList
     
+    visible Parameter objectReference
+    
     /// Create a new FunctionDeclaration node.
     /// 
     /// #exampleInputs
@@ -28,6 +30,10 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     }
     
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        if (objectReference != null && objectReference.name.equals(name)) {
+            return objectReference
+        }
+        
         var parameter = parameters.firstWhere({ _.name.equals(name) })
         
         if (parameter != null) {
@@ -63,6 +69,12 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
             if (node.parseSignature(signature, require) &&
                 node.parseParameters(parameters, require) &&
                 (returnType.count == 0 || node.parseType(returnType))) {
+                if (!node.isStatic) {
+                    node.objectReference = new Parameter(node.parameterList)
+                    node.objectReference.name = "this"
+                    node.objectReference.type = Type.parse(node.parentClass.name)
+                }
+                
                 return node
             }
         }
@@ -150,5 +162,6 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
         super.cloneTo(other)
         
         other.parameterList = parameterList
+        other.objectReference = objectReference
     }
 }
