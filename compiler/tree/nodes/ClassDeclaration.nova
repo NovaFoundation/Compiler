@@ -6,6 +6,7 @@ import "compiler/util/Location"
 import "compiler/tree/nodes/variables/InstanceDeclaration"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/tree/nodes/variables/FieldDeclaration"
+import "compiler/tree/nodes/variables/ArrayBracketOverload"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
 import "compiler/tree/nodes/functions/BodyFunction"
 import "nova/regex/Pattern"
@@ -33,6 +34,8 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     public FieldDeclaration[] fields
     public FunctionDeclaration[] functions
     
+    visible ArrayBracketOverload arrayBracketOverload
+    
     visible Bool isPrivate => visibility.count > 0 && super.isPrivate
     visible Bool isPublic => visibility.count == 0 || super.isPublic
     
@@ -54,6 +57,12 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
             fields.add((FieldDeclaration)child)
         } else if (child.class.isOfType(FunctionDeclaration)) {
             functions.add((FunctionDeclaration)child)
+        } else if (child.class.isOfType(ArrayBracketOverload)) {
+            if (arrayBracketOverload == null) {
+                arrayBracketOverload = (ArrayBracketOverload)child
+            } else {
+                SyntaxErrorException("Array bracket overload already declared for class '#location'", child)
+            }
         } else {
             SyntaxMessage.error("Statement '#child' used in wrong context", child)
         }
@@ -91,6 +100,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         until (node != null) {
             node = BodyFunction.parse(input, this, location, require)
             node = FieldDeclaration.parse(input, this, location, require)
+            node = ArrayBracketOverload.parse(input, this, location, require)
         }
         
         return node
@@ -235,13 +245,30 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         fields.all({ _.parsePlaceholders() }, false) &
         functions.all({ _.parsePlaceholders() }, false)
     
-    public writeHeader() => "#writeModifiers() class #name #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
-    public writeModifiers() => super.writeModifiers() + writeAbstract()
-    public writeExtension() => extendedClass != null ? "extends #extendedClass" : ""
-    public writeImplementedInterfaces() => implementedInterfaces.count > 0 ? "implements #{implementedInterfaces.join(", ")}" : ""
+    public writeHeader() =>
+        "#writeModifiers() class #name #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
+    
+    public writeModifiers() =>
+        super.writeModifiers() + writeAbstract()
+    
+    public writeExtension() =>
+        extendedClass != null ?
+            "extends #extendedClass" :
+            ""
+    
+    public writeImplementedInterfaces() =>
+        implementedInterfaces.count > 0 ?
+            "implements #{implementedInterfaces.join(", ")}" :
+            ""
+    
+    public writeArrayBracketOverload() =>
+        arrayBracketOverload != null ?
+            arrayBracketOverload.toNova() :
+            ""
     
     public toNova() =>
         (writeHeader() + " {\n" +
+        writeArrayBracketOverload() +"\n\n" +
         (fields.map({ _.toNova() }).join("\n") + "\n\n" +
         functions.map({ _.toNova() }).join("\n\n")).trim() + "\n" +
         "}").trim()
