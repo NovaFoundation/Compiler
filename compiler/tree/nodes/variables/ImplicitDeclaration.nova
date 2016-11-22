@@ -1,0 +1,80 @@
+package "compiler/tree/nodes/variables"
+
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Type"
+import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
+
+class ImplicitDeclaration extends LocalDeclaration {
+    visible Bool isImplicit => true
+    
+    visible Value implicitReference
+    
+    visible static Value DEFAULT_IMPLICIT_REFERENCE = new Value(type: Type.parse("Object"))
+    
+    public Type type => implicitReference.type
+    
+    /// Create a new ImplicitDeclaration node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the ImplicitDeclaration node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    /// Parse the given input into a ImplicitDeclaration node. If the input cannot be parsed
+    /// into a ImplicitDeclaration node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * var node = new ImplicitDeclaration(parent, location)
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a ImplicitDeclaration instance.
+    /// parent:   The parent of the ImplicitDeclaration node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed ImplicitDeclaration node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ImplicitDeclaration {
+        if (input.nextWord().equals("var")) {
+            var values = input.splitValues()
+            
+            if (values.count == 2) {
+                var node = new ImplicitDeclaration(parent, location)
+                
+                node.name = values[1]
+                
+                if (node.name.isIdentifier) {
+                    node.implicitReference = DEFAULT_IMPLICIT_REFERENCE
+                    
+                    return node
+                }
+            }
+        }
+        
+        return null
+    }
+    
+    [Override]
+    public onAssigned(Value value) {
+        if (implicitReference == DEFAULT_IMPLICIT_REFERENCE) {
+            implicitReference = value
+        } else { // TODO: get common between newly assigned and existing type
+            implicitReference = value
+        }
+    }
+    
+    public writeType() => "var"
+    
+    public cloneTo(ImplicitDeclaration other) => other {
+        super.cloneTo(other)
+        
+        other.implicitReference = implicitReference
+    }
+}
