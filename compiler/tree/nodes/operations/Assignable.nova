@@ -1,0 +1,9 @@
+package "compiler/tree/nodes/operations"
+
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/variables/VariableDeclaration"
+
+interface Assignable {
+    public onAssigned(Value value) {}
+    public onAssignedTo(VariableDeclaration declaration) {}
+}
