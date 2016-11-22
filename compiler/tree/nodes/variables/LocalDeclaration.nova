@@ -1,9 +1,16 @@
 package "compiler/tree/nodes/variables"
 
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Type"
+import "compiler/tree/nodes/operations/Assignable"
 import "compiler/util/Location"
 
-class LocalDeclaration extends VariableDeclaration {
+import "compiler/util/CompilerStringFunctions"
+
+class LocalDeclaration extends VariableDeclaration implements Assignable {
+    visible Bool isImplicit => false
+    
     /// Create a new LocalDeclaration node.
     /// 
     /// #exampleInputs
@@ -12,8 +19,6 @@ class LocalDeclaration extends VariableDeclaration {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
-        
-        
     }
     
     /// Parse the given input into a LocalDeclaration node. If the input cannot be parsed
@@ -45,7 +50,5 @@ class LocalDeclaration extends VariableDeclaration {
     
     public cloneTo(LocalDeclaration other) => other {
         super.cloneTo(other)
-        
-        
     }
 }

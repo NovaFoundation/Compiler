@@ -4,8 +4,10 @@ import "compiler/util/Location"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Identifier"
 import "compiler/tree/nodes/Accessible"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/operations/Assignable"
 
-class Variable extends Identifier implements Accessible {
+class Variable extends Identifier implements Accessible, Assignable {
     public Bool safeNavigation <=> safeNavigation
     public Accessible accessedNode <=> accessedNode
     
@@ -23,6 +25,11 @@ class Variable extends Identifier implements Accessible {
         super(parent, location)
         
         this.declaration = declaration
+    }
+    
+    [Override]
+    public onAssigned(Value value) {
+        ((Assignable)declaration).onAssigned(value)
     }
     
     public toNova() => declaration.name + writeAccessedNodes()
