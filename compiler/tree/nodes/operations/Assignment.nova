@@ -4,6 +4,8 @@ import "compiler/SyntaxMessage"
 import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/variables/LocalDeclaration"
+import "compiler/tree/nodes/variables/Variable"
+import "compiler/tree/nodes/variables/ImplicitDeclaration"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/util/Location"
 
@@ -12,6 +14,18 @@ import "compiler/util/CompilerStringFunctions"
 class Assignment extends Operation {
     public Value assigned <=> operands[0]
     public Value assignment <=> operands[1]
+    
+    public VariableDeclaration assignedDeclaration {
+        get {
+            if (assigned.class.isOfType(VariableDeclaration)) {
+                return (VariableDeclaration)assigned
+            }
+            
+            return ((Variable)assigned).declaration
+        }
+        
+        no set
+    }
     
     /// Create a new Assignment node.
     /// 
@@ -53,6 +67,9 @@ class Assignment extends Operation {
                     node.parentScope.declarations.add((VariableDeclaration)node.assigned)
                 }
                 
+                ((Assignable)node.assigned).onAssigned(node.assignment)
+                ((Assignable)node.assignment).onAssignedTo(node.assignedDeclaration)
+                
                 return node
             }
         }
@@ -63,7 +80,12 @@ class Assignment extends Operation {
     static findAssigned(String input, Int assignmentIndex) => input.substring(end: assignmentIndex).trim()
     
     parseAssignedNode(String input) -> Bool {
-        var declaration = LocalDeclaration.parse(input, this, location, require: false)
+        LocalDeclaration declaration = null
+        
+        until (declaration != null) {
+            declaration = ImplicitDeclaration.parse(input, this, location, require: false)
+            declaration = LocalDeclaration.parse(input, this, location, require: false)
+        }
         
         if (declaration != null) {
             assigned = declaration
