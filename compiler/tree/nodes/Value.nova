@@ -4,6 +4,7 @@ import "compiler/SyntaxMessage"
 import "compiler/util/Location"
 import "compiler/tree/nodes/arrays/ArrayAccess"
 import "compiler/tree/nodes/operations/Operation"
+import "compiler/tree/nodes/operations/Assignable"
 import "compiler/tree/nodes/variables/Variable"
 
 import "compiler/util/CompilerStringFunctions"
@@ -13,9 +14,9 @@ class Value extends Node {
     
     public ArrayAccess arrayAccess
     
-    public Type type
+    public Type type <=> type
     
-    public Bool isAssignable => true
+    public Bool isAssignable => this.class.isOfType(Assignable)
     
     public ClassDeclaration typeClass {
         get {
@@ -41,8 +42,10 @@ class Value extends Node {
     /// 
     /// parent:   The parent of the Value node.
     /// location: The location of the input text in the source file.
-    public construct(Node parent = null, Location location = Location.INVALID) {
+    public construct(Node parent = null, Location location = Location.INVALID, Type type = null) {
         super(parent, location)
+        
+        this.type = type
     }
     
     /// Parse the given input into a Value node. If the input cannot be parsed
