@@ -6,6 +6,7 @@ import "compiler/tree/nodes/arrays/ArrayAccess"
 import "compiler/tree/nodes/operations/Operation"
 import "compiler/tree/nodes/operations/Assignable"
 import "compiler/tree/nodes/variables/Variable"
+import "compiler/tree/nodes/functions/FunctionCall"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -74,8 +75,10 @@ class Value extends Node {
         
         var node = null
         
-        until (node != null) {
+        until (node.class.isOfType(Value)) {
+            node = Accessible.parseNodeAccess(input, parent, require)
             node = Literal.parse(input, parent, location, require)
+            node = FunctionCall.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
         }
         
