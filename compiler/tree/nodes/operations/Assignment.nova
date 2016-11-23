@@ -111,6 +111,8 @@ class Assignment extends Operation {
             
             return true
         } else {
+            Console.log("Reason: #SyntaxMessage.latestErrorMessage")
+            
             return false
         }
     }
