@@ -87,7 +87,7 @@ class FunctionCall extends Variable {
         if (start > 0) {
             var end = input.findEndingMatch(start, '(', ')')
             
-            if (end > start) {
+            if (end > start && input.substring(end + 1).trim().count == 0) {
                 return input.substring(start + 1, end).trim().splitAtCommas()
             }
         }
@@ -108,7 +108,7 @@ class FunctionCall extends Variable {
     }
     
     parseArguments(String[] arguments) =>
-        arguments.all({ parseArgument(_) })
+        arguments.all({ parseArgument(_) }, false)
     
     searchDeclaration() -> Bool {
         var ref = referenceClass
