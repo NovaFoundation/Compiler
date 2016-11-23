@@ -1,6 +1,7 @@
 package "compiler/tree/nodes/operations"
 
 import "compiler/SyntaxErrorException"
+import "compiler/SyntaxMessage"
 import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/Node"
 import "compiler/util/Location"
@@ -45,9 +46,15 @@ class Operation extends Value {
         if (matches.count > 0) {
             var node = new Operation(parent, location)
             
-            if (node.parseOperators(input, matches) && node.parseOperands(input, matches)) {
+            if (!node.parseOperators(input, matches)){
+                SyntaxMessage.invalidParse("Failed to parse operators for '#input'", node)
+            } else if (!node.parseOperands(input, matches)) {
+                SyntaxMessage.invalidParse("Failed to parse operands for '#input'", node)
+            } else {
                 return node
             }
+        } else {
+            SyntaxMessage.invalidParse("No operators in '#input'")
         }
         
         return null
