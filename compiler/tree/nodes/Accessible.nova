@@ -1,6 +1,12 @@
 package "compiler/tree/nodes"
 
+import "nova/datastruct/Pair"
+import "nova/datastruct/list/List"
+
 import "compiler/util/SyntaxUtils"
+import "compiler/tree/nodes/functions/FunctionCall"
+
+import "compiler/util/CompilerStringFunctions"
 
 interface Accessible {
     public Bool safeNavigation
@@ -20,6 +26,22 @@ interface Accessible {
      */
     public Accessible accessedNode => null {
         set {}
+    }
+    
+    public Accessible returnedNode {
+        get {
+            var prev = this
+            var current = accessedNode
+            
+            while (current != null) {
+                prev = current
+                current = current.accessedNode
+            }
+            
+            return prev
+        }
+        
+        no set
     }
     
     public Accessible accessingNode {
@@ -299,6 +321,56 @@ interface Accessible {
         }*/
         
         return n.parentClass
+    }
+    
+    public static parse(String input, Node parent = null, Bool require = true) -> Accessible {
+        var node = null
+        
+        until (node != null) {
+            node = StaticClassReference.parse(input, parent, require: require)
+            node = FunctionCall.parse(input, parent, require: require)
+        }
+        
+        return node
+    }
+    
+    public static parseNodeAccess(String input, Node parent, Bool require = true) -> Node {
+        var prev = 0
+        var dot  = input.findDotOperatorIndex()
+        
+        var fragments = new String[]
+        
+        while (dot > 0) {
+            fragments.add(input.substring(prev, dot))
+            
+            prev = dot + 1
+            dot  = input.findDotOperatorIndex(prev)
+        }
+        
+        if (prev > 0) {
+            fragments.add(input.substring(prev))
+            
+            var root    = parse(fragments[0], parent, require: require)
+            var current = root
+            
+            if (current != null) {
+                if (fragments.skip(1).all({
+                    var accessed = parse(_, parent: (Node)current, require: require)
+                    
+                    if (accessed != null) {
+                        current.accessedNode = accessed
+                        
+                        return true
+                    }
+                    
+                    return false
+                })) {
+                    return root
+                }
+            }
+        }
+        
+        return null
     }
     
     public writeAccessedNodes() -> String =>

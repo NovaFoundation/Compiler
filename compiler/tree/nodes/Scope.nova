@@ -3,6 +3,7 @@ package "compiler/tree/nodes"
 import "nova/datastruct/Pair"
 import "nova/datastruct/list/List"
 import "compiler/util/Location"
+import "compiler/tree/nodes/Accessible"
 import "compiler/tree/nodes/operations/Operation"
 import "compiler/tree/nodes/operations/Assignment"
 import "compiler/tree/nodes/functions/FunctionCall"
@@ -71,7 +72,7 @@ class Scope extends NodeList {
         Node node = null
         
         until (node != null) {
-        	node = parseIdentifierAccess(input, parent, require: require)
+        	node = Accessible.parseNodeAccess(input, parent, require: require)
             node = Return.parse(input, parent, location, require)
             node = Assignment.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
@@ -79,56 +80,6 @@ class Scope extends NodeList {
         }
         
         return node
-    }
-    
-    public parseAccessible(String input, Node parent = this.parent, Bool require = true) -> Accessible {
-    	var node = null
-        
-        until (node != null) {
-            node = StaticClassReference.parse(input, parent, location, require)
-            node = FunctionCall.parse(input, parent, location, require)
-        }
-    	
-    	return node
-    }
-    
-    parseIdentifierAccess(String input, Node parent, Bool require = true) -> Node {
-    	var prev = 0
-    	var dot  = input.findDotOperatorIndex()
-    	
-    	var fragments = new String[]
-    	
-    	while (dot > 0) {
-    		fragments.add(input.substring(prev, dot))
-    		
-    		prev = dot + 1
-    		dot  = input.findDotOperatorIndex(prev)
-    	}
-    	
-    	if (prev > 0) {
-    		fragments.add(input.substring(prev))
-    		
-    		var root    = parseAccessible(fragments[0], require: require)
-    		var current = root
-    		
-    		if (current != null) {
-    			if (fragments.skip(1).all({
-    				var accessed = parseAccessible(_, parent: (Node)current, require: require)
-    				
-    				if (accessed != null) {
-    					current.accessedNode = accessed
-    					
-    					return true
-    				}
-    				
-    				return false
-    			})) {
-    				return root
-    			}
-    		}
-	    }
-    	
-    	return null
     }
     
     public parsePlaceholders() =>
