@@ -71,6 +71,8 @@ class Value extends Node {
             
             if (declaration != null) {
                 return new Variable(parent, location, declaration)
+            } else {
+                softly throw new InvalidParseException("Could not find declaration for identifier '#input'")
             }
         }
         
@@ -91,15 +93,8 @@ class Value extends Node {
     public static parse(PlaceholderValue placeholder, Bool require = true) =>
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
     
-    public parseType(String input) -> Bool {
-        if (input != null) {
-            type = Type.parse(input)
-            
-            return type != null
-        }
-        
-        return false
-    }
+    public parseType(String input) =>
+        input != null && (type = Type.parse(input)) != null
     
     public validateTypes() -> Bool {
         if (type != null && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type.name) })) {
