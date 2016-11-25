@@ -1,5 +1,6 @@
 package "compiler/tree/nodes"
 
+import "compiler/InvalidParseException"
 import "compiler/util/Location"
 
 import "compiler/util/CompilerStringFunctions"
@@ -48,6 +49,8 @@ class Return extends Node {
                 node.value = Value.parse(contents, node)
                 
                 if (node.value == null) {
+                    softly throw new InvalidParseException("Invalid return value '#contents'", node)
+                    
                     return null
                 }
             }
