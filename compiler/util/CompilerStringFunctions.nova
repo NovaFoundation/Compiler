@@ -428,6 +428,17 @@ extension CompilerStringFunctions {
         return findStringInBaseScope(array, start, searchGenerics)
     }
     
+    public findWordInBaseScope(String this, String word, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
+        var index = findStringInBaseScope(word, start, searchGenerics, defaultReturnValue)
+        
+        while (index >= 0 && ((index > 0 && !WHITESPACE.contains(chars[index - 1])) ||
+            (index + word.count < count - 1 && !WHITESPACE.contains(chars[index + word.count])))) {
+            index = findStringInBaseScope(word, index + word.count + 1, searchGenerics, defaultReturnValue)
+        }
+        
+        return index
+    }
+    
     public findStringInBaseScope(String this, String needle, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) =>
         findStringInBaseScope([needle], start, searchGenerics, defaultReturnValue)
         
