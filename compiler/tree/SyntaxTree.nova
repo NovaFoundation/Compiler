@@ -60,6 +60,8 @@ class SyntaxTree {
                         node = parents.peek().parseStatement(statement, require: false)
                     } catch (SyntaxErrorException e) {
                         Console.log(e)
+                        
+                        node = null
                     }
                     
                     if (node == null) {
@@ -124,7 +126,15 @@ class SyntaxTree {
     
     public parseStatements() {
         root.files.forEach(file -> {
-            if (!file.classes.all({ _.parsePlaceholders() }, false)) {
+            if (!file.classes.all({
+                try {
+                    return _.parsePlaceholders()
+                } catch (SyntaxErrorException e) {
+                    Console.log("Error: #e.message")
+                    
+                    return false
+                }
+            }, false)) {
                 Console.writeLine("failed to parse placeholders for file '#file'")
             }
         })
