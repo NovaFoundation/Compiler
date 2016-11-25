@@ -77,7 +77,7 @@ class Scope extends NodeList {
         Node node = null
         
         until (node != null) {
-        	node = Accessible.parseNodeAccess(input, parent, require: require)
+        	node = Accessible.parseDotAccess(input, parent, require: require)
             node = IfStatement.parse(input, parent, location, require)
             node = ElseStatement.parse(input, parent, location, require)
             node = Return.parse(input, parent, location, require)

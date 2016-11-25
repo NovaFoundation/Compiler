@@ -79,7 +79,7 @@ class Value extends Node {
         var node = null
         
         until (node.class.isOfType(Value)) {
-            node = Accessible.parseNodeAccess(input, parent, require)
+            node = Accessible.parseDotAccess(input, parent, require)
             node = Literal.parse(input, parent, location, require)
             node = StaticClassReference.parse(input, parent, location, require)
             node = FunctionCall.parse(input, parent, location, require)

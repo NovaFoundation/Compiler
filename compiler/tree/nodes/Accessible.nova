@@ -335,7 +335,7 @@ interface Accessible {
         }
     }
     
-    public static parseNodeAccess(String input, Node parent, Bool require = true) -> Node {
+    public static parseDotAccess(String input, Node parent, Bool require = true) -> Node {
         var fragments = input.splitAtDotOperator()
         
         if (fragments != null) {    
