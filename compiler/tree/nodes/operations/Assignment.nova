@@ -103,17 +103,6 @@ class Assignment extends Operation {
     
     static findAssignment(String input, Int assignmentIndex) => input.substring(assignmentIndex + 1).trim()
     
-    parseAssignment(String input) -> Bool {
-        var value = Value.parse(input, this, location)
-        
-        if (value != null) {
-            assignment = value
-            
-            return true
-        } else {
-            Console.log("Reason: #SyntaxMessage.latestErrorMessage")
-            
-            return false
-        }
-    }
+    parseAssignment(String input) =>
+        (assignment = Value.parse(input, this, location)) != null
 }
