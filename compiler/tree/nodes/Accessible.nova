@@ -3,6 +3,8 @@ package "compiler/tree/nodes"
 import "nova/datastruct/Pair"
 import "nova/datastruct/list/List"
 
+import "compiler/SyntaxMessage"
+import "compiler/InvalidParseException"
 import "compiler/util/SyntaxUtils"
 import "compiler/tree/nodes/functions/FunctionCall"
 
@@ -76,8 +78,6 @@ interface Accessible {
                     return id
                 }
             }*/
-            
-            
             
             return null
         }
@@ -324,33 +324,22 @@ interface Accessible {
     }
     
     public static parse(String input, Node parent = null, Bool require = true) -> Accessible {
-        var node = null
+        var node = Value.parse(input, parent, require: require)
         
-        until (node != null) {
-            node = StaticClassReference.parse(input, parent, require: require)
-            node = FunctionCall.parse(input, parent, require: require)
+        if (node.class.isOfType(Accessible)) {
+            return (Accessible)node
+        } else {
+            softly throw new InvalidParseException("Could not parse Accessible '#input', received '#node'")
+            
+            return null
         }
-        
-        return node
     }
     
     public static parseNodeAccess(String input, Node parent, Bool require = true) -> Node {
-        var prev = 0
-        var dot  = input.findDotOperatorIndex()
+        var fragments = input.splitAtDotOperator()
         
-        var fragments = new String[]
-        
-        while (dot > 0) {
-            fragments.add(input.substring(prev, dot))
-            
-            prev = dot + 1
-            dot  = input.findDotOperatorIndex(prev)
-        }
-        
-        if (prev > 0) {
-            fragments.add(input.substring(prev))
-            
-            var root    = parse(fragments[0], parent, require: require)
+        if (fragments != null) {    
+            var root    = parse(fragments.first, parent, require: require)
             var current = root
             
             if (current != null) {
