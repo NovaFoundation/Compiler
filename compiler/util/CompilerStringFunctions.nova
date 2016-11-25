@@ -343,6 +343,28 @@ extension CompilerStringFunctions {
         return defaultReturnValue
     }
     
+    public splitAtDotOperator(String this, String[] defaultReturnValue = null) -> String[] {
+        var prev = 0
+        var dot  = findDotOperatorIndex()
+        
+        var fragments = new String[]
+        
+        while (dot > 0) {
+            fragments.add(substring(prev, dot))
+            
+            prev = dot + 1
+            dot  = findDotOperatorIndex(prev)
+        }
+        
+        if (prev > 0) {
+            fragments.add(substring(prev))
+            
+            return fragments
+        } else {
+            return defaultReturnValue
+        }
+    }
+    
     public splitValues(String this) -> String[] {
         return split(/\s+/)
     }
