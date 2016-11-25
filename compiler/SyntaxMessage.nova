@@ -24,8 +24,4 @@ class SyntaxMessage {
             node.program.compiler.errors.add(message)
         }
     }
-    
-    public static invalidParse(String message, Node node = null) => null {
-        latestErrorMessage = message
-    }
 }
