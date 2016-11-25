@@ -6,7 +6,10 @@ import "compiler/util/Location"
 import "compiler/tree/nodes/Accessible"
 import "compiler/tree/nodes/operations/Operation"
 import "compiler/tree/nodes/operations/Assignment"
+import "compiler/tree/nodes/exceptionhandling/Catch"
 import "compiler/tree/nodes/functions/FunctionCall"
+import "compiler/tree/nodes/controlstructures/IfStatement"
+import "compiler/tree/nodes/controlstructures/ElseStatement"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "compiler/util/CompilerStringFunctions"
@@ -33,6 +36,8 @@ class Scope extends NodeList {
     private Int id
     
     visible VariableDeclaration[] declarations
+    
+    static Class[] LADDER_FORM = [ElseStatement, Catch]
     
     visible Int depth {
         get {
@@ -73,6 +78,8 @@ class Scope extends NodeList {
         
         until (node != null) {
         	node = Accessible.parseNodeAccess(input, parent, require: require)
+            node = IfStatement.parse(input, parent, location, require)
+            node = ElseStatement.parse(input, parent, location, require)
             node = Return.parse(input, parent, location, require)
             node = Assignment.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
@@ -90,7 +97,17 @@ class Scope extends NodeList {
                 var parsed = parseStatement(placeholder.value, child.parent, child.location, true)
                 
                 if (parsed != null) {
-                    return children.replace(child, parsed)
+                    children.replace(child, parsed)
+                    
+                    if (placeholder.scope != null) {
+                        parsed.scope = placeholder.scope
+                        
+                        if (parsed.scope != null) {
+                            return parsed.scope.parsePlaceholders()
+                        }
+                    }
+                    
+                    return true
                 } else {
                     return false
                 }
@@ -99,6 +116,12 @@ class Scope extends NodeList {
             }
         }, false)
     
+    printPrecedingWhitespace(Node child) =>
+        LADDER_FORM.contains(child.class) ? " " : "\n"
+    
+    childToNova(Node child) =>
+        printPrecedingWhitespace(child) + child.toNova()
+    
     public toNova() =>
-        "{\n" + children.map({ _.toNova() + "\n" }).join() + "}"
+        "{" + children.map(childToNova).join() + "\n}"
 }
