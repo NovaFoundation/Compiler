@@ -104,7 +104,10 @@ class Node implements Annotatable {
         no set
     }
     
-    visible Scope scope => null
+    public Scope scope => null {
+        set {}
+    }
+    
     visible Bool containsScope => scope != null
     
     visible Node next => getAdjacentNode(1)
