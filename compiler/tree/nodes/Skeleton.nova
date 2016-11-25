@@ -1,7 +1,10 @@
 package "compiler/tree/nodes"
 
 import "compiler/SyntaxErrorException"
+import "compiler/InvalidParseException"
 import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
 
 /// @Node extension that represents 
 ///
