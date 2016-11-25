@@ -1,6 +1,7 @@
 package "compiler/tree/nodes"
 
 import "compiler/SyntaxMessage"
+import "compiler/InvalidParseException"
 import "compiler/util/Location"
 import "compiler/tree/nodes/arrays/ArrayAccess"
 import "compiler/tree/nodes/operations/Operation"
@@ -78,8 +79,10 @@ class Value extends Node {
         until (node.class.isOfType(Value)) {
             node = Accessible.parseNodeAccess(input, parent, require)
             node = Literal.parse(input, parent, location, require)
+            node = StaticClassReference.parse(input, parent, location, require)
             node = FunctionCall.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
+            softly throw new InvalidParseException("Could not parse value '#input'")
         }
         
         return node
