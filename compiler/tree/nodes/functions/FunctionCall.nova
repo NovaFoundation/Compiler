@@ -6,6 +6,7 @@ import "compiler/tree/nodes/variables/Variable"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/tree/nodes/ClassDeclaration"
 import "compiler/SyntaxErrorException"
+import "compiler/InvalidParseException"
 import "compiler/util/Location"
 import "compiler/tree/nodes/Accessible"
 
@@ -59,7 +60,11 @@ class FunctionCall extends Variable {
             
             node.name = name
             
-            if (node.parseArguments(arguments) && node.searchDeclaration()) {
+            if (!node.parseArguments(arguments)) {
+                softly throw new InvalidParseException("Unable to parse arguments '#arguments'", node)
+            } else if (!node.searchDeclaration()) {
+                softly throw new InvalidParseException("Could not find declaration for function '#node'", node)
+            } else {
                 return node
             }
         }
@@ -120,7 +125,11 @@ class FunctionCall extends Variable {
                 declaration = func
                 
                 return true
+            } else {
+                softly throw new InvalidParseException("Could not find declaration for function call '#this' in class '#ref'", this)
             }
+        } else {
+            softly throw new InvalidParseException("Could not get reference class for function call '#this'", this)
         }
         
         return false
