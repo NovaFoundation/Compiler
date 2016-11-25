@@ -74,6 +74,16 @@ class Operation extends Value {
             }
         })
         
+        for (i in 0..matches.count) {
+            for (j in 1..(matches.count - i)) {
+                if (matches[j - 1] > matches[j]) {
+                    var temp = matches[j - 1]
+                    matches[j - 1] = matches[j]
+                    matches[j] = temp
+                }
+            }
+        }
+        
         return matches
     }
     
@@ -103,6 +113,8 @@ class Operation extends Value {
         
         if (!matches.all(start -> {
             if (prev > start) {
+                softly throw new InvalidParseException("Invalid operator location in operation '#input' (current operands: #operands)", this)
+                
                 return false
             } else {
                 operands.add(input.substring(prev, start).trim())
