@@ -24,6 +24,7 @@ class Loop extends ControlStructure {
         var node = null
         
         until (node.class.isOfType(Loop)) {
+            node = WhileLoop.parse(input, parent, location, require)
             node = ForEachLoop.parse(input, parent, location, require)
         }
         
