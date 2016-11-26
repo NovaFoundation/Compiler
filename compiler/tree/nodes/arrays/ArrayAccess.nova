@@ -1,19 +1,20 @@
 package "compiler/tree/nodes/arrays"
 
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
 import "compiler/SyntaxErrorException"
 import "compiler/util/Location"
 
-/// @Value extension that keeps track
-/// of any time an array is being accessed. For example, the statement: "[34]"
-/// is an array access. Obviously the previous code segment does nothing, however
-/// these nodes will be intertwined with method calls, assignments, if statements, etc.
+/// @Node extension that keeps track of any time an array is being accessed.
+/// For example, the statement: "[34]" is an array access. The previous code
+/// segment does nothing on its own, however these nodes will be intertwined
+/// with method calls, assignments, if statements, etc.
 ///
 /// author:  Braden Steffaniak
 /// since:   v0.2 Mar 24, 2014 at 10:45:29 PM
 /// version: v0.2.45 Oct 20, 2016 at 10:19:22 PM
 class ArrayAccess extends Node {
-    //visible Dimensions dimensions
+    visible Value[] dimensions = new Value[]
     
     /// Create a new ArrayAccess node.
     /// 
@@ -24,8 +25,6 @@ class ArrayAccess extends Node {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
-        
-        //dimensions = new Dimensions(this, location)
     }
     
     /// Parse the given input into a ArrayAccess node. If the input cannot be parsed
@@ -43,17 +42,21 @@ class ArrayAccess extends Node {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed ArrayAccess node, if successful; null otherwise.
-    public parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayAccess {
-        if (input.count >= 3 && input.chars.first == '[' && input.chars.last == ']') {
-            ArrayAccess node = new ArrayAccess(parent, location)
-            
-            
-            
-            if (true) {
-                return node
-            }
+    public parse(String[] input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayAccess {
+        var node = new ArrayAccess(parent, location)
+        
+        if (node.parseDimensions(input)) {
+            return node
         }
         
         return null
     }
+    
+    public parseDimension(String dimension) =>
+        dimensions.add(Value.parse(dimension, this)).last != null
+    
+    parseDimensions(String[] input) =>
+        input.all(parseDimension, false)
+    
+    public toNova() => dimensions.map({ "[#{_.toNova()}]" }).join()
 }
