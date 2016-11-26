@@ -38,6 +38,5 @@ class Variable extends Identifier implements Accessible, Assignable {
         other.declaration = declaration
     }
     
-    public toNova() => declaration.name + writeAccessedNodes()
-    public toString() => toNova()
+    public toNova() => declaration.name + writeArrayAccess() + writeAccessedNodes()
 }
