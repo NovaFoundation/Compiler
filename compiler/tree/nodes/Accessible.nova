@@ -362,6 +362,11 @@ interface Accessible {
         return null
     }
     
+    public cloneTo(Accessible other) => other {
+        other.safeNavigation = safeNavigation
+        other.accessedNode = accessedNode
+    }
+    
     public writeAccessedNodes() -> String =>
         doesAccess ? ".#{((Node)accessedNode).toNova()}#{accessedNode.writeAccessedNodes()}" : ""
 }
