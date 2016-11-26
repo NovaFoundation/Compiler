@@ -1,5 +1,7 @@
 package "compiler/tree/nodes"
 
+import "nova/datastruct/Tuple2"
+
 import "compiler/SyntaxMessage"
 import "compiler/InvalidParseException"
 import "compiler/util/Location"
@@ -55,6 +57,26 @@ class Value extends Node {
     ///           be parsed.
     /// return:   The parsed Value node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value {
+        var arrayData = getArrayAccesses(input)
+        
+        if (arrayData.item1 != null) {
+            input = input.substring(end: arrayData.item2[0]).trim()
+        }
+        
+        var value = parseValue(input, parent, location, require)
+        
+        if (value != null) {
+            if (arrayData.item1 != null) {
+                value.arrayAccess = ArrayAccess.parse(arrayData.item1, value)
+            }
+            
+            return value
+        }
+        
+        return null
+    }
+    
+    static parseValue(String input, Node parent, Location location, Bool require) -> Value {
         if (input.isIdentifier) {
             var declaration = parent.findVariableDeclaration(input)
             
@@ -76,9 +98,40 @@ class Value extends Node {
             node = FunctionCall.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
             softly throw new InvalidParseException("Could not parse value '#input'")
+            return null
         }
         
         return node
+    }
+    
+    static getArrayAccesses(String input) -> Tuple2<Array<String>, IntArray> {
+        String[] array = null
+        var bracketIndex = input.count - 1
+        
+        while (input[bracketIndex] == ']') {
+            var start = input.findEndingMatch(bracketIndex, '[', ']', direction: -1)
+            var old = bracketIndex
+            
+            bracketIndex = start - 1
+            
+            if (start > 0) {
+                if (input[bracketIndex] == ')' || input[bracketIndex] == ']' || input.substring(end: start).isIdentifier) {
+                    array = array ?: new String[]
+                    array.add(0, input.substring(start + 1, old).trim())
+                } else if (array != null) {
+                    array = null
+                }
+            }
+            
+            if (bracketIndex <= 1 || input[bracketIndex] != ']') {
+                break
+            }
+        }
+        
+        IntArray i = new IntArray()
+        i.add(bracketIndex + 1)
+        
+        return new Tuple2(array, i)
     }
     
     public static parse(PlaceholderValue placeholder, Bool require = true) =>
@@ -101,6 +154,7 @@ class Value extends Node {
         SyntaxMessage.error("Invalid type '#type'", this, throwException: throwException)
     
     public writeType() => "#type.toNova()"
+    public writeArrayAccess() => arrayAccess != null ? arrayAccess.toNova() : ""
     
     public cloneTo(Value other) => other {
         super.cloneTo(other)
