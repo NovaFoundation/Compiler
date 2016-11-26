@@ -1,5 +1,7 @@
 package "compiler/tree/nodes"
 
+import "nova/datastruct/HashMap"
+
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
 
@@ -7,6 +9,10 @@ import "compiler/util/CompilerStringFunctions"
 
 class Package extends Node {
     public String location
+    
+    static HashMap<String, Array<NovaFile>> filesMap = new HashMap()
+    
+    visible NovaFile[] files => filesMap[location]
     
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
@@ -51,7 +57,10 @@ class Package extends Node {
             
             node.location = packageLocation
             
-            if (true) {//node.validatePackageLocation(PackageLocation) && node.validateAlias(alias, require))
+            if (node.validateLocation() && node.validateAlias()) {
+                filesMap.put(node.location, filesMap.get(node.location) ?: new NovaFile[])
+                filesMap[node.location].add(parent.parentFile)
+                
                 return node
             }
         }
@@ -59,6 +68,8 @@ class Package extends Node {
         return null
     }
     
+    validateLocation() => true
+    validateAlias() => true
+    
     public toNova() => location != null ? "package \"#location\"" : ""
-    public toString() => toNova()
 }
