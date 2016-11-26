@@ -51,7 +51,10 @@ class FunctionCall extends Variable {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed FunctionCall node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> FunctionCall {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
+        parse(input, parent, location, require, null)
+        
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true, FunctionDeclaration declaration = null) -> FunctionCall {
         var name = findName(input)
         var arguments = findArguments(input)
         
@@ -59,11 +62,14 @@ class FunctionCall extends Variable {
             var node = new FunctionCall(parent, location)
             
             node.name = name
+            node.declaration = declaration
             
             if (!node.parseArguments(arguments)) {
                 softly throw new InvalidParseException("Unable to parse arguments '#arguments'", node)
-            } else if (!node.searchDeclaration()) {
+            } else if (declaration == null && !node.searchDeclaration()) {
                 softly throw new InvalidParseException("Could not find declaration for function '#node'", node)
+            } else if (declaration != null && !node.validateDeclarationCompatible()) {
+                softly throw new InvalidParseException("Given declaration '#declaration' is not compatible with function call '#node'", node)
             } else {
                 return node
             }
@@ -101,10 +107,10 @@ class FunctionCall extends Variable {
     }
     
     parseArgument(String argument) -> Bool {
-        var statement = Value.parse(argument, this)
+        var value = Value.parse(argument, argumentList)
         
-        if (statement != null) {
-            arguments.add(statement)
+        if (value != null) {
+            arguments.add(value)
             
             return true
         }
@@ -113,7 +119,10 @@ class FunctionCall extends Variable {
     }
     
     parseArguments(String[] arguments) =>
-        arguments.all({ parseArgument(_) }, false)
+        arguments.all(parseArgument, false)
+    
+    validateDeclarationCompatible() =>
+        declaration != null
     
     searchDeclaration() -> Bool {
         var ref = referenceClass
@@ -133,6 +142,12 @@ class FunctionCall extends Variable {
         }
         
         return false
+    }
+    
+    public cloneTo(FunctionCall other) => other {
+        super.cloneTo(other)
+        
+        other.argumentList = argumentList
     }
     
     public toNova() => name + "#argumentList" + writeAccessedNodes()
