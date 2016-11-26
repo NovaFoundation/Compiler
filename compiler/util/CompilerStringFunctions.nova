@@ -20,6 +20,8 @@ extension CompilerStringFunctions {
     static Char[] STMT_POST_CONT_CHARS      = "-+~!=%^&|*/\\><,.]".chars
     static Char[] INVALID_DECLARATION_CHARS = "-+~!=%^|/\"\\'{};()".chars
     
+    static Char[] WORD_BOUNDARIES = " \t\n\r-+~!=%^&|*/\\><,\"'[]{};:?()".chars
+    
     public Bool String.isIdentifier {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
         get { return count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/) }
         no set
@@ -431,8 +433,8 @@ extension CompilerStringFunctions {
     public findWordInBaseScope(String this, String word, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
         var index = findStringInBaseScope(word, start, searchGenerics, defaultReturnValue)
         
-        while (index >= 0 && ((index > 0 && !WHITESPACE.contains(chars[index - 1])) ||
-            (index + word.count < count - 1 && !WHITESPACE.contains(chars[index + word.count])))) {
+        while (index >= 0 && ((index > 0 && !WORD_BOUNDARIES.contains(chars[index - 1])) ||
+            (index + word.count < count - 1 && !WORD_BOUNDARIES.contains(chars[index + word.count])))) {
             index = findStringInBaseScope(word, index + word.count + 1, searchGenerics, defaultReturnValue)
         }
         
