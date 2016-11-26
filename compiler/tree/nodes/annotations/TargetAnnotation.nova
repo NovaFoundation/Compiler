@@ -6,7 +6,7 @@ import "compiler/util/Bounds"
 
 import "compiler/util/CompilerStringFunctions"
 
-/// @Node extension that represents
+/// @Annotation extension that represents
 /// 
 /// author: Braden Steffaniak
 class TargetAnnotation extends Annotation {
