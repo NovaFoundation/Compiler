@@ -1,6 +1,7 @@
 package "compiler/tree/nodes"
 
 import "compiler/Compiler"
+import "compiler/InvalidParseException"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/annotations/Annotatable"
 import "compiler/tree/nodes/annotations/Annotation"
@@ -220,6 +221,14 @@ class Node implements Annotatable {
     
     public generateTemporaryScopeNode() -> Node {
         return null
+    }
+    
+    public static strictParse(action()) {
+        try {
+            action()
+        } catch all (InvalidParseException e) {
+            Console.log(e)
+        }
     }
     
     /// Return a new Node containing a copy of the values of the
