@@ -108,6 +108,8 @@ class SyntaxTree {
             
             if (parents.peek() != file) {
                 SyntaxMessage.error("Missing ending brace", file, throwException: false)
+            } else {
+                file.addAutoImports()
             }
         })
         
