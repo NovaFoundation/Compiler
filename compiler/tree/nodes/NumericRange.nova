@@ -1,0 +1,62 @@
+package "compiler/tree/nodes"
+
+import "compiler/SyntaxErrorException"
+import "compiler/InvalidParseException"
+import "compiler/util/Location"
+import "compiler/tree/nodes/functions/Instantiation"
+
+import "compiler/util/CompilerStringFunctions"
+
+/// @Instantiation extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class NumericRange extends Instantiation {
+    visible Value start <=> arguments[0]
+    visible Value end <=> arguments[1]
+    
+    /// Create a new NumericRange node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the NumericRange node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    /// Parse the given input into a NumericRange node. If the input cannot be parsed
+    /// into a NumericRange node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a NumericRange instance.
+    /// parent:   The parent of the NumericRange node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed NumericRange node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NumericRange {
+        var startIndex = input.findStringInBaseScope("..")
+        
+        if (startIndex > 0 && input.isStrictlyOperator("..", startIndex)) {
+            var start = input.substring(end: startIndex).trim()
+            var end = input.substring(startIndex + "..".count).trim()
+            
+            var instantiation = Instantiation.parse("new IntRange(#start, #end)", parent, location, require)
+            
+            if (instantiation != null) {
+                return (NumericRange)instantiation.cloneTo(new NumericRange(parent, location))
+            }
+        }
+        
+        return null
+    }
+    
+    public toNova() => "#{start?.toNova()}..#{end?.toNova()}"
+}
