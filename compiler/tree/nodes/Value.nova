@@ -8,6 +8,7 @@ import "compiler/tree/nodes/operations/Operation"
 import "compiler/tree/nodes/operations/Assignable"
 import "compiler/tree/nodes/variables/Variable"
 import "compiler/tree/nodes/functions/FunctionCall"
+import "compiler/tree/nodes/functions/Instantiation"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -20,19 +21,7 @@ class Value extends Node {
     
     public Bool isAssignable => this.class.isOfType(Assignable)
     
-    public ClassDeclaration typeClass {
-        get {
-            var imp = parentFile.imports.firstWhere({ _.className.equals(type.name) })
-            
-            if (imp != null) {
-                return imp.classDeclaration
-            } else {
-                return null
-            }
-        }
-        
-        no set
-    }
+    public ClassDeclaration typeClass => parentFile.imports.firstWhere({ _.className.equals(type.name) })?.classDeclaration
     
     visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
     
@@ -82,6 +71,8 @@ class Value extends Node {
             node = Accessible.parseDotAccess(input, parent, require)
             node = Literal.parse(input, parent, location, require)
             node = StaticClassReference.parse(input, parent, location, require)
+            node = NumericRange.parse(input, parent, location, require)
+            node = Instantiation.parse(input, parent, location, require)
             node = FunctionCall.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
             softly throw new InvalidParseException("Could not parse value '#input'")
