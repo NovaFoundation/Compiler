@@ -110,6 +110,11 @@ class NovaFile extends Node {
         }
     }
     
+    public addAutoImports() =>
+        packageDeclaration.files.filter({ _ != this }).forEach({
+            addImport(_.classDeclaration.location)
+        })
+    
     public addImport(String location) -> Import {
         if (containsImport(location)) return null
         
