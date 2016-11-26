@@ -48,6 +48,7 @@ class Annotation extends Node {
                 var parameters = contents.substring(bounds.end).trim()
                 
                 until (node != null) {
+                    node = OverrideAnnotation.parse(type, parameters, parent, location, require)
                     node = PrimitiveArrayAnnotation.parse(type, parameters, parent, location, require)
                     node = TargetAnnotation.parse(type, parameters, parent, location, require)
                 }
