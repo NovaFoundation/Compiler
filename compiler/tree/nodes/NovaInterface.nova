@@ -1,5 +1,0 @@
-package "compiler/tree/nodes"
-
-class NovaInterface extends ClassDeclaration {
-    
-}
