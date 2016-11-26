@@ -117,7 +117,7 @@ class SyntaxTree {
     public validateTypes() {
         root.files.forEach(file -> {
             if (!file.classes.all({ _.validateTypes() }, false)) {
-                Console.writeLine("invalid types")
+                Console.writeLine("Invalid types in file '#file'")
             }
         })
         
