@@ -2,6 +2,7 @@ package "compiler/util"
 
 import "nova/regex/Regex"
 import "nova/regex/Match"
+import "nova/datastruct/Tuple2"
 
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/operations/UnaryOperation"
@@ -48,6 +49,36 @@ extension CompilerStringFunctions {
         }
         
         return true
+    }
+    
+    public getArrayAccesses(String this) -> Tuple2<Array<String>, IntArray> {
+        String[] array = null
+        var bracketIndex = count - 1
+        
+        while (chars[bracketIndex] == ']') {
+            var start = findEndingMatch(bracketIndex, '[', ']', direction: -1)
+            var old = bracketIndex
+            
+            bracketIndex = start - 1
+            
+            if (start > 0) {
+                if (chars[bracketIndex] == ')' || chars[bracketIndex] == ']' || substring(end: start).isIdentifier) {
+                    array = array ?: new String[]
+                    array.add(0, substring(start + 1, old).trim())
+                } else if (array != null) {
+                    array = null
+                }
+            }
+            
+            if (bracketIndex <= 1 || chars[bracketIndex] != ']') {
+                break
+            }
+        }
+        
+        IntArray i = new IntArray()
+        i.add(bracketIndex + 1)
+        
+        return new Tuple2(array, i)
     }
     
     public substring(String this, Bounds bounds) =>
