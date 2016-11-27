@@ -1,8 +1,11 @@
 package "compiler/tree/nodes"
 
 import "compiler/SyntaxErrorException"
+import "compiler/InvalidParseException"
 import "compiler/SyntaxMessage"
 import "compiler/util/Location"
+import "compiler/tree/nodes/generics/GenericParameter"
+import "compiler/tree/nodes/generics/GenericCompatible"
 import "compiler/tree/nodes/variables/InstanceDeclaration"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/tree/nodes/variables/FieldDeclaration"
@@ -18,7 +21,7 @@ import "compiler/util/CompilerStringFunctions"
 /// author: Braden Steffaniak
 /// since: 
 /// version: 
-class ClassDeclaration extends InstanceDeclaration implements Abstractable {
+class ClassDeclaration extends InstanceDeclaration implements Abstractable, GenericCompatible {
     visible ClassDeclaration parentClass => this
     
     visible String location =>
@@ -31,8 +34,10 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     public Type extendedClass
     public Type[] implementedInterfaces = new Type[0]
     
-    public FieldDeclaration[] fields
-    public FunctionDeclaration[] functions
+    visible GenericParameter[] genericParameters <=> genericParameters
+    
+    public FieldDeclaration[] fields = new FieldDeclaration[]
+    public FunctionDeclaration[] functions = new FunctionDeclaration[]
     
     visible ArrayBracketOverload arrayBracketOverload
     
@@ -47,9 +52,6 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
-        
-        fields = new FieldDeclaration[]
-        functions = new FunctionDeclaration[]
     }
     
     public addChild(Node child) {
@@ -138,10 +140,18 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
             var nameStartIndex = input.nextNonWhitespaceIndex(index + 6)
             var nameEndIndex   = input.nextWhitespaceIndex(nameStartIndex + 1)
             
-            if (node.parseName(input, nameStartIndex, nameEndIndex, require) && node.parseInheritence(input, nameEndIndex, require)) {
-                return node
-            } else if (require) {
-                SyntaxMessage.error("Invalid class declaration '#input'", node)
+            if (nameStartIndex < nameEndIndex) {
+                var name = input.substring(nameStartIndex, nameEndIndex)
+                
+                if (!node.parseGenericParameters(name)) {
+                    softly throw new InvalidParseException("Unable to parse generic parameters for class '#name'", node)
+                } else if (!node.parseName(name, require)) {
+                    softly throw new InvalidParseException("Unable to parse name for class '#input'", node)
+                } else if (!node.parseInheritence(input, nameEndIndex, require)) {
+                    softly throw new InvalidParseException("Unable to parse inheritence for class '#input'", node)
+                } else {
+                    return node
+                }
             }
         } else if (require) {
             SyntaxMessage.error("Invalid class declaration '#input'", parent)
@@ -164,18 +174,18 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         return true
     }
     
-    parseName(String input, Int start, Int end, Bool require) -> Bool {
-        if (end > start) {
-            name = input.substring(start, end)
-            
-            if (name.isIdentifier) {
-                return true
-            } else {
-                SyntaxMessage.errorIf("Invalid class name '#name'", this, require)
-            }
+    parseName(String name, Bool require) => true {
+        if (genericParameters.count > 0) {
+            name = name.substring(end: name.indexOf('<')).trim()
         }
         
-        return false
+        if (name.isIdentifier) {
+            this.name = name
+        } else {
+            SyntaxMessage.errorIf("Invalid class name '#name'", this, require)
+            
+            return false
+        }
     }
     
     parseInheritence(String input, Int nameEndIndex, Bool require) -> Bool {
@@ -246,7 +256,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable {
         functions.all({ _.parsePlaceholders() }, false)
     
     public writeHeader() =>
-        "#writeModifiers() class #name #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
+        "#writeModifiers() class #{name}#writeGenericParameters() #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
     
     public writeModifiers() =>
         super.writeModifiers() + writeAbstract()
