@@ -47,14 +47,14 @@ class Type {
     
     getGenericParameter(Node parent) -> GenericParameter {
         if (parent.parentFunction != null) {
-            var param = parent.parentFunction.genericParameters.firstWhere({ _.name.equals(name) })
+            var param = parent.parentFunction.genericParameters.firstWhere({ _.type.name.equals(name) })
             
             if (param != null) {
                 return param
             }
         }
         if (parent.parentClass != null) {
-            var param = parent.parentClass.genericParameters.firstWhere({ _.name.equals(name) })
+            var param = parent.parentClass.genericParameters.firstWhere({ _.type.name.equals(name) })
             
             if (param != null) {
                 return param
