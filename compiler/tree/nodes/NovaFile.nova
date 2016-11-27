@@ -102,6 +102,15 @@ class NovaFile extends Node {
         return node
     }
     
+    public generateTemporaryScopeNode() -> Node {
+        return new ClassDeclaration(this)
+    }
+    
+    public getImportedClass(String name, Bool includeSelf = true) =>
+        includeSelf && name.equals(this.name) ?
+            classDeclaration :
+            imports.firstWhere({ _.className.equals(name) })?.classDeclaration
+    
     addDefaultImports() {
         for (i in DEFAULT_IMPORTS) {
             if (i.count > 0) {
