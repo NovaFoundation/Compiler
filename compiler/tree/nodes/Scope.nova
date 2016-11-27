@@ -14,6 +14,7 @@ import "compiler/tree/nodes/controlstructures/IfStatement"
 import "compiler/tree/nodes/controlstructures/ElseStatement"
 import "compiler/tree/nodes/controlstructures/loops/Loop"
 import "compiler/tree/nodes/variables/VariableDeclaration"
+import "compiler/tree/nodes/variables/LocalDeclaration"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -86,9 +87,14 @@ class Scope extends NodeList {
             node = Throw.parse(input, parent, location, require)
             node = Loop.parse(input, parent, location, require)
             node = Return.parse(input, parent, location, require)
+            node = LocalDeclaration.parse(input, parent, location, require)
             node = Assignment.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
             node = Value.parse(input, parent, location, require)
+        }
+        
+        if (node.class.isOfType(LocalDeclaration)) {
+            declarations.add((LocalDeclaration)node)
         }
         
         return node
