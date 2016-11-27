@@ -413,6 +413,21 @@ extension CompilerStringFunctions {
         !Operator.OPERATOR_SYMBOLS.contains(chars[index - 1]) &&
         !Operator.OPERATOR_SYMBOLS.contains(chars[index + operator.count])
     
+    public findOperatorInBaseScope(String this, Char operator, Int start = 0, Bool searchGenerics = false) =>
+        findOperatorInBaseScope("#operator", start, searchGenerics)
+    
+    public findOperatorInBaseScope(String this, String operator, Int start = 0, Bool searchGenerics = false) -> Int {
+        while (true) {
+            var index = findStringInBaseScope(operator, start, searchGenerics)
+            
+            if (index > 0 && !isStrictlyOperator(operator, index)) {
+                start = index + 1
+            } else {
+                return index
+            }
+        }
+    }
+    
     public findCharInBaseScope(String this, Char needle, Int start = 0, Bool searchGenerics = false) -> Int {
         String[] array = new Array(1)
         
