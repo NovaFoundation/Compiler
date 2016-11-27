@@ -6,4 +6,8 @@ interface Abstractable {
     }
     
     public writeAbstract() => isAbstract ? "abstract " : ""
+    
+    public cloneTo(Abstractable other) => other {
+        other.isAbstract = isAbstract
+    }
 }
