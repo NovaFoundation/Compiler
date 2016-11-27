@@ -12,6 +12,7 @@ import "compiler/tree/nodes/operations/ElvisOperation"
 import "compiler/tree/nodes/operations/Assignable"
 import "compiler/tree/nodes/variables/Variable"
 import "compiler/tree/nodes/functions/FunctionCall"
+import "compiler/tree/nodes/functions/ArrayInstantiation"
 import "compiler/tree/nodes/functions/Instantiation"
 
 import "compiler/util/CompilerStringFunctions"
@@ -59,7 +60,7 @@ class Value extends Node {
     ///           be parsed.
     /// return:   The parsed Value node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value {
-        var arrayData = getArrayAccesses(input)
+        var arrayData = input.getArrayAccesses()
         
         if (arrayData.item1 != null) {
             input = input.substring(end: arrayData.item2[0]).trim()
@@ -96,6 +97,7 @@ class Value extends Node {
             node = Literal.parse(input, parent, location, require)
             node = StaticClassReference.parse(input, parent, location, require)
             node = NumericRange.parse(input, parent, location, require)
+            node = ArrayInstantiation.parse(input, parent, location, require)
             node = Instantiation.parse(input, parent, location, require)
             node = FunctionCall.parse(input, parent, location, require)
             node = ElvisOperation.parse(input, parent, location, require)
@@ -108,35 +110,7 @@ class Value extends Node {
         return node
     }
     
-    static getArrayAccesses(String input) -> Tuple2<Array<String>, IntArray> {
-        String[] array = null
-        var bracketIndex = input.count - 1
-        
-        while (input[bracketIndex] == ']') {
-            var start = input.findEndingMatch(bracketIndex, '[', ']', direction: -1)
-            var old = bracketIndex
-            
-            bracketIndex = start - 1
-            
-            if (start > 0) {
-                if (input[bracketIndex] == ')' || input[bracketIndex] == ']' || input.substring(end: start).isIdentifier) {
-                    array = array ?: new String[]
-                    array.add(0, input.substring(start + 1, old).trim())
-                } else if (array != null) {
-                    array = null
-                }
-            }
-            
-            if (bracketIndex <= 1 || input[bracketIndex] != ']') {
-                break
-            }
-        }
-        
-        IntArray i = new IntArray()
-        i.add(bracketIndex + 1)
-        
-        return new Tuple2(array, i)
-    }
+    
     
     public static parse(PlaceholderValue placeholder, Bool require = true) =>
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
