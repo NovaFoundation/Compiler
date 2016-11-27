@@ -49,14 +49,10 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
         var accessorIndex = findAccessorIndex(input)
         
         if (accessorIndex > 0) {
-            accessorValue = input.substring(accessorIndex + 2).trim()
+            var accessorOperator = input[accessorIndex] == '<' ? "<=>" : "=>"
             
-            if (input[accessorIndex - 1] == '<') {
-                accessorIndex--
-                
-                twoWay = true
-            }
-            
+            accessorValue = input.substring(accessorIndex + accessorOperator.count).trim()
+            twoWay = accessorOperator.equals("<=>")
             input = input.substring(end: accessorIndex).trim()
         } else {
             var initializationValueIndex = input.indexOf('=')
@@ -86,10 +82,16 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
     }
     
     static findAccessorIndex(String input, Int defaultReturnValue = -1) -> Int {
-        var index = input.nextWordIndex("=>")
+        var index = input.findOperatorInBaseScope("=>")
         
         if (index < 0) {
-            return defaultReturnValue
+            index = input.findOperatorInBaseScope("<=>")
+            
+            if (index < 0) {
+                return defaultReturnValue
+            } else {
+                return index
+            }
         } else {
             return index
         }
