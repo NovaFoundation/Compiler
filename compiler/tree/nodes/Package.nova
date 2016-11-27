@@ -18,9 +18,8 @@ class Package extends Node {
         super(parent, location)
     }
     
-    public static generateDefaultPackage(Node parent = null, Location location = Location.INVALID) -> Package {
-        return new Package(parent, location)
-    }
+    public static generateDefaultPackage(Node parent = null, Location location = Location.INVALID) =>
+        new Package(parent, location)
     
     /// Parse the given input into a Package node. If the input cannot be parsed
     /// into a Package node, null is returned.
