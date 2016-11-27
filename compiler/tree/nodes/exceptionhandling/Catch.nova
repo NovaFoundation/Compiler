@@ -1,8 +1,13 @@
 package "compiler/tree/nodes/exceptionhandling"
 
 import "compiler/SyntaxErrorException"
+import "compiler/InvalidParseException"
 import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Type"
+import "compiler/tree/nodes/Scope"
 import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
 
 /// @Node extension that represents 
 ///
@@ -10,6 +15,13 @@ import "compiler/util/Location"
 /// since: 
 /// version: 
 class Catch extends Node {
+    visible Bool soft = false
+    
+    visible Type exception
+    visible String variable
+    
+    visible Scope scope <=> scope
+    
     /// Create a new Catch node.
     /// 
     /// #exampleInputs
@@ -18,6 +30,8 @@ class Catch extends Node {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+        
+        scope = new Scope(this, location)
     }
     
     /// Parse the given input into a Catch node. If the input cannot be parsed
@@ -36,14 +50,55 @@ class Catch extends Node {
     ///           be parsed.
     /// return:   The parsed Catch node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Catch {
-        if (true) {
+        if (input.nextWord().equals("catch")) {
             var node = new Catch(parent, location)
             
+            var contents = input.substring("catch".count).trim()
             
+            if (contents.nextWord().equals("all")) {
+                node.soft = true
+                
+                contents = contents.substring("all".count).trim()
+            }
             
-            return node
+            if (contents.count > 0) {
+                if (contents.first == '(') {
+                    if (contents.last == ')') {
+                        contents = contents.substring(1, contents.count - 1).trim()
+                    } else {
+                        return null
+                    }
+                }
+                
+                if (!node.parseException(contents)) {
+                    softly throw new InvalidParseException("Unable to parse exception '#contents'", node)
+                } else {
+                    return node
+                }
+            }
         }
         
         return null
     }
+    
+    parseException(String input) => true {
+        var values = input.splitValues()
+        
+        match (values.count) {
+            case 2 {
+                variable = values[1]
+                
+                fallthrough  
+            } case 1 {
+                return (exception = Type.parse(values[0])) != null
+            }
+            default return false
+        }
+    }
+    
+    public writeException() =>
+        exception.toNova() + (variable != null ? " #variable" : "")
+    
+    public toNova() =>
+        "catch #{soft ? "all" : ""}".trim() + " (#writeException()) #scope.toNova()"
 }
