@@ -33,6 +33,7 @@ class Operator extends Node {
     visible static String L_SHIFT            = "<<"
     visible static String R_SHIFT            = ">>"
     visible static String UR_SHIFT           = ">>>"
+    visible static String SAFE_NAVIGATION    = "?."
     
     visible static String SHORTHAND_DIVIDE             = "/="
     visible static String SHORTHAND_MULTIPLY           = "*="
@@ -52,7 +53,8 @@ class Operator extends Node {
                                           AND, OR, DIVIDE, MULTIPLY, MODULO, INCREMENT, DECREMENT,
                                           EQUALS, BANG, ASSIGN, NOT_EQUAL, ADD, SUBTRACT,
                                           L_SHIFT, UR_SHIFT, R_SHIFT, GREATER_EQ, LESS_EQ, GREATER, LESS,
-                                          BITWISE_AND, BITWISE_OR, BITWISE_XOR, BITWISE_COMPLEMENT ]
+                                          BITWISE_AND, BITWISE_OR, BITWISE_XOR, BITWISE_COMPLEMENT,
+                                          SAFE_NAVIGATION ]
     
     visible static String[] UNARY_OPERATORS          = [ BANG, INCREMENT, DECREMENT, SUBTRACT, BITWISE_COMPLEMENT ]
     visible static String[] UNARY_OPERATORS_NO_MINUS = [ BANG, INCREMENT, DECREMENT, BITWISE_COMPLEMENT ]
