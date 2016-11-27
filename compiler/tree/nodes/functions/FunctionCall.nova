@@ -4,6 +4,7 @@ import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/variables/Variable"
 import "compiler/tree/nodes/variables/VariableDeclaration"
+import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
 import "compiler/tree/nodes/ClassDeclaration"
 import "compiler/SyntaxErrorException"
 import "compiler/InvalidParseException"
@@ -124,7 +125,19 @@ class FunctionCall extends Variable {
     validateDeclarationCompatible() =>
         declaration != null
     
-    searchDeclaration() -> Bool {
+    searchDeclaration() => searchClosureDeclaration() || searchFunctionDeclaration()
+    
+    searchClosureDeclaration() => false {
+        var variable = parent.findVariableDeclaration(name)
+        
+        if (variable.class.isOfType(ClosureDeclaration)) {
+            declaration = (VariableDeclaration)variable
+            
+            return true
+        }
+    }
+    
+    searchFunctionDeclaration() => false {
         var ref = referenceClass
         
         if (ref != null) {
@@ -140,8 +153,6 @@ class FunctionCall extends Variable {
         } else {
             softly throw new InvalidParseException("Could not get reference class for function call '#this'", this)
         }
-        
-        return false
     }
     
     public cloneTo(FunctionCall other) => other {
