@@ -1,0 +1,81 @@
+package "compiler/tree/nodes/operations"
+
+import "compiler/SyntaxErrorException"
+import "compiler/InvalidParseException"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Accessible"
+import "compiler/util/Location"
+
+import "compiler/util/CompilerStringFunctions"
+
+/// @Value extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class ElvisOperation extends Value {
+    visible Value condition
+    visible Value otherwise
+    
+    /// Create a new ElvisOperation node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the ElvisOperation node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    /// Parse the given input into a ElvisOperation node. If the input cannot be parsed
+    /// into a ElvisOperation node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a ElvisOperation instance.
+    /// parent:   The parent of the ElvisOperation node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed ElvisOperation node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ElvisOperation {
+        var index = input.findOperatorInBaseScope("?:")
+        
+        if (index > 0) {
+            var node = new ElvisOperation(parent, location)
+            
+            var condition = input.substring(end: index).trim()
+            var otherwise = input.substring(index + 2).trim()
+            
+            if (!node.parseCondition(condition)) {
+                softly throw new InvalidParseException("Unable to parse elvis operation condition '#condition'", node)
+            } else if (!node.parseOtherwise(otherwise)) {
+                softly throw new InvalidParseException("Unable to parse elvis operation otherwise value '#otherwise'", node)
+            } else if (!node.parseType()) {
+                softly throw new InvalidParseException("Unable to parse elvis operation type for '#input'", node)
+            } else {
+                return node
+            }
+        }
+        
+        return null
+    }
+    
+    parseCondition(String input) =>
+        (condition = Value.parse(input, this)) != null
+    
+    parseOtherwise(String input) =>
+        (otherwise = Value.parse(input, this)) != null
+    
+    parseType() => true {
+        type = condition.type
+    }
+    
+    public toNova() =>
+        "#condition ?: #otherwise"
+}
