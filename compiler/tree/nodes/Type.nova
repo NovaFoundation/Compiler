@@ -80,6 +80,14 @@ class Type {
         return true
     }
     
+    public writeArray() =>
+        "[]".repeat(arrayDimensions)
+    
+    public writeGenericParameters() =>
+        genericArguments.count > 0 ?
+            "<#{genericArguments.join(", ")}>" :
+            ""
+    
     public toString() => toNova()
-    public toNova() => "#name" + (genericArguments.count > 0 ? "<#{genericArguments.join(", ")}>" : "")
+    public toNova() => "#name" + writeArray() + writeGenericParameters()
 }
