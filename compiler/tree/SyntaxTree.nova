@@ -98,7 +98,7 @@ class SyntaxTree {
                     parents.push(node)
                 }
                 if (statements.endsScope) {
-                    repeat (statements.scopesEnded) {
+                    for (e in 0..statements.scopesEnded) {
                         if (!parents.isEmpty) {
                             parents.pop()
                         }
