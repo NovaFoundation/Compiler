@@ -33,10 +33,12 @@ class Type {
         } else if (!node.name.isIdentifier) {
             softly throw new InvalidParseException("Invalid type '#input'", parent)
         } else {
-            var param = node.getGenericParameter(parent)
-            
-            if (param != null) {
-                node = node.cloneTo(new GenericType())
+            if (parent != null) {
+                var param = node.getGenericParameter(parent)
+                
+                if (param != null) {
+                    node = node.cloneTo(new GenericType())
+                }
             }
             
             return node
