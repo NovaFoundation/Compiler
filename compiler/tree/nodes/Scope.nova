@@ -8,6 +8,7 @@ import "compiler/tree/nodes/Accessible"
 import "compiler/tree/nodes/operations/Operation"
 import "compiler/tree/nodes/operations/Assignment"
 import "compiler/tree/nodes/exceptionhandling/Catch"
+import "compiler/tree/nodes/exceptionhandling/Throw"
 import "compiler/tree/nodes/functions/FunctionCall"
 import "compiler/tree/nodes/controlstructures/IfStatement"
 import "compiler/tree/nodes/controlstructures/ElseStatement"
@@ -82,6 +83,7 @@ class Scope extends NodeList {
         	node = Accessible.parseDotAccess(input, parent, require: require)
             node = IfStatement.parse(input, parent, location, require)
             node = ElseStatement.parse(input, parent, location, require)
+            node = Throw.parse(input, parent, location, require)
             node = Loop.parse(input, parent, location, require)
             node = Return.parse(input, parent, location, require)
             node = Assignment.parse(input, parent, location, require)
