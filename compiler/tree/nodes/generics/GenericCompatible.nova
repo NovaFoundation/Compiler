@@ -42,4 +42,8 @@ interface GenericCompatible {
         genericParameters.count > 0 ?
             "<" + genericParameters.map({ _.toNova() }).join(", ") + ">" :
             ""
+    
+    public cloneTo(GenericCompatible other) => other {
+        other.genericParameters = genericParameters
+    }
 }
