@@ -106,9 +106,7 @@ class BodyFunction extends FunctionDeclaration {
         if (inlineBody.class.isOfType(PlaceholderValue)) {
             inlineBody = scope.parseStatement(((PlaceholderValue)inlineBody).value, inlineBody.parent)
             
-            if (inlineBody == null) {
-                return false
-            } else if (inlineBody.class.isOfType(Value)) {
+            if (inlineBody.class.isOfType(Value)) {
                 var type = ((Value)inlineBody).type
                 
                 if (this.type == null) {
@@ -119,6 +117,8 @@ class BodyFunction extends FunctionDeclaration {
                     
                 }*/
             }
+            
+            return inlineBody != null
         }
     }
     
@@ -132,9 +132,15 @@ class BodyFunction extends FunctionDeclaration {
             "" :
             super.writeReturnType()
     
+    writeInlineBody() =>
+        "=> " + inlineBody.toNova() +
+            (scope.children.count > 0 ?
+                " " + scope.toNova() :
+                "")
+    
     public writeBody() =>
         inlineBody != null ?
-            "=> " + inlineBody.toNova() :
+            writeInlineBody() :
             scope.toNova()
     
     public toNova() =>
