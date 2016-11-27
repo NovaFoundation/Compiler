@@ -11,6 +11,8 @@ import "compiler/util/CompilerStringFunctions"
 class Type {
     public String name
     
+    visible Bool isGeneric => false
+    
     visible Int arrayDimensions = 0
     
     visible GenericArgument[] genericArguments = new GenericArgument[0]
