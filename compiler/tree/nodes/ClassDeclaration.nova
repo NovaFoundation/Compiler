@@ -285,4 +285,16 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     
     [Override]
     public toString() => writeHeader()
+    
+    public cloneTo(ClassDeclaration other) => other {
+        super.cloneTo(other)
+        GenericCompatible.super.cloneTo(other)
+        Abstractable.super.cloneTo(other)
+        
+        other.extendedClass = extendedClass
+        other.implementedInterfaces = implementedInterfaces
+        other.fields = fields
+        other.functions = functions
+        other.arrayBracketOverload = arrayBracketOverload
+    }
 }
