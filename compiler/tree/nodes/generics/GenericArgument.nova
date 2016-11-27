@@ -18,6 +18,5 @@ class GenericArgument extends Value {
         parseType(type)
     }
     
-    public toString() => toNova()
     public toNova() => "#type.name"
 }
