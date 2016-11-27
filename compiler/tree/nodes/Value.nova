@@ -7,6 +7,8 @@ import "compiler/InvalidParseException"
 import "compiler/util/Location"
 import "compiler/tree/nodes/arrays/ArrayAccess"
 import "compiler/tree/nodes/operations/Operation"
+import "compiler/tree/nodes/operations/TernaryOperation"
+import "compiler/tree/nodes/operations/ElvisOperation"
 import "compiler/tree/nodes/operations/Assignable"
 import "compiler/tree/nodes/variables/Variable"
 import "compiler/tree/nodes/functions/FunctionCall"
@@ -96,6 +98,8 @@ class Value extends Node {
             node = NumericRange.parse(input, parent, location, require)
             node = Instantiation.parse(input, parent, location, require)
             node = FunctionCall.parse(input, parent, location, require)
+            node = ElvisOperation.parse(input, parent, location, require)
+            node = TernaryOperation.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
             softly throw new InvalidParseException("Could not parse value '#input'")
             return null
