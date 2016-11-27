@@ -4,7 +4,9 @@ import "compiler/SyntaxMessage"
 import "compiler/InvalidParseException"
 import "compiler/tree/nodes/Node"
 import "compiler/util/Location"
+import "compiler/tree/nodes/generics/GenericType"
 import "compiler/tree/nodes/generics/GenericArgument"
+import "compiler/tree/nodes/generics/GenericParameter"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -31,7 +33,32 @@ class Type {
         } else if (!node.name.isIdentifier) {
             softly throw new InvalidParseException("Invalid type '#input'", parent)
         } else {
+            var param = node.getGenericParameter(parent)
+            
+            if (param != null) {
+                node = node.cloneTo(new GenericType())
+            }
+            
             return node
+        }
+        
+        return null
+    }
+    
+    getGenericParameter(Node parent) -> GenericParameter {
+        if (parent.parentFunction != null) {
+            var param = parent.parentFunction.genericParameters.firstWhere({ _.name.equals(name) })
+            
+            if (param != null) {
+                return param
+            }
+        }
+        if (parent.parentClass != null) {
+            var param = parent.parentClass.genericParameters.firstWhere({ _.name.equals(name) })
+            
+            if (param != null) {
+                return param
+            }
         }
         
         return null
@@ -99,4 +126,10 @@ class Type {
     
     public toString() => toNova()
     public toNova() => "#name" + writeArray() + writeGenericParameters()
+    
+    public cloneTo(Type other) => other {
+        other.name = name
+        other.arrayDimensions = arrayDimensions
+        other.genericArguments = genericArguments
+    }
 }
