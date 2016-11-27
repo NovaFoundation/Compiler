@@ -1,0 +1,45 @@
+package "compiler/tree/nodes/generics"
+
+import "compiler/InvalidParseException"
+import "compiler/util/Location"
+import "compiler/tree/nodes/Node"
+import "compiler/tree/nodes/Value"
+import "compiler/tree/nodes/Type"
+
+import "compiler/util/CompilerStringFunctions"
+
+interface GenericCompatible {
+    visible GenericParameter[] genericParameters => null {
+        set {}
+    }
+    
+    public parseGenericParameters(String input, Bool requireWholeString = false) => true {
+        var genericIndex = input.indexOf('<')
+        
+        if (genericIndex >= 0 && (!requireWholeString || genericIndex == 0)) {
+            var end = input.findEndingMatch(genericIndex, '<', '>')
+            
+            if (end > 0 && (!requireWholeString || end == input.count - 1)) {
+                var contents = input.substring(genericIndex + 1, end)
+                
+                var params = contents.splitAtCommas().map({ new GenericParameter((Node)this, ((Node)this).location, _) })
+                genericParameters = params
+                
+                if (genericParameters.any({ _ == null })) { // if any generic parameters didnt parse
+                    softly throw new InvalidParseException("Failed to parse all generic parameters '#contents'", (Node)this)
+                    
+                    return false
+                } else {
+                    return true
+                }
+            }
+        }
+        
+        genericParameters = new GenericParameter[0]
+    }
+    
+    public writeGenericParameters() =>
+        genericParameters.count > 0 ?
+            "<" + genericParameters.map({ _.toNova() }).join(", ") + ">" :
+            ""
+}
