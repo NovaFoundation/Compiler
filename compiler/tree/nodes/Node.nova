@@ -23,11 +23,11 @@ import "nova/datastruct/Bounds"
 /// since:   v0.1 Jan 5, 2014 at 9:00:11 PM
 /// version: v0.2.41 Dec 17, 2014 at 7:48:17 PM
 class Node implements Annotatable {
-    visible Location location
+    [~] Location location
     
-    visible Annotation[] annotations
+    [~] Annotation[] annotations
     
-    public Node parent/* {
+    [+] Node parent/* {
         set {
             if (parent != value) { // Skip if already a child of this parent
             	this.parent = value
@@ -37,7 +37,7 @@ class Node implements Annotatable {
         }
     }*/
     
-    visible String locationInfo {
+    [~] String locationInfo {
         get {
             String info = ""
             
@@ -54,7 +54,7 @@ class Node implements Annotatable {
         no set
     }
     
-    public String nodeType {
+    [+] String nodeType {
         get {
             var name = this.class.name
             
@@ -70,32 +70,32 @@ class Node implements Annotatable {
     /// 
     /// return: Whether or not the specified Node is being decoded at
     ///         the current moment.
-    visible Bool isDecoding => false
-    visible Bool isValid => parent != null
-    visible Bool isUserMade => true
-    visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
-    visible Bool isWithinExternalContext => parent?.isWithinExternalContext
+    [~] Bool isDecoding => false
+    [~] Bool isValid => parent != null
+    [~] Bool isUserMade => true
+    [~] Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
+    [~] Bool isWithinExternalContext => parent?.isWithinExternalContext
     
-    visible Program program => parent?.program
+    [~] Program program => parent?.program
     
-    visible Byte phase => program.tree.phase
+    [~] Byte phase => program.tree.phase
     
-    visible NovaFile parentFile => parent?.parentFile
-    visible Bool isWithinFile => parentFile != null
+    [~] NovaFile parentFile => parent?.parentFile
+    [~] Bool isWithinFile => parentFile != null
     
-    visible FunctionDeclaration parentFunction => parent?.parentFunction
-    visible Bool isWithinFunction => parentFunction != null
+    [~] FunctionDeclaration parentFunction => parent?.parentFunction
+    [~] Bool isWithinFunction => parentFunction != null
     
-    visible Try parentTry => parent?.parentTry
-    visible Bool isWithinTry => parentTry != null
+    [~] Try parentTry => parent?.parentTry
+    [~] Bool isWithinTry => parentTry != null
     
-    visible ClassDeclaration parentClass => parent?.parentClass
-    visible Bool isWithinClass => parentClass != null
+    [~] ClassDeclaration parentClass => parent?.parentClass
+    [~] Bool isWithinClass => parentClass != null
     
-    visible Scope parentScope => parentWithScope.scope
-    visible Bool isWithinScope => parentScope != null
+    [~] Scope parentScope => parentWithScope.scope
+    [~] Bool isWithinScope => parentScope != null
     
-    visible Node parentWithScope {
+    [~] Node parentWithScope {
         get {
             if (parent == null) return null
             
@@ -105,21 +105,21 @@ class Node implements Annotatable {
         no set
     }
     
-    public Scope scope => null {
+    [+] Scope scope => null {
         set {}
     }
     
-    visible Bool containsScope => scope != null
+    [~] Bool containsScope => scope != null
     
-    visible Node next => getAdjacentNode(1)
-    visible Node previous => getAdjacentNode(-1)
+    [~] Node next => getAdjacentNode(1)
+    [~] Node previous => getAdjacentNode(-1)
     
-    visible Int index {
+    [~] Int index {
     	get { parentScope.children.indexOf(this) }
         set { parentScope.children.swap(index, value) }
     }
     
-    public getAdjacentNode(Int offset) -> Node {
+    [+] getAdjacentNode(Int offset) -> Node {
         if (parent != null) {
             Int index = this.index + offset
             
@@ -135,13 +135,13 @@ class Node implements Annotatable {
     /// 
     /// parent:   The Node to act as the parent temporarily.
     /// location: The location of the Node in the source file.
-    public construct(Node parent = null, Location location = Location.INVALID) {
+    [+] construct(Node parent = null, Location location = Location.INVALID) {
         this.parent = parent
         this.location = location
     }
     
     [Override]
-    public addAnnotation(Annotation annotation) {
+    [+] addAnnotation(Annotation annotation) {
         annotations = annotations ?: new Annotation[]
         
         annotations.add(annotation)
@@ -150,7 +150,7 @@ class Node implements Annotatable {
     }
     
     /// Detach the specified node from its parent.
-    public detach() {
+    [+] detach() {
         if (isDecoding) return
         
         detach(parent)
@@ -168,18 +168,18 @@ class Node implements Annotatable {
         onRemoved(fromNode)
     }
     
-    public onAdded(Node parent) {}
-    public onRemoved(Node from) {}
+    [+] onAdded(Node parent) {}
+    [+] onRemoved(Node from) {}
     
-    public onAfterDecoded() => true
-    public onNextStatementDecoded(Node next) => true
-    public onStackPopped() {}
-    public followedByScope(Bool scope) {}
-    public onChildReplaced(Node old, Node replacement) {}
-    public onReplaced(Node parent, Node replacement) {}
-    public onChildDetached(Node child) {}
+    [+] onAfterDecoded() => true
+    [+] onNextStatementDecoded(Node next) => true
+    [+] onStackPopped() {}
+    [+] followedByScope(Bool scope) {}
+    [+] onChildReplaced(Node old, Node replacement) {}
+    [+] onReplaced(Node parent, Node replacement) {}
+    [+] onChildDetached(Node child) {}
     
-    public addChild(Node child) {
+    [+] addChild(Node child) {
         child.parent = this
     }
     
@@ -187,7 +187,7 @@ class Node implements Annotatable {
     /// 
     /// phase:  The phase that the node is being validated in.
     /// return: The Node to continue the validation off of.
-    public validate(Int phase) -> ValidationResult {
+    [+] validate(Int phase) -> ValidationResult {
         return annotations?.reverse().firstNonNull({
             ValidationResult result = _.validate(phase)
             
@@ -199,7 +199,7 @@ class Node implements Annotatable {
             new ValidationResult(this)*/
     }
     
-    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+    [+] findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
         if (containsScope) {
             var declaration = scope.declarations.firstWhere({ _.name.equals(name) })
             
@@ -215,15 +215,15 @@ class Node implements Annotatable {
         return null
     }
     
-    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+    [+] parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         return parentWithScope?.parseStatement(input, parent, location, require)
     }
     
-    public generateTemporaryScopeNode() -> Node {
+    [+] generateTemporaryScopeNode() -> Node {
         return null
     }
     
-    public static strictParse(action()) {
+    [+] static strictParse(action()) {
         try {
             action()
         } catch all (InvalidParseException e) {
@@ -239,29 +239,29 @@ class Node implements Annotatable {
     /// cloneChildren: Whether or not to clone the children of the
     ///                Node as well.
     /// return:        A clone of the specified Node.
-    public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
+    [+] clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
         
     }
     
-    public replace(Node toReplace, Node replacement) => false
-    public validateTypes() => true
-    public parsePlaceholders() => true
+    [+] replace(Node toReplace, Node replacement) => false
+    [+] validateTypes() => true
+    [+] parsePlaceholders() => true
     
-    public cloneTo(Node other) => other {
+    [+] cloneTo(Node other) => other {
         other.parent = parent
         other.location = location
         other.annotations = annotations
     }
     
-    public writeAnnotationSeparator() => " "
+    [+] writeAnnotationSeparator() => " "
     
-    public writeAnnotations() =>
+    [+] writeAnnotations() =>
         annotations != null && annotations.count > 0 ?
             annotations.map({ _.toNova() }).join(" ") + writeAnnotationSeparator() :
             ""
     
-    public toNova() -> String => writeAnnotations() + writeNova()
+    [+] toNova() -> String => writeAnnotations() + writeNova()
     
-    public writeNova() => "{{#this.class}}"
-    public toString() => toNova()
+    [+] writeNova() => "{{#this.class}}"
+    [+] toString() => toNova()
 }
