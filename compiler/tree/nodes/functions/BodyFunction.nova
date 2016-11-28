@@ -145,4 +145,12 @@ class BodyFunction extends FunctionDeclaration {
     
     public toNova() =>
         writeHeader() + " " + writeBody()
+    
+    public cloneTo(BodyFunction other) => other {
+        super.cloneTo(other)
+        
+        other.scope = scope
+        other.inlineBody = inlineBody
+        other.implicitType = implicitType
+    }
 }
