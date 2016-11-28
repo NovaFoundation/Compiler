@@ -1,11 +1,12 @@
 package "compiler/tree/nodes"
 
+import "nova/io/File"
+import "nova/io/FileReader"
+
 import "compiler/util/Location"
 import "compiler/SyntaxMessage"
 import "compiler/tree/nodes/functions/closures/ClosureContext"
 import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
-import "nova/io/File"
-import "nova/io/FileReader"
 
 class NovaFile extends Node {
     visible NovaFile parentFile => this
