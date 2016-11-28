@@ -11,6 +11,7 @@ import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/tree/nodes/variables/FieldDeclaration"
 import "compiler/tree/nodes/variables/ArrayBracketOverload"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
+import "compiler/tree/nodes/functions/Constructor"
 import "compiler/tree/nodes/functions/BodyFunction"
 import "nova/regex/Pattern"
 
@@ -58,7 +59,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         if (child.class.isOfType(FieldDeclaration)) {
             fields.add((FieldDeclaration)child)
         } else if (child.class.isOfType(FunctionDeclaration)) {
-            functions.add((FunctionDeclaration)child)
+            addFunction((FunctionDeclaration)child)
         } else if (child.class.isOfType(ArrayBracketOverload)) {
             if (arrayBracketOverload == null) {
                 arrayBracketOverload = (ArrayBracketOverload)child
@@ -68,6 +69,14 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         } else {
             SyntaxMessage.error("Statement '#child' used in wrong context", child)
         }
+    }
+    
+    public addFunction(FunctionDeclaration function) {
+        if (function.class.isOfType(Constructor)) {
+            
+        }
+        
+        functions.add(function)
     }
     
     public replace(Node toReplace, Node replacement) -> Bool {
@@ -100,6 +109,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         Node node = null
         
         until (node != null) {
+            node = Constructor.parse(input, this, location, require)
             node = BodyFunction.parse(input, this, location, require)
             node = FieldDeclaration.parse(input, this, location, require)
             node = ArrayBracketOverload.parse(input, this, location, require)
