@@ -70,6 +70,6 @@ class WhileLoop extends Loop {
     parseCondition(String input) =>
         (condition = Value.parse(input, this)) != null
     
-    public toNova() =>
+    public writeNova() =>
         "while (#condition.toNova()) #scope.toNova()"
 }

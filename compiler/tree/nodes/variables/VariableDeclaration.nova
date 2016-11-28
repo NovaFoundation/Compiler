@@ -71,7 +71,7 @@ class VariableDeclaration extends Identifier {
     
     public writeModifiers() => ""
     
-    public toNova() => "#writeModifiers() #writeType() #name".replace(/\s+/, " ").trim()
+    public writeNova() => "#writeModifiers() #writeType() #name".replace(/\s+/, " ").trim()
     
     public cloneTo(VariableDeclaration other) => other {
         super.cloneTo(other)

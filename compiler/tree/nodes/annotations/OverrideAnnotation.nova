@@ -44,5 +44,5 @@ class OverrideAnnotation extends Annotation {
         return null
     }
     
-    public toNova() => "[Override]"
+    public writeNova() => "[Override]"
 }

@@ -69,6 +69,6 @@ class IfStatement extends ControlStructure {
     parseCondition(String input) =>
         (condition = Value.parse(input, this)) != null
     
-    public toNova() =>
+    public writeNova() =>
         "if (#condition.toNova()) #scope.toNova()"
 }

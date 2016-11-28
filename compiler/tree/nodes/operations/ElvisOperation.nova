@@ -76,6 +76,6 @@ class ElvisOperation extends Value {
         type = condition.type
     }
     
-    public toNova() =>
+    public writeNova() =>
         "#condition ?: #otherwise"
 }

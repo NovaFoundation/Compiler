@@ -66,5 +66,5 @@ class Return extends Node {
             value.toNova() :
             ""
     
-    public toNova() => "return #writeValue()".trim()
+    public writeNova() => "return #writeValue()".trim()
 }

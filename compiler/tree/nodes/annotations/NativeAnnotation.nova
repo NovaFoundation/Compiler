@@ -44,5 +44,5 @@ class NativeAnnotation extends Annotation {
         return null
     }
     
-    public toNova() => "[Native]"
+    public writeNova() => "[Native]"
 }

@@ -126,8 +126,9 @@ class Type {
             "<#{genericArguments.join(", ")}>" :
             ""
     
-    public toString() => toNova()
-    public toNova() => "#name" + writeArray() + writeGenericParameters()
+    public toString() => writeNova()
+    public toNova() => writeNova()
+    public writeNova() => "#name" + writeArray() + writeGenericParameters()
     
     public cloneTo(Type other) => other {
         other.name = name

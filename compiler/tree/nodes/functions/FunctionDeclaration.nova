@@ -155,6 +155,9 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     public parsePlaceholders() =>
         parameters.all({ _.parsePlaceholders() }, false) &
         super.parsePlaceholders()
+        
+    [+] [Override]
+    writeAnnotationSeparator() => "\n"
     
     public writeReturnType() => type != null ? " -> #type" : ""
     
@@ -164,7 +167,7 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
         "#parameterList.toNova()" +
         writeReturnType()
     
-    public toNova() => writeHeader()
+    public writeNova() => writeHeader()
     
     public cloneTo(FunctionDeclaration other) => other {
         super.cloneTo(other)

@@ -17,5 +17,5 @@ class ParameterList extends NodeList<Parameter> {
         super(parent, location)
     }
     
-    public toNova() => "(#{parameters.join(", ")})"
+    public writeNova() => "(#{parameters.join(", ")})"
 }

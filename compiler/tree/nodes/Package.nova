@@ -70,5 +70,5 @@ class Package extends Node {
     validateLocation() => true
     validateAlias() => true
     
-    public toNova() => location != null ? "package \"#location\"" : ""
+    public writeNova() => location != null ? "package \"#location\"" : ""
 }

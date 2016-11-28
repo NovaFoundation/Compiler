@@ -89,6 +89,6 @@ class ForEachLoop extends Loop {
         this.variableName = input
     }
     
-    public toNova() =>
+    public writeNova() =>
         "for (#variableName in #iterator) #scope.toNova()"
 }

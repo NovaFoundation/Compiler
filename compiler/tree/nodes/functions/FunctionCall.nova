@@ -163,6 +163,6 @@ class FunctionCall extends Variable {
     
     public writeName() => name
     
-    public toNova() => writeName() + "#argumentList" + writeArrayAccess() + writeAccessedNodes()
+    public writeNova() => writeName() + "#argumentList" + writeArrayAccess() + writeAccessedNodes()
     public toString() => toNova()
 }

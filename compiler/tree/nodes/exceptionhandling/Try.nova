@@ -64,6 +64,6 @@ class Try extends ExceptionHandler {
         return null
     }
     
-    public toNova() =>
+    public writeNova() =>
         "try #scope.toNova()"
 }

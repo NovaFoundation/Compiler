@@ -81,6 +81,6 @@ class ElseStatement extends ControlStructure {
         }
     }
     
-    public toNova() =>
+    public writeNova() =>
         "else " + (inlineIf != null ? inlineIf.toNova() : scope.toNova())
 }

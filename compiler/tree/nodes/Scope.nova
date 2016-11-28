@@ -133,6 +133,6 @@ class Scope extends NodeList {
     childToNova(Node child) =>
         printPrecedingWhitespace(child) + child.toNova()
     
-    public toNova() =>
+    public writeNova() =>
         "{" + children.map(childToNova).join() + "\n}"
 }

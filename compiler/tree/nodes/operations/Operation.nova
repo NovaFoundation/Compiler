@@ -132,7 +132,7 @@ class Operation extends Value {
         return parseOperands(operands)
     }
     
-    public toNova() -> String {
+    public writeNova() -> String {
         var output = ""
         
         for (i in 0..operators.count) {

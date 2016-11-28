@@ -72,5 +72,5 @@ class Instantiation extends FunctionCall {
     
     public writeName() => declaration.parentClass.name
     
-    public toNova() => "new #super.toNova()"
+    public writeNova() => "new #super.writeNova()"
 }

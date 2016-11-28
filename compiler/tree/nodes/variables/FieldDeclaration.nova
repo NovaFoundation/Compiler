@@ -117,5 +117,5 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
             (isTwoWayAccessor ? " <=> " : " => ") + accessorValue.toNova() :
             ""
     
-    public toNova() => super.toNova() + writeInitializationValue() + writeAccessorValue()
+    public writeNova() => super.writeNova() + writeInitializationValue() + writeAccessorValue()
 }

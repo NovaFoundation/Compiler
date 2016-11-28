@@ -46,7 +46,7 @@ class Identifier extends Value {
         return null
     }
     
-    public toNova() => name
+    public writeNova() => name
     
     public cloneTo(Identifier other) => other {
         super.cloneTo(other)

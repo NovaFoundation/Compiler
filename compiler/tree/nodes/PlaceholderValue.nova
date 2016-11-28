@@ -56,5 +56,5 @@ class PlaceholderValue extends Value {
             " #scope.toNova()" :
             ""
     
-    public toNova() => "'#{value}#{writeScope()}'"
+    public writeNova() => "'#{value}#{writeScope()}'"
 }

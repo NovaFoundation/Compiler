@@ -86,5 +86,5 @@ class ArrayInstantiation extends Instantiation {
     public writeDimensions() =>
         dimensions.map({ "[#{_.toNova()}]" }).join()
     
-    public toNova() => "new #writeType()" + writeDimensions()
+    public writeNova() => "new #writeType()" + writeDimensions()
 }

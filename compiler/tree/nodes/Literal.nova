@@ -81,5 +81,5 @@ class Literal extends Value implements Accessible {
         return true
     }
     
-    public toNova() => value + writeArrayAccess() + writeAccessedNodes()
+    public writeNova() => value + writeArrayAccess() + writeAccessedNodes()
 }

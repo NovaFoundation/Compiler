@@ -58,5 +58,5 @@ class ArrayAccess extends Node {
     parseDimensions(String[] input) =>
         input.all(parseDimension, false)
     
-    public toNova() => dimensions.map({ "[#{_.toNova()}]" }).join()
+    public writeNova() => dimensions.map({ "[#{_.toNova()}]" }).join()
 }

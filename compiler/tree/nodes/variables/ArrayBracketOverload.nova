@@ -53,5 +53,5 @@ class ArrayBracketOverload extends Node {
         return null
     }
     
-    public toNova() => "this[#{index}]"
+    public writeNova() => "this[#{index}]"
 }

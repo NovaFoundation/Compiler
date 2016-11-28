@@ -87,6 +87,6 @@ class TernaryOperation extends Value {
         type = trueValue.type
     }
     
-    public toNova() =>
+    public writeNova() =>
         "#condition.toNova() ? #trueValue.toNova() : #falseValue.toNova()"
 }

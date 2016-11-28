@@ -253,6 +253,15 @@ class Node implements Annotatable {
         other.annotations = annotations
     }
     
-    public toNova() => "{{#this.class}}"
+    public writeAnnotationSeparator() => " "
+    
+    public writeAnnotations() -> String =>
+        annotations != null && annotations.count > 0 ?
+            annotations.map({ _.toNova() }).join(" ") + writeAnnotationSeparator() :
+            ""
+    
+    public toNova() -> String => writeAnnotations() + writeNova()
+    
+    public writeNova() => "{{#this.class}}"
     public toString() => toNova()
 }

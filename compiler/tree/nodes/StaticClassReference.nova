@@ -47,5 +47,5 @@ class StaticClassReference extends Identifier implements Accessible {
             new StaticClassReference(parent, location, input) :
             null
     
-    public toNova() => super.toNova() + writeArrayAccess() + writeAccessedNodes()
+    public writeNova() => super.writeNova() + writeArrayAccess() + writeAccessedNodes()
 }
