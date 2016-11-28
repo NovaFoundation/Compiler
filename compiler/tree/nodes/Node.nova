@@ -15,29 +15,19 @@ import "nova/datastruct/Bounds"
 
 /// Class that is the parent of all Nodes on the Tree. Keeps the basic
 /// information of where the statement was in the source, and where it was
-/// output in the destination file. A Node can have any number of
-/// children, however some of the extensions of Node have default
-/// children at the start.
+/// output in the destination file.
 /// 
 /// author:  Braden Steffaniak
 /// since:   v0.1 Jan 5, 2014 at 9:00:11 PM
 /// version: v0.2.41 Dec 17, 2014 at 7:48:17 PM
 class Node implements Annotatable {
-    [~] Location location
+    [*] Location location
     
-    [~] Annotation[] annotations
+    [*] Annotation[] annotations
     
-    [+] Node parent/* {
-        set {
-            if (parent != value) { // Skip if already a child of this parent
-            	this.parent = value
-            	
-                value.addChild(this)
-            }
-        }
-    }*/
+    [+] Node parent
     
-    [~] String locationInfo {
+    [*] String locationInfo {
         get {
             String info = ""
             
@@ -70,32 +60,32 @@ class Node implements Annotatable {
     /// 
     /// return: Whether or not the specified Node is being decoded at
     ///         the current moment.
-    [~] Bool isDecoding => false
-    [~] Bool isValid => parent != null
-    [~] Bool isUserMade => true
-    [~] Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
-    [~] Bool isWithinExternalContext => parent?.isWithinExternalContext
+    [*] Bool isDecoding => false
+    [*] Bool isValid => parent != null
+    [*] Bool isUserMade => true
+    [*] Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
+    [*] Bool isWithinExternalContext => parent?.isWithinExternalContext
     
-    [~] Program program => parent?.program
+    [*] Program program => parent?.program
     
-    [~] Byte phase => program.tree.phase
+    [*] Byte phase => program.tree.phase
     
-    [~] NovaFile parentFile => parent?.parentFile
-    [~] Bool isWithinFile => parentFile != null
+    [*] NovaFile parentFile => parent?.parentFile
+    [*] Bool isWithinFile => parentFile != null
     
-    [~] FunctionDeclaration parentFunction => parent?.parentFunction
-    [~] Bool isWithinFunction => parentFunction != null
+    [*] FunctionDeclaration parentFunction => parent?.parentFunction
+    [*] Bool isWithinFunction => parentFunction != null
     
-    [~] Try parentTry => parent?.parentTry
-    [~] Bool isWithinTry => parentTry != null
+    [*] Try parentTry => parent?.parentTry
+    [*] Bool isWithinTry => parentTry != null
     
-    [~] ClassDeclaration parentClass => parent?.parentClass
-    [~] Bool isWithinClass => parentClass != null
+    [*] ClassDeclaration parentClass => parent?.parentClass
+    [*] Bool isWithinClass => parentClass != null
     
-    [~] Scope parentScope => parentWithScope.scope
-    [~] Bool isWithinScope => parentScope != null
+    [*] Scope parentScope => parentWithScope.scope
+    [*] Bool isWithinScope => parentScope != null
     
-    [~] Node parentWithScope {
+    [*] Node parentWithScope {
         get {
             if (parent == null) return null
             
@@ -109,12 +99,12 @@ class Node implements Annotatable {
         set {}
     }
     
-    [~] Bool containsScope => scope != null
+    [*] Bool containsScope => scope != null
     
-    [~] Node next => getAdjacentNode(1)
-    [~] Node previous => getAdjacentNode(-1)
+    [*] Node next => getAdjacentNode(1)
+    [*] Node previous => getAdjacentNode(-1)
     
-    [~] Int index {
+    [*] Int index {
     	get { parentScope.children.indexOf(this) }
         set { parentScope.children.swap(index, value) }
     }
