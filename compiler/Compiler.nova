@@ -3,6 +3,7 @@ package "compiler"
 import "nova/io/File"
 import "nova/datastruct/list/Stack"
 import "nova/datastruct/list/List"
+import "nova/time/Timer"
 
 import "compiler/util/OS"
 import "compiler/util/FileUtils"
@@ -85,6 +86,8 @@ class Compiler {
 //				"-library",
             ]
             
+            var timer = new Timer().start()
+            
             var program = new Program()
             
             var parentDir = new File("../../../tempstd")
@@ -104,15 +107,19 @@ class Compiler {
                 
                 var separator = "============================="
                 Console.writeLine(tree.root.files
-                    .filter({ _.name.equals("String") })
+                    //.filter({ _.name.equals("String") })
                     .map(file -> { "#separator #file.name #separator\n#{file.toNova().formatIndentation()}" }).join("\n"))
             } catch (SyntaxErrorException e) {
                 
             }
             
+            timer.stop()
+            
             errors.forEach({ Console.writeLine("Error: #_") })
             warnings.forEach({ Console.writeLine("Warning: #_") })
             info.forEach({ Console.writeLine("Info: #_") })
+            
+            Console.writeLine("Took #{timer.duration}ms")
             
             //Console.writeLine("Args: #args")
         }
