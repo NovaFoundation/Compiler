@@ -86,13 +86,13 @@ class Compiler {
 //				"-library",
             ]
             
-            var timer = new Timer().start()
-            
             var program = new Program()
             
             var parentDir = new File("../../../tempstd")
             
             files = parentDir.getChildFiles(true).filter({ _.extension.toLowerCase().equals(".nova") }).map({ new NovaFile(_) })
+            
+            var timer = new Timer()
             
             try {
                 files.forEach(file -> {
@@ -101,9 +101,13 @@ class Compiler {
                 
                 var tree = new SyntaxTree(this, program)
                 
+                timer.start()
+                
                 tree.formTree()
                 tree.validateTypes()
                 tree.parseStatements()
+                
+                timer.stop()
                 
                 var separator = "============================="
                 Console.writeLine(tree.root.files
@@ -112,8 +116,6 @@ class Compiler {
             } catch (SyntaxErrorException e) {
                 
             }
-            
-            timer.stop()
             
             errors.forEach({ Console.writeLine("Error: #_") })
             warnings.forEach({ Console.writeLine("Warning: #_") })
