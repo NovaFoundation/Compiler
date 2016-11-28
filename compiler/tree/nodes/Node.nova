@@ -255,7 +255,7 @@ class Node implements Annotatable {
     
     public writeAnnotationSeparator() => " "
     
-    public writeAnnotations() -> String =>
+    public writeAnnotations() =>
         annotations != null && annotations.count > 0 ?
             annotations.map({ _.toNova() }).join(" ") + writeAnnotationSeparator() :
             ""
