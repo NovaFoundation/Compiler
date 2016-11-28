@@ -24,7 +24,7 @@ class Annotation extends Node {
     /// 
     /// #exampleInputs:
     ///     Example inputs:
-    ///     * [PrimitiveArray]
+    ///     * [Native]
     ///     * [Override]
     ///     * [KeepWhitespace baseline: "indent"]
     ///     * [Target not js]
@@ -49,7 +49,7 @@ class Annotation extends Node {
                 
                 until (node != null) {
                     node = OverrideAnnotation.parse(type, parameters, parent, location, require)
-                    node = PrimitiveArrayAnnotation.parse(type, parameters, parent, location, require)
+                    node = NativeAnnotation.parse(type, parameters, parent, location, require)
                     node = TargetAnnotation.parse(type, parameters, parent, location, require)
                 }
                 
