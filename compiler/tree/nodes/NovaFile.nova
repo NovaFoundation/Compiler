@@ -9,25 +9,26 @@ import "compiler/tree/nodes/functions/closures/ClosureContext"
 import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
 
 class NovaFile extends Node {
-    visible NovaFile parentFile => this
+    [Visible] NovaFile parentFile => this
     
-    visible String name, source
+    [Visible] String name, source
     
-    visible File file
+    [Visible] File file
     
-    visible ImportList importList
+    [Visible] ImportList importList
     
-    visible Package packageDeclaration
-    visible Import[] imports => importList.imports
+    [Visible] Package packageDeclaration
+    [Visible] Import[] imports => importList.imports
     
-    visible ClosureDeclaration[] closures = new ClosureDeclaration[]
-    visible ClosureContext[] contexts = new ClosureContext[]
+    [Visible] ClosureDeclaration[] closures = new ClosureDeclaration[]
+    [Visible] ClosureContext[] contexts = new ClosureContext[]
     
-    public ClassDeclaration classDeclaration => classes.firstWhere({ _.name.equals(name) })
+    [Public] ClassDeclaration classDeclaration => classes.firstWhere({ _.name.equals(name) })
     
-    public ClassDeclaration[] classes
+    [Public] ClassDeclaration[] classes
     
-    visible static String[] DEFAULT_IMPORTS = [
+    [Visible] [Static]
+    String[] DEFAULT_IMPORTS = [
         "nova/exception/ExceptionData",
         "nova/exception/Exception",
         "nova/exception/DivideByZeroException",
@@ -57,7 +58,8 @@ class NovaFile extends Node {
         "nova/Class",
     ]
     
-    public construct(File file, Node parent = null, Location location = Location.INVALID) {
+    [Public]
+    construct(File file, Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
         this.file = file
@@ -75,13 +77,10 @@ class NovaFile extends Node {
         addDefaultImports()
     }
 	
-    public addChild(Node child) {
+    [Public]
+    addChild(Node child) {
         if (child.class.isOfType(ClassDeclaration)) {
-            classes.add((ClassDeclaration)child)
-            
-            if (name == null) {
-                name = classes[0].name
-            }
+            addClass((ClassDeclaration)child)
         } else if (child.class.isOfType(Import)) {
             imports.add((Import)child)
         } else if (child.class.isOfType(Package)) {
@@ -91,7 +90,16 @@ class NovaFile extends Node {
         }
     }
     
-    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+    addClass(ClassDeclaration child) {
+        classes.add(child)
+        
+        if (name == null) {
+            name = classes[0].name
+        }
+    }
+    
+    [Public]
+    parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
     	var node = null
         
         until (node != null) {
@@ -103,11 +111,13 @@ class NovaFile extends Node {
         return node
     }
     
-    public generateTemporaryScopeNode() -> Node {
+    [Public]
+    generateTemporaryScopeNode() -> Node {
         return new ClassDeclaration(this)
     }
     
-    public getImportedClass(String name, Bool includeSelf = true) =>
+    [Public]
+    getImportedClass(String name, Bool includeSelf = true) =>
         includeSelf && name.equals(this.name) ?
             classDeclaration :
             imports.firstWhere({ _.className.equals(name) })?.classDeclaration
@@ -120,12 +130,14 @@ class NovaFile extends Node {
         }
     }
     
-    public addAutoImports() =>
+    [Public]
+    addAutoImports() =>
         packageDeclaration.files.filter({ _ != this }).forEach({
             addImport(_.classDeclaration.location)
         })
     
-    public addImport(String location) -> Import {
+    [Public]
+    addImport(String location) -> Import {
         if (containsImport(location)) return null
         
         var node = Import.parse("import \"#location\"", this, this.location)
@@ -139,14 +151,17 @@ class NovaFile extends Node {
         return node
     }
     
-    public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
+    [Public]
+    containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
         return false
     }
     
-    public toNova() =>
+    [Public]
+    toNova() =>
         (packageDeclaration.toNova() + "\n\n" +
         imports.filter({ !_.isDefault }).map({ _.toNova() + "\n" }).join() + "\n" +
         classes.map({ _.toNova() }).join("\n")).trim()
     
-    public toString() => "#{name}.nova"
+    [Public]
+    toString() => "#{name}.nova"
 }
