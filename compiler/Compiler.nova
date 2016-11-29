@@ -31,7 +31,7 @@ class Compiler {
     public static main(String[] args) {
         var c = new Compiler()
         
-        c.compile(null)
+        c.compile(args.skip(1))
         
         Console.waitForEnter()
     }
@@ -48,47 +48,47 @@ class Compiler {
             
             var target = "c"
             
-            args = [
-                "../Compiler",
-				"../Misc/example",
-				"../Misc/stabilitytest", 
-				"-output-directory", "../NovaCompilerOutput/#target",
-				"-package-output-directory", "nova", "../StandardLibrary/#target",
-//				"-dir", formatPath(directory + "../example"),
-//				"-dir", formatPath(directory + "../stabilitytest"),
-//				"-run",
-//				"-csource",
-				"-formatc",
-				//testClasses ? "-v" : "",
-				"-v",
-//				"-gcc",
-//				"-tcc",
-//				"-small",
-//				"-cargs",
-//				"-keepc",
-				"-single-thread",
-				"-single-file",
-				"-main",
-//				"example/Lab",
-//				"stabilitytest/StabilityTest",
-//				"example/SvgChart",
-//				"example/HashMapDemo",
-//				"example/HashSetDemo",
-				"compiler/Compiler",
-//				"-nogc",
-//				"-no-c-output",
-//				"-dry",
-//				"-no-notes",
-//				"-no-warnings",
-//				"-no-errors",
-				"-no-optimize",
-				"-target", target,
-//				"-library",
-            ]
+//             args = [
+//                 "../Compiler",
+// 				"../Misc/example",
+// 				"../Misc/stabilitytest", 
+// 				"-output-directory", "../NovaCompilerOutput/#target",
+// 				"-package-output-directory", "nova", "../StandardLibrary/#target",
+// //				"-dir", formatPath(directory + "../example"),
+// //				"-dir", formatPath(directory + "../stabilitytest"),
+// //				"-run",
+// //				"-csource",
+// 				"-formatc",
+// 				//testClasses ? "-v" : "",
+// 				"-v",
+// //				"-gcc",
+// //				"-tcc",
+// //				"-small",
+// //				"-cargs",
+// //				"-keepc",
+// 				"-single-thread",
+// 				"-single-file",
+// 				"-main",
+// //				"example/Lab",
+// //				"stabilitytest/StabilityTest",
+// //				"example/SvgChart",
+// //				"example/HashMapDemo",
+// //				"example/HashSetDemo",
+// 				"compiler/Compiler",
+// //				"-nogc",
+// //				"-no-c-output",
+// //				"-dry",
+// //				"-no-notes",
+// //				"-no-warnings",
+// //				"-no-errors",
+// 				"-no-optimize",
+// 				"-target", target,
+// //				"-library",
+//             ]
             
             var program = new Program()
             
-            var parentDir = new File("../../../tempstd")
+            var parentDir = new File(args.firstOr("../../../tempstd"))
             
             var parseTimer = new Timer()
             var outputTimer = new Timer()
