@@ -209,11 +209,10 @@ class Node implements Annotatable {
         return parentWithScope?.parseStatement(input, parent, location, require)
     }
     
-    [+] generateTemporaryScopeNode() -> Node {
-        return null
-    }
+    [+] generateTemporaryScopeNode() -> Node =>
+        throw new UnimplementedOperationException("#this.class does not implement generateTemporaryScopeNode")
     
-    [+] static strictParse(action()) {
+    [+] [Static] strictParse(action()) {
         try {
             action()
         } catch all (InvalidParseException e) {
@@ -229,19 +228,18 @@ class Node implements Annotatable {
     /// cloneChildren: Whether or not to clone the children of the
     ///                Node as well.
     /// return:        A clone of the specified Node.
-    [+] clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) -> Node {
-        
-    }
-    
-    [+] replace(Node toReplace, Node replacement) => false
-    [+] validateTypes() => true
-    [+] parsePlaceholders() => true
+    [+] clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) =>
+        cloneTo(new Node(parent, location))
     
     [+] cloneTo(Node other) => other {
         other.parent = parent
         other.location = location
         other.annotations = annotations
     }
+    
+    [+] replace(Node toReplace, Node replacement) => false
+    [+] validateTypes() => true
+    [+] parsePlaceholders() => true
     
     [+] writeAnnotationSeparator() => " "
     
