@@ -156,8 +156,8 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
         parameters.all({ _.parsePlaceholders() }, false) &
         super.parsePlaceholders()
         
-    [+] [Override]
-    writeAnnotationSeparator() => "\n"
+    [Override]
+    public writeAnnotationSeparator() => "\n"
     
     public writeReturnType() => type != null ? " -> #type" : ""
     

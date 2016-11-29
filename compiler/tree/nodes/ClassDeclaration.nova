@@ -23,27 +23,27 @@ import "compiler/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class ClassDeclaration extends InstanceDeclaration implements Abstractable, GenericCompatible {
-    [Visible] ClassDeclaration parentClass => this
+    visible ClassDeclaration parentClass => this
     
-    [Visible] String location =>
+    visible String location =>
         parentFile.packageDeclaration.location != null ?
             parentFile.packageDeclaration.location + "/" + name :
             name
     
-    [Public] Bool isAbstract <=> isAbstract
+    public Bool isAbstract <=> isAbstract
     
-    [Public] Type extendedClass
-    [Public] Type[] implementedInterfaces = new Type[0]
+    public Type extendedClass
+    public Type[] implementedInterfaces = new Type[0]
     
-    [Visible] GenericParameter[] genericParameters <=> genericParameters
+    visible GenericParameter[] genericParameters <=> genericParameters
     
-    [Public] FieldDeclaration[] fields = new FieldDeclaration[]
-    [Public] FunctionDeclaration[] functions = new FunctionDeclaration[]
+    public FieldDeclaration[] fields = new FieldDeclaration[]
+    public FunctionDeclaration[] functions = new FunctionDeclaration[]
     
-    [Visible] ArrayBracketOverload arrayBracketOverload
+    visible ArrayBracketOverload arrayBracketOverload
     
-    [Visible] Bool isPrivate => visibility.count > 0 && super.isPrivate
-    [Visible] Bool isPublic => visibility.count == 0 || super.isPublic
+    visible Bool isPrivate => visibility.count > 0 && super.isPrivate
+    visible Bool isPublic => visibility.count == 0 || super.isPublic
     
     /// Create a new ClassDeclaration node.
     /// 
@@ -51,13 +51,11 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     /// 
     /// parent:   The parent of the ClassDeclaration node.
     /// location: The location of the input text in the source file.
-    [Public]
-    construct(Node parent = null, Location location = Location.INVALID) {
+    public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
     }
     
-    [Public]
-    addChild(Node child) {
+    public addChild(Node child) {
         if (child.class.isOfType(FieldDeclaration)) {
             fields.add((FieldDeclaration)child)
         } else if (child.class.isOfType(FunctionDeclaration)) {
@@ -73,8 +71,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         }
     }
     
-    [Public]
-    addFunction(FunctionDeclaration function) {
+    public addFunction(FunctionDeclaration function) {
         if (function.class.isOfType(Constructor)) {
             
         }
@@ -82,8 +79,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         functions.add(function)
     }
     
-    [Public]
-    replace(Node toReplace, Node replacement) -> Bool {
+    public replace(Node toReplace, Node replacement) -> Bool {
         if (toReplace.class.isOfType(FieldDeclaration)) {
             return fields.replace((FieldDeclaration)toReplace, (FieldDeclaration)replacement)
         } else if (toReplace.class.isOfType(FunctionDeclaration)) {
@@ -93,15 +89,13 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         }
     }
     
-    [Public]
-    findCompatibleFunctions(String name, Value[] argumentTypes = null) =>
+    public findCompatibleFunctions(String name, Value[] argumentTypes = null) =>
         functions.filter(func -> {
             func.name.equals(name) &&
             (argumentTypes == null || func.compatibleArguments(argumentTypes))
         })
     
-    [Public]
-    findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
         var field = fields.firstWhere({ _.name.equals(name) })
         
         if (field != null) {
@@ -111,8 +105,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         return super.findVariableDeclaration(name, searchAncestors)
     }
     
-    [Public]
-    parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
         until (node != null) {
@@ -125,8 +118,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         return node
     }
     
-    [Public]
-    generateTemporaryScopeNode() -> Node {
+    public generateTemporaryScopeNode() -> Node {
         return new BodyFunction(this)
     }
     
@@ -136,7 +128,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     /// #exampleInputs:
     ///     Example inputs:
     ///      * class MyClass
-    ///      * [Public] class Abc extends MyClass
+    ///      * public class Abc extends MyClass
     ///      * private class Xyz extends Abc implements Multiply, Divide
     /// 
     /// input:    The input string to parse into a ClassDeclaration instance.
@@ -145,8 +137,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed ClassDeclaration node, if successful; null otherwise.
-    [Public] [Static]
-    parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClassDeclaration {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClassDeclaration {
         var index = input.nextWordIndex("class")
         
         if (index >= 0) {
@@ -256,8 +247,8 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         return implementations.count == 0
     }
     
-    [Public] [Override]
-    parseModifier(String modifier) -> Bool {
+    [Override]
+    public parseModifier(String modifier) -> Bool {
         if (super.parseModifier(modifier)) return true
             
         match (modifier)
@@ -266,55 +257,46 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         return true
     }
     
-    [Public]
-    validateTypes() =>
+    public validateTypes() =>
         fields.all({ _.validateTypes() }, false) &
         functions.all({ _.validateTypes() }, false)
     
-    [Public]
-    parsePlaceholders() =>
+    public parsePlaceholders() =>
         fields.all({ _.parsePlaceholders() }, false) &
         functions.all({ _.parsePlaceholders() }, false)
     
-    [Public]
-    writeHeader() =>
+    public writeHeader() =>
         "#writeModifiers() class #{name}#writeGenericParameters() #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
     
-    [Public]
-    writeModifiers() =>
+    public writeModifiers() =>
         super.writeModifiers() + writeAbstract()
     
-    [Public]
-    writeExtension() =>
+    public writeExtension() =>
         extendedClass != null ?
             "extends #extendedClass" :
             ""
     
-    [Public]
-    writeImplementedInterfaces() =>
+    public writeImplementedInterfaces() =>
         implementedInterfaces.count > 0 ?
             "implements #{implementedInterfaces.join(", ")}" :
             ""
     
-    [Public]
-    writeArrayBracketOverload() =>
+    public writeArrayBracketOverload() =>
         arrayBracketOverload != null ?
             arrayBracketOverload.toNova() :
             ""
     
-    [Public]
-    toNova() =>
+    public toNova() =>
         (writeHeader() + " {\n" +
         writeArrayBracketOverload() +"\n\n" +
         (fields.map({ _.toNova() }).join("\n") + "\n\n" +
         functions.map({ _.toNova() }).join("\n\n")).trim() + "\n" +
         "}").trim()
     
-    [Public] [Override]
-    toString() => writeHeader()
+    [Override]
+    public toString() => writeHeader()
     
-    [Public]
-    cloneTo(ClassDeclaration other) => other {
+    public cloneTo(ClassDeclaration other) => other {
         super.cloneTo(other)
         GenericCompatible.super.cloneTo(other)
         Abstractable.super.cloneTo(other)

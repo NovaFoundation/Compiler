@@ -2,15 +2,12 @@ package "compiler/engines"
 
 import "compiler/Compiler"
 
-[Abstract]
-class CodeGeneratorEngine {
-    [Visible] Compiler controller
+abstract class CodeGeneratorEngine {
+    visible Compiler controller
     
-    [Public] [Abstract]
-    writeFiles()
+    public abstract writeFiles()
     
     /// Insert the main method into the correct file. Also set up the
     /// initialization for the program within the main method.
-    [Public] [Abstract]
-    insertMainMethod()
+    public abstract insertMainMethod()
 }

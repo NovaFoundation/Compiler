@@ -9,26 +9,25 @@ import "compiler/tree/nodes/functions/closures/ClosureContext"
 import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
 
 class NovaFile extends Node {
-    [Visible] NovaFile parentFile => this
+    visible NovaFile parentFile => this
     
-    [Visible] String name, source
+    visible String name, source
     
-    [Visible] File file
+    visible File file
     
-    [Visible] ImportList importList
+    visible ImportList importList
     
-    [Visible] Package packageDeclaration
-    [Visible] Import[] imports => importList.imports
+    visible Package packageDeclaration
+    visible Import[] imports => importList.imports
     
-    [Visible] ClosureDeclaration[] closures = new ClosureDeclaration[]
-    [Visible] ClosureContext[] contexts = new ClosureContext[]
+    visible ClosureDeclaration[] closures = new ClosureDeclaration[]
+    visible ClosureContext[] contexts = new ClosureContext[]
     
-    [Public] ClassDeclaration classDeclaration => classes.firstWhere({ _.name.equals(name) })
+    public ClassDeclaration classDeclaration => classes.firstWhere({ _.name.equals(name) })
     
-    [Public] ClassDeclaration[] classes
+    public ClassDeclaration[] classes
     
-    [Visible] [Static]
-    String[] DEFAULT_IMPORTS = [
+    visible static String[] DEFAULT_IMPORTS = [
         "nova/exception/ExceptionData",
         "nova/exception/Exception",
         "nova/exception/DivideByZeroException",
@@ -58,8 +57,7 @@ class NovaFile extends Node {
         "nova/Class",
     ]
     
-    [Public]
-    construct(File file, Node parent = null, Location location = Location.INVALID) {
+    public construct(File file, Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
         this.file = file
@@ -77,8 +75,7 @@ class NovaFile extends Node {
         addDefaultImports()
     }
 	
-    [Public]
-    addChild(Node child) {
+    public addChild(Node child) {
         if (child.class.isOfType(ClassDeclaration)) {
             addClass((ClassDeclaration)child)
         } else if (child.class.isOfType(Import)) {
@@ -98,8 +95,7 @@ class NovaFile extends Node {
         }
     }
     
-    [Public]
-    parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
     	var node = null
         
         until (node != null) {
@@ -111,13 +107,11 @@ class NovaFile extends Node {
         return node
     }
     
-    [Public]
-    generateTemporaryScopeNode() -> Node {
+    public generateTemporaryScopeNode() -> Node {
         return new ClassDeclaration(this)
     }
     
-    [Public]
-    getImportedClass(String name, Bool includeSelf = true) =>
+    public getImportedClass(String name, Bool includeSelf = true) =>
         includeSelf && name.equals(this.name) ?
             classDeclaration :
             imports.firstWhere({ _.className.equals(name) })?.classDeclaration
@@ -130,14 +124,12 @@ class NovaFile extends Node {
         }
     }
     
-    [Public]
-    addAutoImports() =>
+    public addAutoImports() =>
         packageDeclaration.files.filter({ _ != this }).forEach({
             addImport(_.classDeclaration.location)
         })
     
-    [Public]
-    addImport(String location) -> Import {
+    public addImport(String location) -> Import {
         if (containsImport(location)) return null
         
         var node = Import.parse("import \"#location\"", this, this.location)
@@ -151,17 +143,14 @@ class NovaFile extends Node {
         return node
     }
     
-    [Public]
-    containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
+    public containsImport(String location, Bool absoluteLocation = true, Bool aliased = false) -> Bool {
         return false
     }
     
-    [Public]
-    toNova() =>
+    public toNova() =>
         (packageDeclaration.toNova() + "\n\n" +
         imports.filter({ !_.isDefault }).map({ _.toNova() + "\n" }).join() + "\n" +
         classes.map({ _.toNova() }).join("\n")).trim()
     
-    [Public]
-    toString() => "#{name}.nova"
+    public toString() => "#{name}.nova"
 }
