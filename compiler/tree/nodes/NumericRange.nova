@@ -42,7 +42,7 @@ class NumericRange extends Instantiation {
     ///           be parsed.
     /// return:   The parsed NumericRange node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> NumericRange {
-        var startIndex = input.findStringInBaseScope("..")
+        var startIndex = input.findStringOnTopLevel("..")
         
         if (startIndex > 0 && input.isStrictlyOperator("..", startIndex)) {
             var start = input.substring(end: startIndex).trim()

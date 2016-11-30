@@ -82,10 +82,10 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
     }
     
     static findAccessorIndex(String input, Int defaultReturnValue = -1) -> Int {
-        var index = input.findOperatorInBaseScope("=>")
+        var index = input.findOperatorOnTopLevel("=>")
         
         if (index < 0) {
-            index = input.findOperatorInBaseScope("<=>")
+            index = input.findOperatorOnTopLevel("<=>")
             
             if (index < 0) {
                 return defaultReturnValue

@@ -56,7 +56,7 @@ class ForEachLoop extends Loop {
                 if (end > 0) {
                     contents = contents.substring(1, end).trim()
                     
-                    var inIndex = contents.findWordInBaseScope("in")
+                    var inIndex = contents.findWordOnTopLevel("in")
                     
                     if (inIndex > 0) {
                         var variable = contents.substring(end: inIndex).trim()

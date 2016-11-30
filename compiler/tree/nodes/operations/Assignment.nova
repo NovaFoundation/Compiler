@@ -48,7 +48,7 @@ class Assignment extends Operation {
     ///           be parsed.
     /// return:   The parsed Assignment node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Assignment {
-        var assignmentIndex = input.findCharInBaseScope('=')
+        var assignmentIndex = input.findCharOnTopLevel('=')
         
         if (input.isStrictlyOperator('=', assignmentIndex)) {
             var node = new Assignment(parent, location)

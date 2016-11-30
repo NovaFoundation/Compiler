@@ -420,7 +420,7 @@ extension CompilerStringFunctions {
         var oldIndex =  0
         var index    = -1
         
-        while ((index = findCharInBaseScope(',', index + 1, searchGenerics)) >= 0) {
+        while ((index = findCharOnTopLevel(',', index + 1, searchGenerics)) >= 0) {
             strs.add(substring(oldIndex, index).trim())
             
             oldIndex = index + 1
@@ -441,7 +441,7 @@ extension CompilerStringFunctions {
         operators.forEach(operator -> {
             Int index = 0
             
-            while ((index = findStringInBaseScope(operator, start: index + 1)) >= 0) {   
+            while ((index = findStringOnTopLevel(operator, start: index + 1)) >= 0) {   
                 if ((includeEdges || index > 0 && index < this.count - operator.count) &&
                     isStrictlyOperator(operator, index)) {
                     matches.add(index)
@@ -472,12 +472,12 @@ extension CompilerStringFunctions {
         !Operator.OPERATOR_SYMBOLS.contains(chars[index - 1]) &&
         !Operator.OPERATOR_SYMBOLS.contains(chars[index + operator.count])
     
-    public findOperatorInBaseScope(String this, Char operator, Int start = 0, Bool searchGenerics = false) =>
-        findOperatorInBaseScope("#operator", start, searchGenerics)
+    public findOperatorOnTopLevel(String this, Char operator, Int start = 0, Bool searchGenerics = false) =>
+        findOperatorOnTopLevel("#operator", start, searchGenerics)
     
-    public findOperatorInBaseScope(String this, String operator, Int start = 0, Bool searchGenerics = false) -> Int {
+    public findOperatorOnTopLevel(String this, String operator, Int start = 0, Bool searchGenerics = false) -> Int {
         while (true) {
-            var index = findStringInBaseScope(operator, start, searchGenerics)
+            var index = findStringOnTopLevel(operator, start, searchGenerics)
             
             if (index > 0 && !isStrictlyOperator(operator, index)) {
                 start = index + 1
@@ -487,39 +487,39 @@ extension CompilerStringFunctions {
         }
     }
     
-    public findCharInBaseScope(String this, Char needle, Int start = 0, Bool searchGenerics = false) -> Int {
+    public findCharOnTopLevel(String this, Char needle, Int start = 0, Bool searchGenerics = false) -> Int {
         String[] array = new Array(1)
         
         array.add("#needle")
         
-        return findStringInBaseScope(array, start, searchGenerics)
+        return findStringOnTopLevel(array, start, searchGenerics)
     }
     
-    public findCharInBaseScope(String this, Char[] needles, Int start = 0, Bool searchGenerics = false) -> Int {
+    public findCharOnTopLevel(String this, Char[] needles, Int start = 0, Bool searchGenerics = false) -> Int {
         String[] array = new Array(needles.count)
         
         for (needle in needles) {
             array.add("#needle")
         }
         
-        return findStringInBaseScope(array, start, searchGenerics)
+        return findStringOnTopLevel(array, start, searchGenerics)
     }
     
-    public findWordInBaseScope(String this, String word, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
-        var index = findStringInBaseScope(word, start, searchGenerics, defaultReturnValue)
+    public findWordOnTopLevel(String this, String word, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
+        var index = findStringOnTopLevel(word, start, searchGenerics, defaultReturnValue)
         
         while (index >= 0 && ((index > 0 && !WORD_BOUNDARIES.contains(chars[index - 1])) ||
             (index + word.count < count - 1 && !WORD_BOUNDARIES.contains(chars[index + word.count])))) {
-            index = findStringInBaseScope(word, index + word.count + 1, searchGenerics, defaultReturnValue)
+            index = findStringOnTopLevel(word, index + word.count + 1, searchGenerics, defaultReturnValue)
         }
         
         return index
     }
     
-    public findStringInBaseScope(String this, String needle, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) =>
-        findStringInBaseScope([needle], start, searchGenerics, defaultReturnValue)
+    public findStringOnTopLevel(String this, String needle, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) =>
+        findStringOnTopLevel([needle], start, searchGenerics, defaultReturnValue)
         
-    public findStringInBaseScope(String this, String[] needles, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
+    public findStringOnTopLevel(String this, String[] needles, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
         while (start < count) {
             var c = chars[start]
             
@@ -573,7 +573,7 @@ extension CompilerStringFunctions {
      * @return The new statement end index.
      */
     public calculateStatementEnd(String this, Int currentEnd, Int statementEndIndex = currentEnd) -> Int {
-        currentEnd = findCharInBaseScope(EITHER_STATEMENT_END_CHARS, currentEnd)
+        currentEnd = findCharOnTopLevel(EITHER_STATEMENT_END_CHARS, currentEnd)
         
         if (currentEnd < 0) {
             if (nextNonWhitespaceIndex(statementEndIndex + 1) < 0) {
@@ -836,7 +836,7 @@ extension CompilerStringFunctions {
      * @return The index of the dot operator. If a dot operator is not
      *      found, then -1 is returned instead.
      */
-    public findDotOperatorIndex(String this, Int start = 0) => findCharInBaseScope('.', start)
+    public findDotOperatorIndex(String this, Int start = 0) => findCharOnTopLevel('.', start)
     
     public formatIndentation(String this) -> String {
         var output = ""
