@@ -51,5 +51,11 @@ class Constructor extends BodyFunction {
         return null
     }
     
+    /*public onAdded(Node parent) {
+        super.onAdded(parent)
+        
+        parent.addChild(new InitializationFunction(this))
+    }*/
+    
     public writeReturnType() => ""
 }
