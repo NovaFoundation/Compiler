@@ -11,6 +11,9 @@ import "compiler/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class Literal extends Value implements Accessible {
+    public Bool safeNavigation <=> safeNavigation
+    public Accessible accessedNode <=> accessedNode
+    
     public String value
     
     /// Create a new Literal node.
