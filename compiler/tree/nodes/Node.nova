@@ -158,6 +158,12 @@ class Node implements Annotatable {
         onRemoved(fromNode)
     }
     
+    public addChild(Node child) {
+        child.parent = this
+        
+        child?.onAdded(this)
+    }
+    
     public onAdded(Node parent) {}
     public onRemoved(Node from) {}
     
@@ -168,10 +174,6 @@ class Node implements Annotatable {
     public onChildReplaced(Node old, Node replacement) {}
     public onReplaced(Node parent, Node replacement) {}
     public onChildDetached(Node child) {}
-    
-    public addChild(Node child) {
-        child.parent = this
-    }
     
     /// Validate the node to make last minute changes or error checking.
     /// 
