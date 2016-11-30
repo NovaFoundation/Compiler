@@ -435,10 +435,38 @@ extension CompilerStringFunctions {
         return strs
     }
     
+    public findOperatorIndices(String this, String[] operators = Operator.BINARY_OPERATORS, Bool includeEdges = true) -> Int[] {
+        var matches = new Int[0]
+        
+        operators.forEach(operator -> {
+            Int index = 0
+            
+            while ((index = findStringInBaseScope(operator, start: index + 1)) >= 0) {   
+                if ((includeEdges || index > 0 && index < this.count - operator.count) &&
+                    isStrictlyOperator(operator, index)) {
+                    matches.add(index)
+                }
+            }
+        })
+        
+        for (i in 0..matches.count) {
+            for (j in 1..(matches.count - i)) {
+                if (matches[j - 1] > matches[j]) {
+                    var temp = matches[j - 1]
+                    matches[j - 1] = matches[j]
+                    matches[j] = temp
+                }
+            }
+        }
+        
+        return matches
+    }
+    
     /// If is the given operator and not a sub-operator of another operator.
     /// e.g. '=' is a sub-operator of '>='
     public isStrictlyOperator(String this, Char operator, Int index) => isStrictlyOperator("#operator", index)
     public isStrictlyOperator(String this, String operator, Int index) =>
+        index == count - operator.count ||
         index >= 0 &&
         index < count - operator.count &&
         !Operator.OPERATOR_SYMBOLS.contains(chars[index - 1]) &&
