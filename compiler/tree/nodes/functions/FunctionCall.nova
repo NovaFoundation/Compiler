@@ -125,7 +125,10 @@ class FunctionCall extends Variable {
     validateDeclarationCompatible() =>
         declaration != null
     
-    searchDeclaration() => searchClosureDeclaration() || searchFunctionDeclaration()
+    searchDeclaration() =>
+        searchClosureDeclaration() ||
+        searchThisDeclaration() ||
+        searchFunctionDeclaration()
     
     searchClosureDeclaration() => false {
         var variable = parent.findVariableDeclaration(name)
@@ -152,6 +155,19 @@ class FunctionCall extends Variable {
             }
         } else {
             softly throw new InvalidParseException("Could not get reference class for function call '#this'", this)
+        }
+    }
+    
+    /// Search for the declaration of the constructor if the function call is 'this(...)'
+    searchThisDeclaration() => false {
+        if (name.equals("this") && !isAccessed) {
+            var constructor = parentClass.constructors.firstWhere({ true })
+            
+            if (constructor != null) {
+                declaration = constructor
+                
+                return true
+            }
         }
     }
     
