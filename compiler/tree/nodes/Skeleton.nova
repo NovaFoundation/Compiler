@@ -37,15 +37,13 @@ class Skeleton extends Node {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed Skeleton node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Skeleton {
-        if (true) {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Skeleton => null {
+        if (false) {
             var node = new Skeleton(parent, location)
             
             
             
             return node
         }
-        
-        return null
     }
 }
