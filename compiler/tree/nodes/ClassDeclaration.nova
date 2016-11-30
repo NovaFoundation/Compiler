@@ -1,5 +1,8 @@
 package "compiler/tree/nodes"
 
+import "nova/regex/Pattern"
+import "nova/datastruct/list/ImmutableArray"
+
 import "compiler/SyntaxErrorException"
 import "compiler/InvalidParseException"
 import "compiler/SyntaxMessage"
@@ -13,7 +16,6 @@ import "compiler/tree/nodes/variables/ArrayBracketOverload"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
 import "compiler/tree/nodes/functions/Constructor"
 import "compiler/tree/nodes/functions/BodyFunction"
-import "nova/regex/Pattern"
 
 import "compiler/util/CompilerStringFunctions"
 
@@ -40,6 +42,16 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     public FieldDeclaration[] fields = new FieldDeclaration[]
     public FunctionDeclaration[] functions = new FunctionDeclaration[]
     
+    //[Immutable]
+    public ImmutableArray<Constructor> constructors {
+        get {
+            //[Immutable]
+            return functions.filter({ _.class.isOfType(Constructor) }).toImmutable()
+        }
+        
+        no set
+    }
+    
     visible ArrayBracketOverload arrayBracketOverload
     
     visible Bool isPrivate => visibility.count > 0 && super.isPrivate
@@ -59,7 +71,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         if (child.class.isOfType(FieldDeclaration)) {
             fields.add((FieldDeclaration)child)
         } else if (child.class.isOfType(FunctionDeclaration)) {
-            addFunction((FunctionDeclaration)child)
+            functions.add((FunctionDeclaration)child)
         } else if (child.class.isOfType(ArrayBracketOverload)) {
             if (arrayBracketOverload == null) {
                 arrayBracketOverload = (ArrayBracketOverload)child
@@ -69,14 +81,8 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         } else {
             SyntaxMessage.error("Statement '#child' used in wrong context", child)
         }
-    }
-    
-    public addFunction(FunctionDeclaration function) {
-        if (function.class.isOfType(Constructor)) {
-            
-        }
         
-        functions.add(function)
+        super.addChild(child)
     }
     
     public replace(Node toReplace, Node replacement) -> Bool {
