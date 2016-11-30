@@ -42,7 +42,7 @@ class Operation extends Value {
     ///           be parsed.
     /// return:   The parsed Operation node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Operation {
-        var matches = findOperatorIndices(input)
+        var matches = input.findOperatorIndices(includeEdges: false)
         
         if (matches.count > 0) {
             var node = new Operation(parent, location)
@@ -59,32 +59,6 @@ class Operation extends Value {
         }
         
         return null
-    }
-    
-    static findOperatorIndices(String input) -> Int[] {
-        var matches = new Int[0]
-        
-        Operator.BINARY_OPERATORS.forEach(operator -> {
-            Int index = 0
-            
-            while ((index = input.findStringInBaseScope(operator, start: index + 1)) > 0) {   
-                if (input.isStrictlyOperator(operator, index)) {
-                    matches.add(index)
-                }
-            }
-        })
-        
-        for (i in 0..matches.count) {
-            for (j in 1..(matches.count - i)) {
-                if (matches[j - 1] > matches[j]) {
-                    var temp = matches[j - 1]
-                    matches[j - 1] = matches[j]
-                    matches[j] = temp
-                }
-            }
-        }
-        
-        return matches
     }
     
     parseOperators(String input, Int[] matches) =>
