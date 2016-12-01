@@ -2,8 +2,11 @@ package "compiler/tree"
 
 import "nova/datastruct/list/NoSuchElementException"
 import "nova/datastruct/list/Iterator"
+import "nova/datastruct/list/Stack"
 import "nova/regex/Pattern"
+
 import "compiler/util/CompilerStringFunctions"
+import "compiler/tree/nodes/Node"
 
 class StatementIterator implements Iterator<String> {
     static Char[] NON_STATEMENT_CHARS = [ ' ', '\n', '\t', '\r', '}' ]
@@ -14,6 +17,8 @@ class StatementIterator implements Iterator<String> {
     
     visible Int scopesEnded
     visible Int position
+    
+    Stack<Node> parents
     
     visible Bool hasNext {
         get {
@@ -86,8 +91,9 @@ class StatementIterator implements Iterator<String> {
         }
     }
     
-    public construct(String source) {
+    public construct(String source, Stack<Node> parents) {
         this.source = source.trim()
+        this.parents = parents
         
         reset()
     }
