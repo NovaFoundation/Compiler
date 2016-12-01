@@ -9,6 +9,7 @@ import "compiler/tree/nodes/exceptionhandling/Try"
 import "compiler/util/Location"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
+import "compiler/tree/nodes/functions/Instantiation"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "nova/datastruct/Bounds"
@@ -70,6 +71,8 @@ class Node implements Annotatable {
     
     visible Byte phase => program.tree.phase
     
+    visible Instantiation parentInstantiation => parent?.parentInstantiation
+    
     visible NovaFile parentFile => parent?.parentFile
     visible Bool isWithinFile => parentFile != null
     
@@ -95,9 +98,25 @@ class Node implements Annotatable {
         no set
     }
     
-    public Scope scope => null {
-        set {}
+    public Node scopeConsumer => this
+    
+    public Scope scope {
+        get {
+            var consumer = scopeConsumer
+            
+            return consumer != null && consumer != this ? consumer.scope : null
+        }
+        
+        set {
+            var consumer = scopeConsumer
+            
+            if (consumer != null && consumer != this) {
+                consumer.setScope(value)
+            }
+        }
     }
+    
+    setScope(Scope s) => this.scope = s
     
     visible Bool containsScope => scope != null
     
@@ -114,7 +133,7 @@ class Node implements Annotatable {
             Int index = this.index + offset
             
             if (index >= 0 && index < parentScope.children.count) {
-                return parentScope.children[index]
+                return (Node)parentScope.children[index]
             }
         }
         
@@ -241,7 +260,24 @@ class Node implements Annotatable {
     
     public replace(Node toReplace, Node replacement) => false
     public validateTypes() => true
-    public parsePlaceholders() => true
+    
+    public parsePlaceholders() =>
+        scope != null ?
+            scope.parsePlaceholders() :
+            true
+    
+    public parsePlaceholderChildren(NodeList<PlaceholderValue> nodes) -> Bool =>
+        scopeConsumer != this && scopeConsumer != null ?
+            scopeConsumer.parsePlaceholderChildren(nodes) :
+            nodes.children.all(child -> {
+                if (scope != null) {
+                    scope.addChild(child)
+                    
+                    return child.parsePlaceholders()
+                }
+                
+                return false
+            }, false)
     
     public writeAnnotationSeparator() => " "
     
