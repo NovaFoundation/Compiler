@@ -11,7 +11,7 @@ import "compiler/util/Location"
 class PlaceholderValue extends Value {
     public String value
     
-    visible Scope scope <=> scope
+    visible NodeList<PlaceholderValue> nodes
     
     /// Create a new PlaceholderValue node.
     /// 
@@ -26,11 +26,15 @@ class PlaceholderValue extends Value {
     }
     
     public addChild(Node child) {
-        scope = scope ?: new Scope(this, location)
-        
-        scope.children.add(child)
-        
-        super.addChild(child)
+        if (child.class.isOfType(PlaceholderValue)) {
+            nodes = nodes ?: new NodeList(this, location)
+            
+            nodes.children.add((PlaceholderValue)child)
+            
+            super.addChild(child)
+        } else {
+            throw new Exception("Invalid child '#child' added to placeholder value")
+        }
     }
     
     /// Parse the given input into a PlaceholderValue node. If the input cannot be parsed
@@ -51,10 +55,10 @@ class PlaceholderValue extends Value {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
         new PlaceholderValue(parent, location, input)
     
-    public writeScope() =>
-        scope != null ?
-            " #scope.toNova()" :
+    public writeChildren() =>
+        nodes != null ?
+            " #nodes.children.map({ _.toNova() })" :
             ""
     
-    public writeNova() => "'#{value}#{writeScope()}'"
+    public writeNova() => "'#{value}#{writeChildren()}'"
 }
