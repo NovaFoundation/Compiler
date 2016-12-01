@@ -38,7 +38,7 @@ class SyntaxTree {
     
     public formTree() {
         root.files.forEach((file, i) -> {
-            var statements = file.source.statements
+            var statements = file.source.getStatements(parents)
             
             parents.push(file)
             

@@ -3,8 +3,10 @@ package "compiler/util"
 import "nova/regex/Regex"
 import "nova/regex/Match"
 import "nova/datastruct/Tuple2"
+import "nova/datastruct/list/Stack"
 
 import "compiler/error/UnimplementedOperationException"
+import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/operations/UnaryOperation"
 import "compiler/tree/nodes/operations/Operator"
 import "compiler/tree/StatementIterator"
@@ -36,10 +38,8 @@ extension CompilerStringFunctions {
         no set
     }
     
-    public StatementIterator String.statements {//=> new StatementIterator(this)
-        get { return new StatementIterator(this) }
-        no set
-    }
+    public getStatements(String this, Stack<Node> parents) =>
+        new StatementIterator(this, parents)
     
     public containsAllWhitespaceAfter(String this, Int index, Int direction = 1) -> Bool {
         for (var i = index; i < count && i >= 0; i += direction) {
