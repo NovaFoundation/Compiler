@@ -5,6 +5,8 @@ import "compiler/InvalidParseException"
 import "compiler/util/Location"
 import "compiler/tree/nodes/Node"
 import "compiler/tree/nodes/Type"
+import "compiler/tree/nodes/PlaceholderValue"
+import "compiler/tree/nodes/NodeList"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 
@@ -16,6 +18,10 @@ import "compiler/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class Instantiation extends FunctionCall {
+    visible ObjectNotation objectNotation
+    
+    visible Instantiation parentInstantiation => this
+    
     /// Create a new Instantiation node.
     /// 
     /// #exampleInputs
@@ -24,6 +30,31 @@ class Instantiation extends FunctionCall {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+    }
+    
+    public addChild(Node node) {
+        objectNotation = objectNotation ?: new ObjectNotation(this)
+        
+        objectNotation.addChild(node)
+    }
+    
+    public parsePlaceholderChildren(NodeList<PlaceholderValue> nodes) -> Bool =>
+        nodes.children.all(placeholder -> {
+            addChild(placeholder)
+            
+            var property = parseStatement(placeholder.value, objectNotation)
+            
+            if (property != null) {
+                objectNotation.replace(placeholder, property)
+            }
+            
+            return property != null
+        }, false)
+    
+    public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node => null {
+        var node = ObjectNotationProperty.parse(input, parent, location, require)
+        
+        return node
     }
     
     /// Parse the given input into a Instantiation node. If the input cannot be parsed
@@ -70,7 +101,13 @@ class Instantiation extends FunctionCall {
         return null
     }
     
-    public writeName() => declaration.parentClass.name
+    public writeName() =>
+        declaration.parentClass.name
     
-    public writeNova() => "new #super.writeNova()"
+    public writeObjectNotation() =>
+        objectNotation != null ?
+            " " + objectNotation.toNova() :
+            ""
+    
+    public writeNova() => "new #super.writeNova()" + writeArrayAccess() + writeObjectNotation() + writeAccessedNodes()
 }
