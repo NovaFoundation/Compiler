@@ -100,9 +100,7 @@ class Compiler {
             fileTimer.stop()
             
             try {
-                files.forEach(file -> {
-                    program.addChild(file)
-                })
+                files.forEach({ program.addChild(_) })
                 
                 var tree = new SyntaxTree(this, program)
                 
