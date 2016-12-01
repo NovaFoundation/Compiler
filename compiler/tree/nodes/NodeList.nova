@@ -3,7 +3,7 @@ package "compiler/tree/nodes"
 import "compiler/util/Location"
 
 class NodeList<E extends Node> extends Node {
-    visible Node[] children
+    visible E[] children
     visible Bool isEmpty => children.count == 0
     
     /// Create a new NodeList node.
@@ -13,7 +13,7 @@ class NodeList<E extends Node> extends Node {
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
-        children = Node[]
+        children = new E[]
     }
     
     //public replaceWith(Node replacement) => parent.replace(this, replacement)
@@ -40,7 +40,9 @@ class NodeList<E extends Node> extends Node {
             
             // Set this instance as the new parent.
             node.parent = this
-
+        }
+        
+        if (index >= children.count) {
             children.add(index, node)
         } else {
             children[index] = node
