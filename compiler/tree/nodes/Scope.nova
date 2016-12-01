@@ -110,15 +110,18 @@ class Scope extends NodeList {
                 if (parsed != null) {
                     children.replace(child, parsed)
                     
-                    if (placeholder.scope != null) {
-                        parsed.scope = placeholder.scope
+                    if (placeholder.nodes != null) {
+                        //parsed.scope = placeholder.scope
                         
-                        if (parsed.scope != null) {
+                        parsed.parsePlaceholderChildren(placeholder.nodes)
+                        
+                        /*if (parsed.scope != null) {
                             return parsed.scope.parsePlaceholders()
-                        }
+                        }*/
                     }
                     
-                    return true
+                    return parsed.parsePlaceholders()
+                    //return true
                 } else {
                     return false
                 }
