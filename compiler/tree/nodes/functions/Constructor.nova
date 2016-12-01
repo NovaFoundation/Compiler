@@ -44,7 +44,10 @@ class Constructor extends BodyFunction {
             if (function.name.equals("construct")) {
                 var node = new Constructor(parent, location)
                 
-                return (Constructor)function.cloneTo(node)
+                node = (Constructor)function.cloneTo(node)
+                node.type = parent.parentClass.type
+                
+                return node
             }
         }
         
