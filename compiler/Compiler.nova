@@ -3,11 +3,13 @@ package "compiler"
 import "nova/io/File"
 import "nova/datastruct/list/Stack"
 import "nova/datastruct/list/List"
+import "nova/datastruct/list/ImmutableArray"
 import "nova/time/Timer"
 
 import "compiler/util/OS"
 import "compiler/util/FileUtils"
 
+import "compiler/tree/nodes/annotations/Annotation"
 import "compiler/tree/nodes/ClassDeclaration"
 import "compiler/tree/nodes/NovaFile"
 import "compiler/tree/nodes/Node"
@@ -85,6 +87,8 @@ class Compiler {
 // 				"-target", target,
 // //				"-library",
 //             ]
+            
+            var annotationTypes = Class.ALL.filter({ _.isOfType(Annotation) })
             
             var program = new Program()
             
