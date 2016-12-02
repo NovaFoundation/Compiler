@@ -4,7 +4,9 @@ import "compiler/util/Location"
 
 class NodeList<E extends Node> extends Node {
     visible E[] children
-    visible Bool isEmpty => children.count == 0
+    visible Bool isEmpty => count == 0
+    
+    visible Int count => children.count
     
     /// Create a new NodeList node.
     /// 
