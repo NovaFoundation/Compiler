@@ -5,7 +5,9 @@ import "compiler/tree/nodes/NodeList"
 import "compiler/util/Location"
 
 class ParameterList extends NodeList<Parameter> {
-    public Parameter[] parameters => (Parameter[])children
+    public Parameter[] parameters <=> (Parameter[])children
+    
+    this[Int index] <=> parameters[index]
     
     /// Create a new ParameterList node.
     /// 
