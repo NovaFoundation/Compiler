@@ -1,2 +1,2 @@
 language: nova
-mainClassLocation: compiler/Compiler.nova
+mainClassLocation: spectra/Spectra.nova
