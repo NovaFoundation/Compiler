@@ -5,6 +5,7 @@ import "compiler/tree/nodes/Value"
 import "compiler/tree/nodes/variables/Variable"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 import "compiler/tree/nodes/functions/closures/ClosureDeclaration"
+import "compiler/tree/nodes/functions/closures/LambdaExpression"
 import "compiler/tree/nodes/ClassDeclaration"
 import "compiler/SyntaxErrorException"
 import "compiler/InvalidParseException"
@@ -24,6 +25,10 @@ class FunctionCall extends Variable {
     visible Value[] arguments => argumentList.arguments
     
     public Bool isAssignable => false
+    
+    visible FunctionDeclaration function => (FunctionDeclaration)declaration
+    
+    visible FunctionCall parentFunctionCall => this
     
     /// Create a new FunctionCall node.
     /// 
@@ -55,7 +60,7 @@ class FunctionCall extends Variable {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
         parse(input, parent, location, require, null)
         
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true, FunctionDeclaration declaration = null) -> FunctionCall {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true, FunctionDeclaration declaration = null) -> FunctionCall => null {
         var name = findName(input)
         var arguments = findArguments(input)
         
@@ -75,11 +80,9 @@ class FunctionCall extends Variable {
                 return node
             }
         }
-        
-        return null
     }
     
-    static findName(String input) -> String {
+    static findName(String input) -> String => null {
         var index = input.indexOf('(')
         
         if (index > 0) {
@@ -89,11 +92,9 @@ class FunctionCall extends Variable {
                 return name
             }
         }
-        
-        return null
     }
     
-    static findArguments(String input) -> String[] {
+    static findArguments(String input) -> String[] => null {
         var start = input.indexOf('(')
         
         if (start > 0) {
@@ -103,20 +104,18 @@ class FunctionCall extends Variable {
                 return input.substring(start + 1, end).trim().splitAtCommas()
             }
         }
-        
-        return null
     }
     
-    parseArgument(String argument) -> Bool {
-        var value = Value.parse(argument, argumentList)
+    parseArgument(String argument) => true {
+        var value = null
         
-        if (value != null) {
-            arguments.add(value)
-            
-            return true
+        until (value != null) {
+            value = LambdaExpression.parse(argument, argumentList)
+            value = Value.parse(argument, argumentList)
+            return false
         }
         
-        return false
+        arguments.add(value)
     }
     
     parseArguments(String[] arguments) =>
@@ -140,6 +139,19 @@ class FunctionCall extends Variable {
         }
     }
     
+    /// Search for the declaration of the constructor if the function call is 'this(...)'
+    searchThisDeclaration() => false {
+        if (name.equals("this") && !isAccessed) {
+            var constructor = parentClass.constructors.firstWhere({ true })
+            
+            if (constructor != null) {
+                declaration = constructor
+                
+                return true
+            }
+        }
+    }
+    
     searchFunctionDeclaration() => false {
         var ref = referenceClass
         
@@ -155,19 +167,6 @@ class FunctionCall extends Variable {
             }
         } else {
             softly throw new InvalidParseException("Could not get reference class for function call '#this'", this)
-        }
-    }
-    
-    /// Search for the declaration of the constructor if the function call is 'this(...)'
-    searchThisDeclaration() => false {
-        if (name.equals("this") && !isAccessed) {
-            var constructor = parentClass.constructors.firstWhere({ true })
-            
-            if (constructor != null) {
-                declaration = constructor
-                
-                return true
-            }
         }
     }
     
