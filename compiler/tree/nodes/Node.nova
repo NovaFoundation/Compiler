@@ -2,6 +2,7 @@ package "compiler/tree/nodes"
 
 import "compiler/Compiler"
 import "compiler/InvalidParseException"
+import "compiler/SyntaxErrorException"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/annotations/Annotatable"
 import "compiler/tree/nodes/annotations/Annotation"
@@ -9,7 +10,9 @@ import "compiler/tree/nodes/exceptionhandling/Try"
 import "compiler/util/Location"
 import "compiler/error/UnimplementedOperationException"
 import "compiler/tree/nodes/functions/FunctionDeclaration"
+import "compiler/tree/nodes/functions/FunctionCall"
 import "compiler/tree/nodes/functions/Instantiation"
+import "compiler/tree/nodes/functions/closures/LambdaExpression"
 import "compiler/tree/nodes/variables/VariableDeclaration"
 
 import "nova/datastruct/Bounds"
@@ -72,9 +75,12 @@ class Node implements Annotatable {
     visible Byte phase => program.tree.phase
     
     visible Instantiation parentInstantiation => parent?.parentInstantiation
+    visible LambdaExpression parentLambda => parent?.parentLambda
     
     visible NovaFile parentFile => parent?.parentFile
     visible Bool isWithinFile => parentFile != null
+    
+    visible FunctionCall parentFunctionCall => parent?.parentFunctionCall
     
     visible FunctionDeclaration parentFunction => parent?.parentFunction
     visible Bool isWithinFunction => parentFunction != null
@@ -237,6 +243,14 @@ class Node implements Annotatable {
         try {
             action()
         } catch all (InvalidParseException e) {
+            Console.log(e)
+        }
+    }
+    
+    public static catchSyntaxErrors(action()) {
+        try {
+            action()
+        } catch (SyntaxErrorException e) {
             Console.log(e)
         }
     }
