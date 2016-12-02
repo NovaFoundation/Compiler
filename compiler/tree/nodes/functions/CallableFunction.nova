@@ -20,21 +20,21 @@ interface CallableFunction extends GenericCompatible {
     public parseParameter(String parameter, Bool require = true) =>
         Parameter.parse(parameter, parameterList, ((Node)this).location)
     
-    public parseParameterAndAnnotations(String parameter, Bool require = true) -> Bool {
+    public parseParameterAndAnnotations(String parameter, Bool require = true) => false {
         var annotations = SyntaxTree.searchAnnotations(parameter)
         var param = parseParameter(annotations.remainingStatement, require)
         
         if (param != null) {
             parameters.add(param)
             annotations.addTo(param)
-        } else {
-            SyntaxMessage.errorIf("Invalid parameter '#parameter'", (Node)this, require)
+            
+            return true
         }
         
-        return param != null
+        SyntaxMessage.errorIf("Invalid parameter '#parameter'", (Node)this, require)
     }
     
-    public parseParameters(String parameters, Bool require) =>
+    public parseParameters(String parameters, Bool require = true) =>
         parameters.splitAtCommas().all({ parseParameterAndAnnotations(_, require) }, false)
     
     public compatibleArguments(Value[] arguments) -> Bool {
