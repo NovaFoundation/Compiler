@@ -32,7 +32,7 @@ class LambdaExpression extends Value implements CallableFunction {
     
     visible ClosureDeclaration closureDeclaration =>
         parentFunctionCall.function != null ?
-            parentFunctionCall.function.parameters[index] :
+            (ClosureDeclaration)parentFunctionCall.function.parameters[index] :
             inferredClosureDeclaration
     
     visible FunctionDeclaration inferredFunctionDeclaration {
