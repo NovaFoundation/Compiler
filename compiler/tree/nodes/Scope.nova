@@ -105,26 +105,21 @@ class Scope extends NodeList {
             if (child.class.isOfType(PlaceholderValue)) {
                 var placeholder = (PlaceholderValue)child
                 
-                var parsed = parseStatement(placeholder.value, child.parent, child.location, true)
-                
-                if (parsed != null) {
-                    children.replace(child, parsed)
+                catchSyntaxErrors({
+                    var parsed = parseStatement(placeholder.value, child.parent, child.location, true)
                     
-                    if (placeholder.nodes != null) {
-                        //parsed.scope = placeholder.scope
+                    if (parsed != null) {
+                        children.replace(child, parsed)
                         
-                        parsed.parsePlaceholderChildren(placeholder.nodes)
+                        if (placeholder.nodes != null) {
+                            parsed.parsePlaceholderChildren(placeholder.nodes)
+                        }
                         
-                        /*if (parsed.scope != null) {
-                            return parsed.scope.parsePlaceholders()
-                        }*/
+                        return parsed.parsePlaceholders()
                     }
-                    
-                    return parsed.parsePlaceholders()
-                    //return true
-                } else {
-                    return false
-                }
+                })
+                
+                return false
             } else {
                 return true
             }
@@ -137,5 +132,5 @@ class Scope extends NodeList {
         printPrecedingWhitespace(child) + child.toNova()
     
     public writeNova() =>
-        "{" + children.map(childToNova).join() + "\n}"
+        "{" + children.map(childToNova).join() + (children.count > 0 ? "\n" : "") + "}"
 }
