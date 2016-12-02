@@ -138,6 +138,7 @@ class Compiler {
             Console.writeLine("Nova parse time: #{parseTimer.duration}ms")
             Console.writeLine("Nova result output time: #{outputTimer.duration}ms")
             Console.writeLine("Nova compile time: #{compileTimer.duration}ms")
+            Console.writeLine("Nova regex overhead: #{System.overheadTimer.duration}ms")
             
             //Console.writeLine("Args: #args")
         }
