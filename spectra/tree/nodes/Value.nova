@@ -1,0 +1,139 @@
+package "spectra/tree/nodes"
+
+import "nova/datastruct/Tuple2"
+
+import "spectra/SyntaxMessage"
+import "spectra/InvalidParseException"
+import "spectra/util/Location"
+import "spectra/tree/nodes/arrays/ArrayAccess"
+import "spectra/tree/nodes/operations/Operation"
+import "spectra/tree/nodes/operations/UnaryOperation"
+import "spectra/tree/nodes/operations/TernaryOperation"
+import "spectra/tree/nodes/operations/ElvisOperation"
+import "spectra/tree/nodes/operations/Assignable"
+import "spectra/tree/nodes/variables/Variable"
+import "spectra/tree/nodes/functions/FunctionCall"
+import "spectra/tree/nodes/functions/ArrayInstantiation"
+import "spectra/tree/nodes/functions/Instantiation"
+
+import "spectra/util/CompilerStringFunctions"
+
+class Value extends Node {
+    visible static Byte VALUE = 1, POINTER = 2, REFERENCE = 3, DOUBLE_POINTER = 4
+    
+    public ArrayAccess arrayAccess
+    
+    public Accessible returnedNode => this
+    
+    public Type type <=> type
+    
+    public Bool isAssignable => this.class.isOfType(Assignable)
+    
+    public ClassDeclaration typeClass => parentFile.imports.firstWhere({ _.className.equals(type.name) })?.classDeclaration
+    
+    visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
+    
+    visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(type.name) })
+    
+    /// Create a new Value node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the Value node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID, Type type = null) {
+        super(parent, location)
+        
+        this.type = type
+    }
+    
+    /// Parse the given input into a Value node. If the input cannot be parsed
+    /// into a Value node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a Value instance.
+    /// parent:   The parent of the Value node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed Value node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value {
+        var arrayData = input.getArrayAccesses()
+        
+        if (arrayData.item1 != null) {
+            input = input.substring(end: arrayData.item2[0]).trim()
+        }
+        
+        var value = parseValue(input, parent, location, require)
+        
+        if (value != null) {
+            if (arrayData.item1 != null) {
+                value.arrayAccess = ArrayAccess.parse(arrayData.item1, value)
+            }
+            
+            return value
+        }
+        
+        return null
+    }
+    
+    static parseValue(String input, Node parent, Location location, Bool require) -> Value {
+        var node = null
+        
+        until (node.class.isOfType(Value)) {
+            node = Variable.findVariable(input, parent, location)
+            node = Priority.parse(input, parent, location, require)
+            node = Accessible.parseDotAccess(input, parent, require)
+            node = Literal.parse(input, parent, location, require)
+            node = StaticClassReference.parse(input, parent, location, require)
+            node = NumericRange.parse(input, parent, location, require)
+            node = ArrayInstantiation.parse(input, parent, location, require)
+            node = Instantiation.parse(input, parent, location, require)
+            node = FunctionCall.parse(input, parent, location, require)
+            node = ElvisOperation.parse(input, parent, location, require)
+            node = TernaryOperation.parse(input, parent, location, require)
+            node = UnaryOperation.parse(input, parent, location, require)
+            node = Operation.parse(input, parent, location, require)
+            softly throw new InvalidParseException("Could not parse value '#input'")
+            return null
+        }
+        
+        return node
+    }
+    
+    
+    
+    public static parse(PlaceholderValue placeholder, Bool require = true) =>
+        parse(placeholder.value, placeholder.parent, placeholder.location, require)
+    
+    public parseType(String input) =>
+        input != null && (type = Type.parse(input)) != null
+    
+    public validateTypes() -> Bool {
+        if (type != null && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type.name) })) {
+            invalidTypeError(throwException: false)
+            
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    public invalidTypeError(Type type = this.type, Bool throwException = true) =>
+        SyntaxMessage.error("Invalid type '#type'", this, throwException: throwException)
+    
+    public writeType() => "#type.toNova()"
+    public writeArrayAccess() => arrayAccess != null ? arrayAccess.toNova() : ""
+    
+    public cloneTo(Value other) => other {
+        super.cloneTo(other)
+        
+        other.arrayAccess = arrayAccess
+        other.type = type
+    }
+}

@@ -1,0 +1,14 @@
+package "spectra/tree/nodes/generics"
+
+import "spectra/util/Location"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Value"
+import "spectra/tree/nodes/Type"
+
+class GenericType extends Type {
+    visible Bool isGeneric => true
+    
+    public construct(String name = null) {
+        super(name)
+    }
+}

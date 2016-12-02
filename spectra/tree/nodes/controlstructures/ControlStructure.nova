@@ -1,0 +1,21 @@
+package "spectra/tree/nodes/controlstructures"
+
+import "spectra/util/Location"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Scope"
+
+class ControlStructure extends Node {
+    visible Scope scope <=> scope
+    
+    /// Create a new IfStatement node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the IfStatement node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        this.scope = new Scope(this, location)
+    }
+}

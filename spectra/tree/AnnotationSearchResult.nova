@@ -1,0 +1,18 @@
+package "spectra/tree"
+
+import "nova/datastruct/list/Stack"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/annotations/Annotation"
+
+class AnnotationSearchResult {
+    visible Annotation[] annotations = new Annotation[0]
+    visible String remainingStatement
+    
+    public construct(String remainingStatement) {
+        this.remainingStatement = remainingStatement
+    }
+    
+    public addTo(Node node) => annotations.forEach({ node.addAnnotation(_) })
+    public addTo(Stack<Annotation> stack) => annotations.forEach({ stack.push(_) })
+}

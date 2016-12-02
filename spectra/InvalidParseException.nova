@@ -1,0 +1,12 @@
+package "spectra"
+
+import "spectra/tree/nodes/Node"
+
+class InvalidParseException extends Exception {
+    visible Node node
+    
+    public construct(String message, Node node = null) {
+        super(message)
+        this.node = node
+    }
+}

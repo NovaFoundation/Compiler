@@ -1,0 +1,45 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/SyntaxErrorException"
+import "spectra/InvalidParseException"
+import "spectra/util/Location"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/NodeList"
+import "spectra/tree/nodes/variables/VariableDeclaration"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @Node extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class ObjectNotation extends NodeList {
+    /// Create a new ObjectNotation node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the ObjectNotation node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        var decl = parentInstantiation.typeClass.findVariableDeclaration(name, searchAncestors)
+        
+        if (decl != null) {
+            return decl
+        } else {
+            return super.findVariableDeclaration(name, searchAncestors)
+        }
+    }
+    
+    public writeChildren() =>
+        children.count > 0 ?
+            "\n" + children.map({ _.toNova() + "\n" }).join() :
+            ""
+    
+    public writeNova() =>
+        "{" + writeChildren() + "}"
+}

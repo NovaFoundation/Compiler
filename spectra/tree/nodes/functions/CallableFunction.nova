@@ -1,0 +1,57 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Identifier"
+import "spectra/InvalidParseException"
+import "spectra/tree/nodes/annotations/Annotation"
+import "spectra/tree/AnnotationSearchResult"
+import "spectra/tree/nodes/generics/GenericParameter"
+import "spectra/tree/nodes/generics/GenericCompatible"
+import "spectra/tree/nodes/Value"
+import "spectra/tree/SyntaxTree"
+import "spectra/SyntaxMessage"
+
+import "spectra/util/CompilerStringFunctions"
+
+interface CallableFunction extends GenericCompatible {
+    visible ParameterList parameterList => null
+    visible Parameter[] parameters => parameterList.parameters
+    
+    public parseParameter(String parameter, Bool require = true) =>
+        Parameter.parse(parameter, parameterList, ((Node)this).location)
+    
+    public parseParameterAndAnnotations(String parameter, Bool require = true) => false {
+        var annotations = SyntaxTree.searchAnnotations(parameter)
+        var param = parseParameter(annotations.remainingStatement, require)
+        
+        if (param != null) {
+            parameters.add(param)
+            annotations.addTo(param)
+            
+            return true
+        }
+        
+        SyntaxMessage.errorIf("Invalid parameter '#parameter'", (Node)this, require)
+    }
+    
+    public parseParameters(String parameters, Bool require = true) =>
+        parameters.splitAtCommas().all({ parseParameterAndAnnotations(_, require) }, false)
+    
+    public compatibleArguments(Value[] arguments) -> Bool {
+        return true
+    }
+    
+    public parseName(String name) => false {
+        if (!parseGenericParameters(name)) {
+            softly throw new InvalidParseException("Unable to parse generic parameters for class '#name'", (Node)this)
+        } else {
+            if (genericParameters.count > 0) {
+                name = name.substring(end: name.indexOf('<')).trim()
+            }
+            
+            ((Identifier)this).name = name
+            
+            return name.isIdentifier
+        }
+    }
+}

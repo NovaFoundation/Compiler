@@ -1,0 +1,179 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/SyntaxMessage"
+import "spectra/InvalidParseException"
+import "spectra/tree/SyntaxTree"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Type"
+import "spectra/tree/nodes/variables/InstanceDeclaration"
+import "spectra/tree/nodes/variables/VariableDeclaration"
+import "spectra/tree/nodes/generics/GenericParameter"
+import "spectra/tree/nodes/generics/GenericCompatible"
+import "spectra/util/Location"
+
+import "spectra/util/CompilerStringFunctions"
+
+class FunctionDeclaration extends InstanceDeclaration implements CallableFunction, GenericCompatible {
+    visible FunctionDeclaration parentFunction => this
+    
+    visible GenericParameter[] genericParameters <=> genericParameters
+    
+    visible ParameterList parameterList <=> parameterList
+    
+    visible Parameter objectReference
+    
+    /// Create a new FunctionDeclaration node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the FunctionDeclaration node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        parameterList = new ParameterList(this)
+    }
+    
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        if (objectReference != null && objectReference.name.equals(name)) {
+            return objectReference
+        }
+        
+        var parameter = parameters.firstWhere({ _.name.equals(name) })
+        
+        if (parameter != null) {
+            return parameter
+        }
+        
+        return super.findVariableDeclaration(name, searchAncestors)
+    }
+    
+    /// Parse the given input into a FunctionDeclaration node. If the input cannot be parsed
+    /// into a FunctionDeclaration node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      *
+    ///      *
+    ///      *
+    /// 
+    /// input:    The input string to parse into a FunctionDeclaration instance.
+    /// parent:   The parent of the FunctionDeclaration node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed FunctionDeclaration node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> FunctionDeclaration {
+        var signature  = findSignature(input)
+        var parameters = findParameters(input)
+        var returnType = findReturnType(input)
+        
+        if (signature != null && parameters != null && returnType != null) {
+            var node = new FunctionDeclaration(parent, location)
+            
+            if (node.parseSignature(signature, require) &&
+                node.parseParameters(parameters, require) &&
+                (returnType.count == 0 || node.parseType(returnType))) {
+                if (!node.isStatic) {
+                    node.objectReference = new Parameter(node.parameterList)
+                    node.objectReference.name = "this"
+                    node.objectReference.type = Type.parse(node.parentClass.name)
+                }
+                
+                return node
+            }
+        }
+        
+        if (require) {
+            SyntaxMessage.error("Invalid function declaration '#input'", parent)
+        }
+        
+        return null
+    }
+    
+    static findSignature(String input) -> String {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return null
+        }
+        
+        return input.substring(end: start).trim()
+    }
+    
+    static findReturnType(String input) -> String {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return null
+        }
+        
+        var end = input.findEndingMatch(start, '(', ')')
+        
+        if (end < 0) {
+            return null
+        }
+        
+        if (input.containsAllWhitespaceAfter(end + 1)) {
+            return ""
+        }
+        
+        end = input.nextWordIndex("->", end + 1)
+        
+        if (end < 0) {
+            return null
+        }
+        
+        return input.substring(start: end + 2).trim()
+    }
+    
+    static findParameters(String input) -> String {
+        var start = input.indexOf('(')
+        
+        if (start < 0) {
+            return null
+        }
+        
+        var end = input.findEndingMatch(start, '(', ')')
+        
+        if (end < 0) {
+            return null
+        }
+        
+        return input.substring(start + 1, end).trim()
+    }
+    
+    public parseSignature(String signature, Bool require) =>
+        signature.splitValues().filterEmpty().all((word, index, words) -> {
+            if (index == ((Array)words).count - 1) {
+                return parseName(word)
+            } else {
+                return parseModifier(word)
+            }
+        }, false)
+    
+    public parsePlaceholders() =>
+        parameters.all({ _.parsePlaceholders() }, false) &
+        super.parsePlaceholders()
+        
+    [Override]
+    public writeAnnotationSeparator() => "\n"
+    
+    public writeReturnType() => type != null ? " -> #type" : ""
+    
+    public writeHeader() =>
+        "#writeModifiers() #name".replace(/\s+/, " ").trim() +
+        writeGenericParameters() +
+        "#parameterList.toNova()" +
+        writeReturnType()
+    
+    public writeNova() => writeHeader()
+    
+    public cloneTo(FunctionDeclaration other) => other {
+        super.cloneTo(other)
+        GenericCompatible.super.cloneTo(other)
+        
+        other.parameterList = parameterList
+        other.objectReference = objectReference
+    }
+}

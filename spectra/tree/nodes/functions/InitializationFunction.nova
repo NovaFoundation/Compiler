@@ -1,0 +1,28 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Type"
+import "spectra/tree/nodes/Scope"
+import "spectra/tree/nodes/Return"
+import "spectra/tree/nodes/Value"
+import "spectra/tree/nodes/PlaceholderValue"
+import "spectra/util/Location"
+import "spectra/SyntaxMessage"
+
+import "spectra/util/CompilerStringFunctions"
+
+class InitializationFunction extends BodyFunction {
+    /// Create a new InitializationFunction node.
+    /// 
+    /// parent:   The parent of the InitializationFunction node.
+    /// location: The location of the input text in the source file.
+    public construct(Constructor constructor) {
+        super(constructor.parent, constructor.location)
+        
+        constructor.cloneTo(this)
+        
+        name = "this"
+    }
+    
+    
+}

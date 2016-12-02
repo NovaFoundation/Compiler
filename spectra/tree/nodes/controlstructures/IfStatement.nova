@@ -1,0 +1,74 @@
+package "spectra/tree/nodes/controlstructures"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Scope"
+import "spectra/tree/nodes/Value"
+import "spectra/SyntaxErrorException"
+import "spectra/SyntaxMessage"
+import "spectra/util/Location"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @ControlStructure extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class IfStatement extends ControlStructure {
+    visible Value condition
+    
+    /// Create a new IfStatement node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the IfStatement node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    /// Parse the given input into a IfStatement node. If the input cannot be parsed
+    /// into a IfStatement node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a IfStatement instance.
+    /// parent:   The parent of the IfStatement node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed IfStatement node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> IfStatement {
+        if (input.nextWord().equals("if")) {
+            input = input.substring("if".count).trim()
+            
+            var node = new IfStatement(parent, location)
+            
+            if (input[0] == '(') {
+                var end = input.findEndingMatch(0, '(', ')')
+                
+                input = input.substring(1, end).trim()
+            }
+            
+            if (!node.parseCondition(input)) {
+                SyntaxMessage.error("Unable to parse if statement condition '#input'", node, throwException: false)
+                
+                return null
+            }
+            
+            return node
+        }
+        
+        return null
+    }
+    
+    parseCondition(String input) =>
+        (condition = Value.parse(input, this)) != null
+    
+    public writeNova() =>
+        "if (#condition.toNova()) #scope.toNova()"
+}

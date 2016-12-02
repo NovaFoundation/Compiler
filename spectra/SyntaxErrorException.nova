@@ -1,0 +1,16 @@
+package "spectra"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Program"
+
+class SyntaxErrorException extends Exception {
+    public construct() {}
+    
+    public construct(String message, Node node = null, Program program = null) {
+        super(message)
+        
+        node = node ?: program
+        
+        node.program.compiler.errors.add(message)
+    }
+}

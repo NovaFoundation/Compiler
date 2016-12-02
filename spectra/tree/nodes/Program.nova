@@ -1,0 +1,34 @@
+package "spectra/tree/nodes"
+
+import "spectra/Spectra"
+import "spectra/tree/SyntaxTree"
+import "spectra/SyntaxMessage"
+
+class Program extends NodeList<NovaFile> {
+    visible Program program => this
+    
+    visible NovaFile[] files => (NovaFile[])children
+    
+    public SyntaxTree tree
+    
+    visible Spectra compiler => tree.compiler
+    
+    public construct(SyntaxTree tree = null) {
+        super()
+        
+        this.tree = tree
+    }
+    
+    public addChild(Node child) {
+        if (!child.class.isOfType(NovaFile)) {
+            SyntaxMessage.error("Invalid child '#child'", child)
+        } else {
+            super.addChild(child)
+        }
+    }
+    
+    public getClassDeclaration(String location) =>
+        files.firstWhere(f -> { f.classDeclaration != null && f.classDeclaration.location.equals(location) })?.classDeclaration
+    
+    public toString() => "Program"
+}

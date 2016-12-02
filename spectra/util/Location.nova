@@ -1,0 +1,267 @@
+package "spectra/util"
+
+import "nova/datastruct/Bounds"
+
+/**
+ * Class that contains information for a line number and character offset.
+ * Used in the compilation process, in the event that there is an error
+ * or warning, for knowing where exactly it occurred in the source code.
+ * 
+ * @author    Braden Steffaniak
+ * @since    v0.1 Jan 7, 2014 at 10:11:40 AM
+ * @version    v0.2.39 Dec 7, 2014 at 3:17:17 AM
+ */
+class Location {
+    /**
+     * Get the line number that the Location represents.
+     * 
+     * @return The line number that the Location represents.
+     */
+    public Int lineNumber
+    
+    /**
+     * Get character offset that the Location represents on the
+     * specified line number.
+     * 
+     * @return The character offset that the Location represents on the
+     *         specified line number.
+     */
+    public Int offset
+    
+    /**
+     * Get the Bounds of the Location's offset. The starting and ending
+     * offsets.
+     * 
+     * @return The Bounds instance containing the starting and ending
+     *         offsets.
+     */
+    visible Bounds bounds
+    
+    visible static Location INVALID = new Location(0, 0, 0, 0)
+    
+    /**
+     * Default constructor.
+     */
+    public construct() {
+        bounds = new Bounds(0, 0)
+    }
+    
+    /**
+     * Copy the location data from the given Location variable Into
+     * a newly instantiated Location instance.
+     * 
+     * @param loc The location to copy the data from.
+     */
+    public construct(Location loc) {
+        this(0, loc.offset, loc.bounds.start, loc.bounds.end)
+    }
+    
+    /**
+     * Constructor that initializes the lineNumber and offset to the
+     * given values.
+     * 
+     * @param lineNumber The lineNumber that the Location represents.
+     * @param offset The character offset horizontally on the current line.
+     * @param start The character offset that the Location represents as
+     *         the start throughout the whole source text.
+     * @param end The character offset that the Location represents as
+     *         the end throughout the whole source text.
+     */
+    public construct(Int lineNumber, Int offset, Int start, Int end) {
+        // Initialize default data.
+        this()
+        
+        this.offset = offset
+        this.lineNumber = lineNumber
+        setBounds(start, end)
+    }
+    
+    /**
+     * Set the line number that the Location represents.
+     * 
+     * @param lineNumber The line number that the Location represents.
+     */
+    public setLineNumber(Int lineNumber) {
+        this.lineNumber = lineNumber
+    }
+    
+    /**
+     * Get the character offset that the Location represents as the start
+     * throughout the whole source text.
+     * 
+     * @return The character offset that the Location represents as the
+     *         start throughout the whole source text.
+     */
+    public getStart() -> Int {
+        return bounds.start
+    }
+    
+    /**
+     * Get the character offset that the Location represents as the end
+     * throughout the whole source text.
+     * 
+     * @return The character offset that the Location represents as the end
+     *         throughout the whole source text.
+     */
+    public getEnd() -> Int {
+        return bounds.end
+    }
+    
+    /**
+     * Set character offset that the Location represents on the
+     * specified line number.
+     * 
+     * @param offset The character offset that the Location represents
+     *         on the specified line number.
+     */
+    public setOffset(Int offset) {
+        this.offset = offset
+    }
+    
+    /**
+     * Add the given amount to each of the Location's offset value.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setOffset(bounds.getOffset() + amount)</pre></blockquote>
+     * 
+     * @param amount The amount to add to the Location's offset.
+     */
+    public addOffset(Int amount) {
+        offset += amount
+    }
+    
+    /**
+     * Subtract the given amount from each of the Location's offset value.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setOffset(bounds.getOffset() - amount)</pre></blockquote>
+     * 
+     * @param amount The amount to subtract from the Location's offset.
+     */
+    public subtractOffset(Int amount) {
+        offset -= amount
+    }
+    
+    public setBounds(Bounds bounds) {
+        this.bounds = bounds
+    }
+    
+    /**
+     * Set the Bounds that the location encapsulates.
+     * 
+     * @param start The character offset that the Location represents as
+     *         the start on the specified line.
+     * @param end The character offset that the Location represents as
+     *         the end on the specified line.
+     */
+    public setBounds(Int start, Int end) {
+        bounds.start = start
+        bounds.end = end
+    }
+    
+    /**
+     * Add the given amount to each of the Bounds's start and end values.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setStart(bounds.getStart() + amount)
+     * bounds.setEnd(bounds.getEnd() + amount)</pre></blockquote>
+     * 
+     * @param amount The amount to add to the Bounds's values.
+     */
+    public addBounds(Int amount) {
+        bounds.start += amount
+        bounds.end += amount
+    }
+    
+    /**
+     * Add the given amounts to each of the Bounds's start and end values.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setStart(bounds.getStart() + startAmount)
+     * bounds.setEnd(bounds.getEnd() + endAmount)</pre></blockquote>
+     * 
+     * @param startAmount The amount to add to the Bounds's start value.
+     * @param endAmount The amount to add to the Bounds's end value.
+     */
+    public moveBounds(Int startAmount, Int endAmount) {
+        bounds.start += startAmount
+        bounds.end += endAmount
+    }
+    
+    /**
+     * Subtract the given amounts to each of the Bounds's start and end
+     * values.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setStart(bounds.getStart() - startAmount)
+     * bounds.setEnd(bounds.getEnd() - endAmount)</pre></blockquote>
+     * 
+     * @param startAmount The amount to subtract to the Bounds's start
+     *         value.
+     * @param endAmount The amount to subtract to the Bounds's end value.
+     */
+    public subtractBounds(Int startAmount, Int endAmount) {
+        bounds.start -= startAmount
+        bounds.end -= endAmount
+    }
+    
+    /**
+     * Subtract the given amount from each of the Bounds's start and end
+     * values.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setStart(bounds.getStart() - amount)
+     * bounds.setEnd(bounds.getEnd() - amount)</pre></blockquote>
+     * 
+     * @param amount The amount to subtract from the Bounds's values.
+     */
+    public subtractBounds(Int amount) {
+        bounds.start -= amount
+        bounds.end -= amount
+    }
+    
+    /**
+     * Add the given amounts to each of the Bounds's start and end values.<br>
+     * <br>
+     * This is the same as calling the following:
+     * <blockquote><pre>
+     * bounds.setStart(bounds.getStart() + startAmount)
+     * bounds.setEnd(bounds.getStart() + endAmount)</pre></blockquote>
+     * 
+     * @param startAmount The amount to add as the Bounds's start value.
+     * @param endAmount The amount to add as the Bounds's end value.
+     */
+    public addBounds(Int startAmount, Int endAmount) {
+        bounds.start += startAmount
+        bounds.end += endAmount
+    }
+    
+    /**
+     * Get whether the line number is a valid location in a source
+     * file, or just generated.
+     * 
+     * @return Whether or not the Location is valid in the source file.
+     */
+    public isValid() -> Bool {
+        return lineNumber > 0
+    }
+    
+    /**
+     * Create a new Location that reflects the specified parent Location.
+     * 
+     * @return A new Location reflecting the specified parent Location.
+     */
+    public asNew() -> Location {
+        return new Location(this)
+    }
+    
+    public toString() -> String {
+        return "Line #lineNumber #bounds"
+    }
+}

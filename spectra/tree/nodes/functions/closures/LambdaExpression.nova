@@ -1,0 +1,176 @@
+package "spectra/tree/nodes/functions/closures"
+
+import "nova/datastruct/list/Stack"
+
+import "spectra/SyntaxErrorException"
+import "spectra/InvalidParseException"
+import "spectra/util/Location"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Scope"
+import "spectra/tree/nodes/Value"
+import "spectra/tree/nodes/PlaceholderValue"
+import "spectra/tree/nodes/ClassDeclaration"
+import "spectra/tree/nodes/variables/VariableDeclaration"
+import "spectra/tree/nodes/functions/Parameter"
+import "spectra/tree/nodes/functions/ParameterList"
+import "spectra/tree/nodes/functions/FunctionCall"
+import "spectra/tree/nodes/functions/FunctionDeclaration"
+import "spectra/tree/nodes/functions/CallableFunction"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @Node extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class LambdaExpression extends Value implements CallableFunction {
+    visible ParameterList parameterList <=> parameterList
+    
+    visible Int index =>
+        parentFunctionCall.arguments.indexOf(this, defaultReturnValue: parentFunctionCall.arguments.count)
+    
+    visible ClosureDeclaration closureDeclaration =>
+        parentFunctionCall.function != null ?
+            (ClosureDeclaration)parentFunctionCall.function.parameters[index] :
+            inferredClosureDeclaration
+    
+    visible FunctionDeclaration inferredFunctionDeclaration {
+        get {
+            ClassDeclaration reference = parentFunctionCall.referenceClass
+            var similar = reference.functions.filter({ _.name.equals(parentFunctionCall.name) })
+            
+            return null
+        }
+        
+        no set
+    }
+    
+    visible ClosureDeclaration inferredClosureDeclaration =>
+        inferredFunctionDeclaration != null ?
+            inferredFunctionDeclaration.parameters[index] :
+            null
+    
+    visible LambdaExpression parentLambda => this
+    
+    public Scope scope <=> scope
+    
+    /// Create a new LambdaExpression node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the LambdaExpression node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        this.scope = new Scope(this, location)
+        this.parameterList = new ParameterList(this, location)
+    }
+    
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        var parameter = parameters.firstWhere({ _.name.equals(name) })
+        
+        if (parameter != null) {
+            return parameter
+        }
+        
+        return super.findVariableDeclaration(name, searchAncestors)
+    }
+    
+    /// Parse the given input into a LambdaExpression node. If the input cannot be parsed
+    /// into a LambdaExpression node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a LambdaExpression instance.
+    /// parent:   The parent of the LambdaExpression node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed LambdaExpression node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> LambdaExpression => null {
+        var arrowIndex = input.findOperatorOnTopLevel("->", start: 1)
+        
+        String parameters = null
+        
+        if (arrowIndex > 0) {
+            parameters = input.substring(end: arrowIndex).trim()
+            
+            if (parameters.first == '(' && parameters.last == ')') {
+                parameters = parameters.trimEnds(1, true)
+            }
+        }
+        
+        if (parameters != null || input.first == '{') {
+            var node = new LambdaExpression(parent, location)
+            var operation = input.substring(arrowIndex > 0 ? arrowIndex : 0).trim()
+            
+            if (!node.parseOperation(operation)) {
+                softly throw new InvalidParseException("Could not parse lambda expression operation '#operation'", node)
+            } else if (!node.parseParameters(parameters)) {
+                softly throw new InvalidParseException("Could not parse lambda expression parameters '#parameters'", node)
+            } else {
+                return node
+            }
+        }
+    }
+    
+    findOperation(String input) -> String => null {
+        var start = input.findCharOnTopLevel('{')
+        
+        if (start >= 0) {
+            var end = input.findEndingMatch(start, '{', '}')
+            
+            return input.substring(start + 1, end).trim()
+        }
+        
+        softly throw new InvalidParseException("Could not find lambda expression operation in '#input'", this)
+    }
+    
+    parseOperation(String input) => false {
+        var operation = findOperation(input)
+        
+        if (operation != null) {
+            if (operation.count > 0) {
+                var statements = operation.getStatements(new Stack([this]))
+                
+                for (statement in statements) {
+                    scope.addChild(PlaceholderValue.parse(statement, scope))
+                }
+                
+                scope.parsePlaceholders()
+            }
+            
+            return true
+        }
+    }
+    
+    public parseParameters(String parameters, Bool require = true) =>
+        parameters == null ||
+        CallableFunction.super.parseParameters(parameters, require)
+    
+    /// @CallableFunction.parseParameter override that allows typeless parameters. 
+    public parseParameter(String parameter, Bool require = true) =>
+        LambdaParameter.parse(parameter, parameterList, require: require)
+    
+    public writeParameters() => "" {
+        if (parameters.count == 1) {
+            return parameters[0].toNova()
+        } else if (parameters.count > 1) {
+            return "(" + parameters.map({ _.toNova() }).join(", ") + ")"
+        }
+    }
+    
+    writeParameterClause() =>
+        parameters.count > 0 ?
+            writeParameters() + " -> " :
+            ""
+    
+    public writeNova() =>
+        writeParameters() + scope.toNova()
+}

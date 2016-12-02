@@ -1,0 +1,7 @@
+package "spectra/util"
+
+import "spectra/util/CompilerStringFunctions"
+
+class SyntaxUtils {
+    public static checkTypes(Class[] types, Class clazz) => false//types.any({ clazz.isOfType(_) })
+}

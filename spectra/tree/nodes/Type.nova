@@ -1,0 +1,138 @@
+package "spectra/tree/nodes"
+
+import "spectra/SyntaxMessage"
+import "spectra/InvalidParseException"
+import "spectra/tree/nodes/Node"
+import "spectra/util/Location"
+import "spectra/tree/nodes/generics/GenericType"
+import "spectra/tree/nodes/generics/GenericArgument"
+import "spectra/tree/nodes/generics/GenericParameter"
+
+import "spectra/util/CompilerStringFunctions"
+
+class Type {
+    public String name
+    
+    visible Bool isGeneric => false
+    
+    visible Int arrayDimensions = 0
+    
+    visible GenericArgument[] genericArguments = new GenericArgument[0]
+    
+    public construct(String name = null) {
+        this.name = name
+    }
+    
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Type {
+        var node = new Type(input)
+        
+        if (!node.parseGenericArguments(input, parent, location)) {
+            softly throw new InvalidParseException("Unable to parse generic arguments for type '#input'", parent)
+        } else if (!node.parseArray(parent, require)) {
+            softly throw new InvalidParseException("Unable to parse array dimensions for type '#input'", parent)
+        } else if (!node.name.isIdentifier) {
+            softly throw new InvalidParseException("Invalid type '#input'", parent)
+        } else {
+            if (parent != null) {
+                var param = node.getGenericParameter(parent)
+                
+                if (param != null) {
+                    node = node.cloneTo(new GenericType())
+                }
+            }
+            
+            return node
+        }
+        
+        return null
+    }
+    
+    getGenericParameter(Node parent) -> GenericParameter {
+        if (parent.parentFunction != null) {
+            var param = parent.parentFunction.genericParameters.firstWhere({ _.type.name.equals(name) })
+            
+            if (param != null) {
+                return param
+            }
+        }
+        if (parent.parentClass != null) {
+            var param = parent.parentClass.genericParameters.firstWhere({ _.type.name.equals(name) })
+            
+            if (param != null) {
+                return param
+            }
+        }
+        
+        return null
+    }
+    
+    parseGenericArguments(String input, Node parent, Location location) => true {
+        var genericIndex = input.indexOf('<')
+        
+        if (genericIndex > 0) {
+            name = input.substring(end: genericIndex)
+            
+            var end = input.findEndingMatch(genericIndex, '<', '>')
+            
+            if (end > 0) {
+                genericArguments = input.substring(genericIndex + 1, end).splitAtCommas().map({ new GenericArgument(parent, location, _) })
+                
+                if (genericArguments.any({ _ == null })) { // if any generic arguments didnt parse
+                    return false
+                }
+            }
+        }
+    }
+    
+    parseArray(Node parent, Bool require) -> Bool {
+        var start = name.indexOf('[')
+        
+        if (start > 0) {
+            var first = start
+            var end = name.findEndingMatch(start, '[', ']')
+            var last = end
+            
+            while (end > start) {
+                last = end
+                
+                arrayDimensions++
+                
+                if (name.substring(start + 1, end).trim().count > 0) {
+                    SyntaxMessage.errorIf("Type declaration '#name' cannot have contents within the array brackets", parent, condition: require)
+                    
+                    return false
+                }
+                
+                start = name.indexOf('[', end + 1)
+                
+                if (start < 0) break
+                
+                end = name.findEndingMatch(start, '[', ']')
+            }
+            
+            if (last > first) {
+                name = (name.substring(0, first) + name.substring(last + 1)).trim()
+            }
+        }
+        
+        return true
+    }
+    
+    public writeArray() =>
+        "[]".repeat(arrayDimensions)
+    
+    public writeGenericParameters() =>
+        genericArguments.count > 0 ?
+            "<#{genericArguments.join(", ")}>" :
+            ""
+    
+    public toString() => writeNova()
+    public toNova() => writeNova()
+    public writeNova() => "#name" + writeArray() + writeGenericParameters()
+    
+    public cloneTo(Type other) => other {
+        other.name = name
+        other.arrayDimensions = arrayDimensions
+        other.genericArguments = genericArguments
+    }
+}

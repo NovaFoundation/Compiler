@@ -1,0 +1,183 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Value"
+import "spectra/tree/nodes/variables/Variable"
+import "spectra/tree/nodes/variables/VariableDeclaration"
+import "spectra/tree/nodes/functions/closures/ClosureDeclaration"
+import "spectra/tree/nodes/functions/closures/LambdaExpression"
+import "spectra/tree/nodes/ClassDeclaration"
+import "spectra/SyntaxErrorException"
+import "spectra/InvalidParseException"
+import "spectra/util/Location"
+import "spectra/tree/nodes/Accessible"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @Variable extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class FunctionCall extends Variable {
+    visible FunctionArgumentList argumentList
+    
+    visible Value[] arguments => argumentList.arguments
+    
+    public Bool isAssignable => false
+    
+    visible FunctionDeclaration function => (FunctionDeclaration)declaration
+    
+    visible FunctionCall parentFunctionCall => this
+    
+    /// Create a new FunctionCall node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the FunctionCall node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        argumentList = new FunctionArgumentList(this, location)
+    }
+    
+    /// Parse the given input into a FunctionCall node. If the input cannot be parsed
+    /// into a FunctionCall node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a FunctionCall instance.
+    /// parent:   The parent of the FunctionCall node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed FunctionCall node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) =>
+        parse(input, parent, location, require, null)
+        
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true, FunctionDeclaration declaration = null) -> FunctionCall => null {
+        var name = findName(input)
+        var arguments = findArguments(input)
+        
+        if (name != null && arguments != null) {
+            var node = new FunctionCall(parent, location)
+            
+            node.name = name
+            node.declaration = declaration
+            
+            if (!node.parseArguments(arguments)) {
+                softly throw new InvalidParseException("Unable to parse arguments '#arguments'", node)
+            } else if (declaration == null && !node.searchDeclaration()) {
+                softly throw new InvalidParseException("Could not find declaration for function '#node'", node)
+            } else if (declaration != null && !node.validateDeclarationCompatible()) {
+                softly throw new InvalidParseException("Given declaration '#declaration' is not compatible with function call '#node'", node)
+            } else {
+                return node
+            }
+        }
+    }
+    
+    static findName(String input) -> String => null {
+        var index = input.indexOf('(')
+        
+        if (index > 0) {
+            var name = input.substring(end: index).trim()
+            
+            if (name.isIdentifier) {
+                return name
+            }
+        }
+    }
+    
+    static findArguments(String input) -> String[] => null {
+        var start = input.indexOf('(')
+        
+        if (start > 0) {
+            var end = input.findEndingMatch(start, '(', ')')
+            
+            if (end > start && input.substring(end + 1).trim().count == 0) {
+                return input.substring(start + 1, end).trim().splitAtCommas()
+            }
+        }
+    }
+    
+    parseArgument(String argument) => true {
+        var value = null
+        
+        until (value != null) {
+            value = LambdaExpression.parse(argument, argumentList)
+            value = Value.parse(argument, argumentList)
+            return false
+        }
+        
+        arguments.add(value)
+    }
+    
+    parseArguments(String[] arguments) =>
+        arguments.all(parseArgument, false)
+    
+    validateDeclarationCompatible() =>
+        declaration != null
+    
+    searchDeclaration() =>
+        searchClosureDeclaration() ||
+        searchThisDeclaration() ||
+        searchFunctionDeclaration()
+    
+    searchClosureDeclaration() => false {
+        var variable = parent.findVariableDeclaration(name)
+        
+        if (variable.class.isOfType(ClosureDeclaration)) {
+            declaration = (VariableDeclaration)variable
+            
+            return true
+        }
+    }
+    
+    /// Search for the declaration of the constructor if the function call is 'this(...)'
+    searchThisDeclaration() => false {
+        if (name.equals("this") && !isAccessed) {
+            var constructor = parentClass.constructors.firstWhere({ true })
+            
+            if (constructor != null) {
+                declaration = constructor
+                
+                return true
+            }
+        }
+    }
+    
+    searchFunctionDeclaration() => false {
+        var ref = referenceClass
+        
+        if (ref != null) {
+            var func = ref.functions.firstWhere({ _.name.equals(name) })
+            
+            if (func != null) {
+                declaration = func
+                
+                return true
+            } else {
+                softly throw new InvalidParseException("Could not find declaration for function call '#this' in class '#ref'", this)
+            }
+        } else {
+            softly throw new InvalidParseException("Could not get reference class for function call '#this'", this)
+        }
+    }
+    
+    public cloneTo(FunctionCall other) => other {
+        super.cloneTo(other)
+        
+        other.argumentList = argumentList
+    }
+    
+    public writeName() => name
+    
+    public writeNova() => writeName() + "#argumentList" + writeArrayAccess() + writeAccessedNodes()
+    public toString() => toNova()
+}

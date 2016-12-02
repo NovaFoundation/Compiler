@@ -1,0 +1,22 @@
+package "spectra/tree/nodes/generics"
+
+import "spectra/util/Location"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Value"
+import "spectra/tree/nodes/Type"
+
+class GenericArgument extends Value {
+    /// Create a new GenericArgument node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the GenericArgument node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID, String type) {
+        super(parent, location)
+        
+        parseType(type)
+    }
+    
+    public writeNova() => "#type.name"
+}

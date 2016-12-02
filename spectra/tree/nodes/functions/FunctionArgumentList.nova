@@ -1,0 +1,25 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/ArgumentList"
+import "spectra/SyntaxErrorException"
+import "spectra/util/Location"
+
+/// @ArgumentList extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class FunctionArgumentList extends ArgumentList {
+    /// Create a new FunctionArgumentList node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the FunctionArgumentList node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+}

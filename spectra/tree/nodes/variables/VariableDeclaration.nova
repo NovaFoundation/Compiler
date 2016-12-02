@@ -1,0 +1,81 @@
+package "spectra/tree/nodes/variables"
+
+import "spectra/tree/nodes/Node"
+import "spectra/SyntaxErrorException"
+import "spectra/util/Location"
+import "spectra/tree/nodes/Identifier"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @Node extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+class VariableDeclaration extends Identifier {
+    /// Create a new VariableDeclaration node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the VariableDeclaration node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+        
+        
+    }
+    
+    /// Parse the given input into a VariableDeclaration node. If the input cannot be parsed
+    /// into a VariableDeclaration node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///      * 
+    ///      * 
+    ///      * 
+    /// 
+    /// input:    The input string to parse into a VariableDeclaration instance.
+    /// parent:   The parent of the VariableDeclaration node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed VariableDeclaration node, if successful; null otherwise.
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
+        var words = input.splitValues()
+        
+        if (words.count == 2) {
+            var node = new VariableDeclaration(parent, location)
+            
+            node.name = words.last
+            
+            if (node.name.isIdentifier && node.parseType(words.first)) {
+                return node
+            }
+        }
+        
+        return null
+    }
+    
+    public parseModifier(String modifier) -> Bool {
+        return false
+    }
+    
+    public parseModifiers(String modifiers) =>
+        parseModifiers(modifiers.split(/\s+/))
+    
+    public parseModifiers(String[] modifiers) =>
+        modifiers.all(x -> { x.count == 0 || parseModifier(x) })
+    
+    public getInvalidModifiers(String modifiers) =>
+        modifiers.split(/\s+/).filter(x -> { x.count > 0 && !parseModifier(x) })
+    
+    public writeModifiers() => ""
+    
+    public writeNova() => "#writeModifiers() #writeType() #name".replace(/\s+/, " ").trim()
+    
+    public cloneTo(VariableDeclaration other) => other {
+        super.cloneTo(other)
+        
+        
+    }
+}

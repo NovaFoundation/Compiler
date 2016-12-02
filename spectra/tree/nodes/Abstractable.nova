@@ -1,0 +1,13 @@
+package "spectra/tree/nodes"
+
+interface Abstractable {
+    public Bool isAbstract => false {
+        set {}
+    }
+    
+    public writeAbstract() => isAbstract ? "abstract " : ""
+    
+    public cloneTo(Abstractable other) => other {
+        other.isAbstract = isAbstract
+    }
+}
