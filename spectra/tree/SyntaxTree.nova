@@ -15,14 +15,14 @@ import "spectra/tree/nodes/annotations/Annotation"
 import "spectra/util/CompilerStringFunctions"
 
 class SyntaxTree {
-    visible Program root
+    final visible Program root
     
     visible Byte phase
     
-    Stack<Annotation> pendingAnnotations
-    Stack<Node> parents
+    final Stack<Annotation> pendingAnnotations
+    final Stack<Node> parents
     
-    visible Spectra compiler
+    final visible Spectra compiler
     
     public construct(Spectra compiler, Program root) {
         pendingAnnotations = new Stack()
