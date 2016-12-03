@@ -24,16 +24,17 @@ import "nova/datastruct/Bounds"
 /// author:  Braden Steffaniak
 /// since:   v0.1 Jan 5, 2014 at 9:00:11 PM
 /// version: v0.2.41 Dec 17, 2014 at 7:48:17 PM
+[AutoFinal]
 class Node implements Annotatable {
-    visible Location location
+    visible var Location location
     
-    visible Annotation[] annotations
+    visible var Annotation[] annotations
     
-    public Node parent
+    public var Node parent
     
     visible String locationInfo {
         get {
-            String info = ""
+            var info = ""
             
             if (parentFile != null) {
                 info += "in file #parentFile.name"
@@ -50,7 +51,7 @@ class Node implements Annotatable {
     
     public String nodeType {
         get {
-            var name = this.class.name
+            let name = this.class.name
             
             return name
         }
@@ -106,15 +107,15 @@ class Node implements Annotatable {
     
     public Node scopeConsumer => this
     
-    public Scope scope {
+    public var Scope scope {
         get {
-            var consumer = scopeConsumer
+            let consumer = scopeConsumer
             
             return consumer != null && consumer != this ? consumer.scope : null
         }
         
         set {
-            var consumer = scopeConsumer
+            let consumer = scopeConsumer
             
             if (consumer != null && consumer != this) {
                 consumer.setScope(value)
@@ -175,7 +176,7 @@ class Node implements Annotatable {
     ///
     /// fromNode: The Node to detach the specified Node from.
     private detach(Node fromNode) {
-    	var p = parent
+    	let p = parent
     	
         parent = null
         
@@ -212,13 +213,13 @@ class Node implements Annotatable {
         }) ?: new ValidationResult(this)
         
         /*return annotations?.reverse()
-            .firstNonNull({ (var result = _.validate(phase)).skipValidation ? result : null }) ?:
+            .firstNonNull({ (let result = _.validate(phase)).skipValidation ? result : null }) ?:
             new ValidationResult(this)*/
     }
     
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
         if (containsScope) {
-            var declaration = scope.declarations.firstWhere({ _.name.equals(name) })
+            let declaration = scope.declarations.firstWhere({ _.name.equals(name) })
             
             if (declaration != null) {
                 return declaration

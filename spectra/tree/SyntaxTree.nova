@@ -14,15 +14,16 @@ import "spectra/tree/nodes/annotations/Annotation"
 
 import "spectra/util/CompilerStringFunctions"
 
+[AutoFinal]
 class SyntaxTree {
-    final visible Program root
+    visible Program root
     
-    visible Byte phase
+    visible var Byte phase
     
-    final Stack<Annotation> pendingAnnotations
-    final Stack<Node> parents
+    Stack<Annotation> pendingAnnotations
+    Stack<Node> parents
     
-    final visible Spectra compiler
+    visible Spectra compiler
     
     public construct(Spectra compiler, Program root) {
         pendingAnnotations = new Stack()
@@ -45,11 +46,11 @@ class SyntaxTree {
             for (statement in statements) {
                 if (parents.isEmpty) break
                     
-                var full = statement
+                let full = statement
                 
-                Node node = null
+                var Node node = null
                 
-                var annotations = searchAnnotations(statement)
+                let annotations = searchAnnotations(statement)
                 
                 annotations.addTo(pendingAnnotations)
                 
@@ -144,8 +145,8 @@ class SyntaxTree {
         phase = 4
     }
     
-    public static searchAnnotations(String statement) -> AnnotationSearchResult {
-        var result = new AnnotationSearchResult(statement)
+    public static searchAnnotations(var String statement) -> AnnotationSearchResult {
+        let result = new AnnotationSearchResult(statement)
         var annotation = Annotation.parse(statement, require: false)
         
         while (annotation != null && statement.count > 0) {

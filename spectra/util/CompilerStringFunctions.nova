@@ -13,6 +13,7 @@ import "spectra/tree/StatementIterator"
 
 import "spectra/util/Bounds"
 
+[AutoFinal]
 extension CompilerStringFunctions {
     static Char[] WHITESPACE = " \t\n\r".chars
     
@@ -52,12 +53,12 @@ extension CompilerStringFunctions {
     }
     
     public getArrayAccesses(String this) -> Tuple2<Array<String>, IntArray> {
-        String[] array = null
+        var String[] array = null
         var bracketIndex = count - 1
         
         while (chars[bracketIndex] == ']') {
-            var start = findEndingMatch(bracketIndex, '[', ']', direction: -1)
-            var old = bracketIndex
+            let start = findEndingMatch(bracketIndex, '[', ']', direction: -1)
+            let old = bracketIndex
             
             bracketIndex = start - 1
             
@@ -85,7 +86,7 @@ extension CompilerStringFunctions {
         substring(bounds.start, bounds.end)
     
     public nextWordBounds(String this, Int start = 0) -> Bounds {
-        var index = nextWhitespaceIndex(start)
+        let index = nextWhitespaceIndex(start)
         
         if (index > 0) {
             return new Bounds(start, index)
@@ -120,7 +121,7 @@ extension CompilerStringFunctions {
             var wordEndIndex = nextWhitespaceIndex(wordStartIndex, direction: direction)
             
             if (direction < 0) {
-                var temp = wordStartIndex + 1
+                let temp = wordStartIndex + 1
                 wordStartIndex = wordEndIndex + 1
                 wordEndIndex = temp
             }
@@ -132,7 +133,7 @@ extension CompilerStringFunctions {
     }
     
     public nextNonWhitespaceChar(String this, Int start = 0, Char defaultReturnValue = 0) -> Char {
-        var index = nextNonWhitespaceIndex(start)
+        let index = nextNonWhitespaceIndex(start)
         
         if (index >= 0) {
             return chars[index]
@@ -227,7 +228,7 @@ extension CompilerStringFunctions {
      * @return The String without the surrounding quotes.
      */
     public removeSurroundingQuotes(String this) -> String {
-        String input = this
+        var input = this
         
         while (input.isSurroundedByQuotes()) {
             input = input.substring(1, input.count - 1)
@@ -270,7 +271,7 @@ extension CompilerStringFunctions {
      * @return The index of the matching char. If an end is not found, -1
      *      is returned instead.
      */
-    public findEndingChar(String this, Char c, Int start, Int direction = 1, advance(String, Char, Int, Int) -> Int = defaultCharacterCheck, Int defaultReturnValue = -1) -> Int {
+    public findEndingChar(String this, Char c, var Int start, Int direction = 1, advance(String, Char, Int, Int) -> Int = defaultCharacterCheck, Int defaultReturnValue = -1) -> Int {
         if (start < 0 || start >= count) {
             return -1
         }
@@ -330,14 +331,14 @@ extension CompilerStringFunctions {
      * @return The index of the pair to the starting String, if no pair is
      *      found then -1 is returned.
      */
-    public findEndingMatch(String this, Int index, String start, String end, Int direction = 1, Char escapeChar = '\0', Int defaultReturnValue = -1) -> Int {
+    public findEndingMatch(String this, var Int index, var String start, var String end, Int direction = 1, Char escapeChar = '\0', Int defaultReturnValue = -1) -> Int {
         if (direction < 0) {
             String temp = start
             start = end
             end   = temp
         }
         
-        Int scope = 0
+        var Int scope = 0
         
         while (index >= 0 && index < count) {
             Char c = chars[index]
@@ -378,10 +379,9 @@ extension CompilerStringFunctions {
     
     public splitAtDotOperator(String this, String[] defaultReturnValue = null) -> String[] {
         var prev = 0
-        
         var dot  = findDotOperatorIndex()
         
-        var fragments = new String[]
+        let fragments = new String[]
         
         while (dot > 0) {
             fragments.add(substring(prev, dot))
@@ -426,7 +426,7 @@ extension CompilerStringFunctions {
             oldIndex = index + 1
         }
         
-        var last = substring(oldIndex).trim()
+        let last = substring(oldIndex).trim()
         
         if (!allowTrailing || last.count > 0) {
             strs.add(last)
@@ -436,7 +436,7 @@ extension CompilerStringFunctions {
     }
     
     public findOperatorIndices(String this, String[] operators = Operator.BINARY_OPERATORS, Bool includeEdges = true) -> Int[] {
-        var matches = new Int[0]
+        let matches = new Int[0]
         System.overheadTimer.start()
         operators.forEach(operator -> {
             Int index = 0
@@ -454,7 +454,7 @@ extension CompilerStringFunctions {
         for (i in 0..matches.count) {
             for (j in 1..(matches.count - i)) {
                 if (matches[j - 1] > matches[j]) {
-                    var temp = matches[j - 1]
+                    let temp = matches[j - 1]
                     matches[j - 1] = matches[j]
                     matches[j] = temp
                 }
@@ -477,9 +477,9 @@ extension CompilerStringFunctions {
     public findOperatorOnTopLevel(String this, Char operator, Int start = 0, Bool searchGenerics = false) =>
         findOperatorOnTopLevel("#operator", start, searchGenerics)
     
-    public findOperatorOnTopLevel(String this, String operator, Int start = 0, Bool searchGenerics = false) -> Int {
+    public findOperatorOnTopLevel(String this, String operator, var Int start = 0, Bool searchGenerics = false) -> Int {
         while (true) {
-            var index = findStringOnTopLevel(operator, start, searchGenerics)
+            let index = findStringOnTopLevel(operator, start, searchGenerics)
             
             if (index > 0 && !isStrictlyOperator(operator, index)) {
                 start = index + 1
@@ -521,9 +521,9 @@ extension CompilerStringFunctions {
     public findStringOnTopLevel(String this, String needle, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) =>
         findStringOnTopLevel([needle], start, searchGenerics, defaultReturnValue)
         
-    public findStringOnTopLevel(String this, String[] needles, Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
+    public findStringOnTopLevel(String this, String[] needles, var Int start = 0, Bool searchGenerics = false, Int defaultReturnValue = -1) -> Int {
         while (start < count) {
-            var c = chars[start]
+            let c = chars[start]
             
             if (containsString(needles, start)) {
                 return start
@@ -558,7 +558,7 @@ extension CompilerStringFunctions {
      * @param currentEnd The index to search after.
      * @return The new statement end index.
      */
-    public calculateStatementEnd(String this, Int currentEnd, Int statementEndIndex = currentEnd) -> Int {
+    public calculateStatementEnd(String this, var Int currentEnd, Int statementEndIndex = currentEnd) -> Int {
         currentEnd = findCharOnTopLevel(EITHER_STATEMENT_END_CHARS, currentEnd)
         
         if (currentEnd < 0) {
@@ -571,8 +571,8 @@ extension CompilerStringFunctions {
             return currentEnd
         }
         
-        var prevCharIndex = nextNonWhitespaceIndex(currentEnd - 1, -1)
-        var nextCharIndex = nextNonWhitespaceIndex(currentEnd + 1)
+        let prevCharIndex = nextNonWhitespaceIndex(currentEnd - 1, -1)
+        let nextCharIndex = nextNonWhitespaceIndex(currentEnd + 1)
         
         return calculateReturnValue(statementEndIndex, currentEnd, nextCharIndex, prevCharIndex)
     }
@@ -601,7 +601,7 @@ extension CompilerStringFunctions {
         return currentEnd
     }
     
-    public nextWordBounds(String this, Int start, Int direction) -> Bounds {
+    public nextWordBounds(String this, var Int start, Int direction) -> Bounds {
         if (start < 0 || start >= count) {
             return Bounds.EMPTY
         }
@@ -644,7 +644,7 @@ extension CompilerStringFunctions {
      *      were no grouped chars, then an empty String is returned.
      */
     public findGroupedChars(String this, Char[] chars, Int start = 0, Int direction = 1) -> String {
-        var index = start
+        let index = start
         
         while (index < count && index >= 0 && chars.contains(this.chars[index])) {
             index += direction
@@ -669,10 +669,10 @@ extension CompilerStringFunctions {
     public checkStatementContinuation(String this, Int prevCharIndex, Int nextCharIndex) -> Bool {
         Bounds prevWordBounds = nextWordBounds(prevCharIndex, -1)
         
-        var nextNextCharIndex = nextNonWhitespaceIndex(nextWhitespaceIndex(nextCharIndex + 1))
+        let nextNextCharIndex = nextNonWhitespaceIndex(nextWhitespaceIndex(nextCharIndex + 1))
         
         // Whether or not the current statement needs the next line to complete the statement
-        Bool pendingCompletion = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, direction: -1)
+        var pendingCompletion = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, direction: -1)
         
         if (pendingCompletion && chars[prevCharIndex] == '>') {
             if (substring(prevCharIndex - 1, prevCharIndex + 1).equals("=>")) {
@@ -705,7 +705,7 @@ extension CompilerStringFunctions {
      *      operator.
      */
     public containsUnaryOperator(String this, Int index, Int stopIndex, Int direction = 1) -> Bool {
-        Bounds bounds = findStrings(Operator.UNARY_OPERATORS_NO_MINUS, index, direction)
+        var Bounds bounds = findStrings(Operator.UNARY_OPERATORS_NO_MINUS, index, direction)
         
         if (!validBounds(bounds, stopIndex, direction)) {
             bounds = findStrings(Operator.MINUS, index, direction)
@@ -715,8 +715,8 @@ extension CompilerStringFunctions {
             String unary = substring(bounds.start, bounds.end)
             
             // Get the propper sides
-            var foundSide   = -direction
-            var correctSide = UnaryOperation.RIGHT//UnaryOperation.SIDES[unary]
+            let foundSide   = -direction
+            let correctSide = UnaryOperation.RIGHT//UnaryOperation.SIDES[unary]
             
             return correctSide == foundSide || correctSide == UnaryOperation.EITHER
         }
@@ -724,7 +724,7 @@ extension CompilerStringFunctions {
         return false
     }
     
-    public findStrings(String this, String[] strings, Int start = 0, Int direction = 1, Char[] scopeChecks = null) -> Bounds {
+    public findStrings(String this, String[] strings, var Int start = 0, Int direction = 1, Char[] scopeChecks = null) -> Bounds {
         while (start >= 0 && start < count) {
             Char c = chars[start]
             
@@ -828,15 +828,16 @@ extension CompilerStringFunctions {
         var output = ""
         var tabs   = ""
         
-        var matches = Regex.getMatches("[\\}\\{\\)\\(\n]", this)
+        let matches = Regex.getMatches("[\\}\\{\\)\\(\n]", this)
         
-        Int lastIndex = 0
-        var sameLine  = false
-        var inParen   = false
-        Int lambda    = 0
+        var Int lastIndex = 0
+        var Int lambda    = 0
+        
+        var sameLine = false
+        var inParen  = false
         
         matches.forEach(match -> {
-            var c = this.chars[match.start]
+            let c = this.chars[match.start]
             
             if (c == '{' || c == '(') {
                 if (inParen && c == '{') {

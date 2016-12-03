@@ -19,6 +19,7 @@ import "spectra/tree/SyntaxTree"
 
 import "spectra/util/CompilerStringFunctions"
 
+[AutoFinal]
 class Spectra {
     visible static Bool DEBUG = true
     
@@ -28,10 +29,10 @@ class Spectra {
     visible String[] warnings = new String[]
     visible String[] info     = new String[]
     
-    NovaFile[] files
+    var NovaFile[] files
     
     public static main(String[] args) {
-        var c = new Spectra()
+        let c = new Spectra()
         
         c.compile(args.skip(1))
         
@@ -48,7 +49,7 @@ class Spectra {
         if (DEBUG) {
             testClasses()
             
-            var target = "c"
+            let target = "c"
             
 //             args = [
 //                 "../Spectra",
@@ -88,16 +89,16 @@ class Spectra {
 // //				"-library",
 //             ]
             
-            var annotationTypes = Class.ALL.filter({ _.isOfType(Annotation) })
+            let annotationTypes = Class.ALL.filter({ _.isOfType(Annotation) })
             
-            var program = new Program()
+            let program = new Program()
             
-            var parentDir = new File(args.firstOr("../../../tempstd"))
+            let parentDir = new File(args.firstOr("../../../tempstd"))
             
-            var parseTimer = new Timer()
-            var outputTimer = new Timer()
-            var compileTimer = new Timer().start()
-            var fileTimer = new Timer().start()
+            let parseTimer = new Timer()
+            let outputTimer = new Timer()
+            let compileTimer = new Timer().start()
+            let fileTimer = new Timer().start()
             
             files = parentDir.getChildFiles(true).filter({ _.extension.toLowerCase().equals(".nova") }).map({ new NovaFile(_) })
             
@@ -106,7 +107,7 @@ class Spectra {
             try {
                 files.forEach({ program.addChild(_) })
                 
-                var tree = new SyntaxTree(this, program)
+                let tree = new SyntaxTree(this, program)
                 
                 parseTimer.start()
                 
@@ -118,7 +119,7 @@ class Spectra {
                 
                 outputTimer.start()
                 
-                var separator = "============================="
+                let separator = "============================="
                 Console.writeLine(tree.root.files
                     //.filter({ _.name.equals("String") })
                     .map(file -> { "#separator #file.name #separator\n#{file.toNova().formatIndentation()}" }).join("\n"))
