@@ -138,7 +138,10 @@ class Spectra {
             Console.writeLine("Nova parse time: #{parseTimer.duration}ms")
             Console.writeLine("Nova result output time: #{outputTimer.duration}ms")
             Console.writeLine("Nova compile time: #{compileTimer.duration}ms")
-            Console.writeLine("Nova regex overhead: #{System.overheadTimer.duration}ms")
+            
+            if (System.overheadTimer.iterations > 0) {
+                Console.writeLine("Nova overhead timer: #{System.overheadTimer.duration}ms over #{System.overheadTimer.iterations} iterations")
+            }
             
             //Console.writeLine("Args: #args")
         }
