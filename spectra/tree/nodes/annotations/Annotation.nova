@@ -60,5 +60,5 @@ class Annotation extends Node {
         return null
     }
     
-    public getRemainingStatement(String input) => input.substring(input.findEndingMatch(0, '[', ']') + 1).trim()
+    public static getRemainingStatement(String input) => input.substring(input.findEndingMatch(0, '[', ']') + 1).trim()
 }
