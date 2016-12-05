@@ -683,9 +683,9 @@ extension CompilerStringFunctions {
         }
         
         // Whether or not the next statement needs a fragment before it to complete the statement
-        Bool requiresCompletion = STMT_POST_CONT_CHARS.contains(chars[nextCharIndex]) && (!containsUnaryOperator(nextCharIndex, nextNextCharIndex) || findGroupedSymbols(nextCharIndex).equals("-"))
+        let requiresCompletion = STMT_POST_CONT_CHARS.contains(chars[nextCharIndex]) && (!containsUnaryOperator(nextCharIndex, nextNextCharIndex) || findGroupedSymbols(nextCharIndex).equals("-"))
         
-        String prevWord = prevWordBounds.extractString(this)
+        let prevWord = prevWordBounds.extractString(this)
         
         return pendingCompletion ^ requiresCompletion || (prevWord.equals("return") && pendingCompletion /*&& parentStack.check().parentMethod.type != null*/)
     }
