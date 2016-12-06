@@ -49,7 +49,7 @@ class Scope extends NodeList {
             
             var depth = 0
             
-            while (current != null) {
+            while (current) {
                 depth++
                 
                 current = current.parentWithScope
@@ -80,7 +80,7 @@ class Scope extends NodeList {
         
         Node node = null
         
-        until (node != null) {
+        until (node) {
         	node = Accessible.parseDotAccess(input, parent, require: require)
             node = IfStatement.parse(input, parent, location, require)
             node = ElseStatement.parse(input, parent, location, require)
@@ -108,10 +108,10 @@ class Scope extends NodeList {
                 catchSyntaxErrors({
                     var parsed = parseStatement(placeholder.value, child.parent, child.location, true)
                     
-                    if (parsed != null) {
+                    if (parsed) {
                         children.replace(child, parsed)
                         
-                        if (placeholder.nodes != null) {
+                        if (placeholder.nodes) {
                             parsed.parsePlaceholderChildren(placeholder.nodes)
                         }
                         

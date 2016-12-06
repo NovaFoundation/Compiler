@@ -44,7 +44,7 @@ class Instantiation extends FunctionCall {
             
             var property = parseStatement(placeholder.value, objectNotation)
             
-            if (property != null) {
+            if (property) {
                 objectNotation.replace(placeholder, property)
             }
             
@@ -83,14 +83,14 @@ class Instantiation extends FunctionCall {
             if (className.isIdentifier) {
                 var clazz = parent.parentFile.getImportedClass(className)
                 
-                if (clazz != null) {
+                if (clazz) {
                     FunctionDeclaration constructor = clazz.functions.firstWhere({ _.name.equals("construct") })
                     
-                    if (constructor != null) {
+                    if (constructor) {
                         var parameters = callString.substring(parenthesisIndex)
                         var call = FunctionCall.parse(className + parameters, parent, declaration: constructor)
                         
-                        if (call != null) {
+                        if (call) {
                             return (Instantiation)call.cloneTo(node)
                         }
                     }
@@ -105,7 +105,7 @@ class Instantiation extends FunctionCall {
         declaration.parentClass.name
     
     public writeObjectNotation() =>
-        objectNotation != null ?
+        objectNotation ?
             " " + objectNotation.toNova() :
             ""
     

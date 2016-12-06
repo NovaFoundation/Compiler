@@ -14,7 +14,7 @@ class SyntaxMessage {
     }
     
     public static error(String message, Node node, Bool throwException = true) {
-        if (node != null) {
+        if (node) {
             message += " - #node.locationInfo"
         }
         

@@ -63,7 +63,7 @@ class ObjectNotationProperty extends Assignment {
     parseAssignedNode(String input) => false {
         var variable = Variable.findVariable(input, parent)
         
-        if (variable != null) {
+        if (variable) {
             assigned = variable
             
             return true
@@ -73,7 +73,7 @@ class ObjectNotationProperty extends Assignment {
     parseAssignment(String input) => false {
         var value = Value.parse(input, this)
         
-        if (value != null) {
+        if (value) {
             assignment = value
             
             return true

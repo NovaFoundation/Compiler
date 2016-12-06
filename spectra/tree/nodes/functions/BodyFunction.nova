@@ -63,10 +63,10 @@ class BodyFunction extends FunctionDeclaration {
         
         var function = FunctionDeclaration.parse(input, parent, location, require)
         
-        if (function != null) {
+        if (function) {
             var node = new BodyFunction(parent, location)
             
-            if (inlineBody != null) {
+            if (inlineBody) {
                 node.inlineBody = PlaceholderValue.parse(inlineBody, node, location, require)
             }
             
@@ -139,7 +139,7 @@ class BodyFunction extends FunctionDeclaration {
                 "")
     
     public writeBody() =>
-        inlineBody != null ?
+        inlineBody ?
             writeInlineBody() :
             scope.toNova()
     

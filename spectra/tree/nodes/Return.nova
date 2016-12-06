@@ -62,7 +62,7 @@ class Return extends Node {
     }
     
     public writeValue() =>
-        value != null ?
+        value ?
             value.toNova() :
             ""
     

@@ -34,7 +34,7 @@ class ClosureParameter extends Parameter {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClosureParameter {
         var type = Type.parse(input, parent)
         
-        if (type != null) {
+        if (type) {
             var node  = new ClosureParameter(parent)
             node.type = type
             node.name = "_#{node.parentParameterList.parameters.count + 1}"
@@ -43,7 +43,7 @@ class ClosureParameter extends Parameter {
         } else {
             var parameter = Parameter.parse(input, parent, location, require)
             
-            if (parameter != null) {
+            if (parameter) {
                 var node = new ClosureParameter(parent)
                 parameter.cloneTo(node)
                 node.name = "_#node.name"

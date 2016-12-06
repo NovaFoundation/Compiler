@@ -73,7 +73,7 @@ class Operation extends Value {
         operands.all({
             var operand = Value.parse(_, this, location)
             
-            if (operand != null) {
+            if (operand) {
                 this.operands.add(operand)
             }
             

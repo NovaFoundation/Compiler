@@ -65,14 +65,14 @@ class Value extends Node {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value {
         var arrayData = input.getArrayAccesses()
         
-        if (arrayData.item1 != null) {
+        if (arrayData.item1) {
             input = input.substring(end: arrayData.item2[0]).trim()
         }
         
         var value = parseValue(input, parent, location, require)
         
-        if (value != null) {
-            if (arrayData.item1 != null) {
+        if (value) {
+            if (arrayData.item1) {
                 value.arrayAccess = ArrayAccess.parse(arrayData.item1, value)
             }
             
@@ -112,10 +112,10 @@ class Value extends Node {
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
     
     public parseType(String input) =>
-        input != null && (type = Type.parse(input)) != null
+        input && (type = Type.parse(input))
     
     public validateTypes() -> Bool {
-        if (type != null && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type.name) })) {
+        if (type && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type.name) })) {
             invalidTypeError(throwException: false)
             
             return false
@@ -128,7 +128,7 @@ class Value extends Node {
         SyntaxMessage.error("Invalid type '#type'", this, throwException: throwException)
     
     public writeType() => "#type.toNova()"
-    public writeArrayAccess() => arrayAccess != null ? arrayAccess.toNova() : ""
+    public writeArrayAccess() => arrayAccess ? arrayAccess.toNova() : ""
     
     public cloneTo(Value other) => other {
         super.cloneTo(other)

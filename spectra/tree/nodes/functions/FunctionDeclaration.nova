@@ -35,13 +35,13 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     }
     
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
-        if (objectReference != null && objectReference.name.equals(name)) {
+        if (objectReference && objectReference.name.equals(name)) {
             return objectReference
         }
         
         var parameter = parameters.firstWhere({ _.name.equals(name) })
         
-        if (parameter != null) {
+        if (parameter) {
             return parameter
         }
         
@@ -68,7 +68,7 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
         var parameters = findParameters(input)
         var returnType = findReturnType(input)
         
-        if (signature != null && parameters != null && returnType != null) {
+        if (signature && parameters && returnType) {
             var node = new FunctionDeclaration(parent, location)
             
             if (node.parseSignature(signature, require) &&
@@ -159,7 +159,7 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     [Override]
     public writeAnnotationSeparator() => "\n"
     
-    public writeReturnType() => type != null ? " -> #type" : ""
+    public writeReturnType() => type ? " -> #type" : ""
     
     public writeHeader() =>
         "#writeModifiers() #name".replace(/\s+/, " ").trim() +

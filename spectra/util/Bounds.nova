@@ -59,7 +59,7 @@ class Bounds {
     /// 
     /// bounds: The Bounds to check against.
     /// return: Whether or not the two Bounds have equal values.
-    public equals(Bounds bounds) => bounds != null && bounds.start == start && bounds.end == end
+    public equals(Bounds bounds) => bounds && bounds.start == start && bounds.end == end
     
     /// Generate a String representation of the Bounds Object
     /// containing the start and end position of the Bounds.

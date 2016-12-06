@@ -100,7 +100,7 @@ class NovaFile extends Node {
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
     	var node = null
         
-        until (node != null) {
+        until (node) {
             node = ClassDeclaration.parse(input, this, location, require)
             node = Import.parse(input, this, location, require)
             node = Package.parse(input, this, location, require)
@@ -136,7 +136,7 @@ class NovaFile extends Node {
         
         var node = Import.parse("import \"#location\"", this, this.location)
         
-        if (node != null) {
+        if (node) {
             imports.add(node)
         } else {
             SyntaxMessage.error("Invalid import location '#location'", this)

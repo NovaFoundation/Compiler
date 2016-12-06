@@ -66,7 +66,7 @@ extension CompilerStringFunctions {
                 if (chars[bracketIndex] == ')' || chars[bracketIndex] == ']' || substring(end: start).isIdentifier) {
                     array = array ?: new String[]
                     array.add(0, substring(start + 1, old).trim())
-                } else if (array != null) {
+                } else if (array) {
                     array = null
                 }
             }
@@ -677,7 +677,7 @@ extension CompilerStringFunctions {
         if (pendingCompletion && chars[prevCharIndex] == '>') {
             if (substring(prevCharIndex - 1, prevCharIndex + 1).equals("=>")) {
                 
-            } else if (searchGenericType(prevCharIndex, true) != null) {
+            } else if (searchGenericType(prevCharIndex, true)) {
                 pendingCompletion = false
             }
         }
@@ -687,7 +687,7 @@ extension CompilerStringFunctions {
         
         let prevWord = prevWordBounds.extractString(this)
         
-        return pendingCompletion ^ requiresCompletion || (prevWord.equals("return") && pendingCompletion /*&& parentStack.check().parentMethod.type != null*/)
+        return pendingCompletion ^ requiresCompletion || (prevWord.equals("return") && pendingCompletion /*&& parentStack.check().parentMethod.type*/)
     }
     
     private static validBounds(Bounds bounds, Int stopIndex, Int direction) =>
@@ -728,7 +728,7 @@ extension CompilerStringFunctions {
         while (start >= 0 && start < count) {
             Char c = chars[start]
             
-            if (scopeChecks != null) {
+            if (scopeChecks) {
                 if (scopeChecks.contains('"') && c == '"') {
                     start = findEndingQuote(start, direction)
                     

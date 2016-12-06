@@ -28,7 +28,7 @@ class ObjectNotation extends NodeList {
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
         var decl = parentInstantiation.typeClass.findVariableDeclaration(name, searchAncestors)
         
-        if (decl != null) {
+        if (decl) {
             return decl
         } else {
             return super.findVariableDeclaration(name, searchAncestors)

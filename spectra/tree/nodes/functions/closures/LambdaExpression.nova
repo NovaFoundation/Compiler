@@ -31,7 +31,7 @@ class LambdaExpression extends Value implements CallableFunction {
         parentFunctionCall.arguments.indexOf(this, defaultReturnValue: parentFunctionCall.arguments.count)
     
     visible ClosureDeclaration closureDeclaration =>
-        parentFunctionCall.function != null ?
+        parentFunctionCall.function ?
             (ClosureDeclaration)parentFunctionCall.function.parameters[index] :
             inferredClosureDeclaration
     
@@ -47,7 +47,7 @@ class LambdaExpression extends Value implements CallableFunction {
     }
     
     visible ClosureDeclaration inferredClosureDeclaration =>
-        inferredFunctionDeclaration != null ?
+        inferredFunctionDeclaration ?
             inferredFunctionDeclaration.parameters[index] :
             null
     
@@ -71,7 +71,7 @@ class LambdaExpression extends Value implements CallableFunction {
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
         var parameter = parameters.firstWhere({ _.name.equals(name) })
         
-        if (parameter != null) {
+        if (parameter) {
             return parameter
         }
         
@@ -106,7 +106,7 @@ class LambdaExpression extends Value implements CallableFunction {
             }
         }
         
-        if (parameters != null || input.first == '{') {
+        if (parameters || input.first == '{') {
             var node = new LambdaExpression(parent, location)
             var operation = input.substring(arrowIndex > 0 ? arrowIndex : 0).trim()
             
@@ -135,7 +135,7 @@ class LambdaExpression extends Value implements CallableFunction {
     parseOperation(String input) => false {
         var operation = findOperation(input)
         
-        if (operation != null) {
+        if (operation) {
             if (operation.count > 0) {
                 var statements = operation.getStatements(new Stack([this]))
                 

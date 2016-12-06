@@ -33,10 +33,10 @@ class Type {
         } else if (!node.name.isIdentifier) {
             softly throw new InvalidParseException("Invalid type '#input'", parent)
         } else {
-            if (parent != null) {
+            if (parent) {
                 var param = node.getGenericParameter(parent)
                 
-                if (param != null) {
+                if (param) {
                     node = node.cloneTo(new GenericType())
                 }
             }
@@ -51,14 +51,14 @@ class Type {
         if (parent.parentFunction != null) {
             var param = parent.parentFunction.genericParameters.firstWhere({ _.type.name.equals(name) })
             
-            if (param != null) {
+            if (param) {
                 return param
             }
         }
-        if (parent.parentClass != null) {
+        if (parent.parentClass) {
             var param = parent.parentClass.genericParameters.firstWhere({ _.type.name.equals(name) })
             
-            if (param != null) {
+            if (param) {
                 return param
             }
         }

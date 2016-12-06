@@ -47,7 +47,7 @@ class Annotation extends Node {
                 var type = contents.substring(bounds)
                 var parameters = contents.substring(bounds.end).trim()
                 
-                until (node != null) {
+                until (node) {
                     node = OverrideAnnotation.parse(type, parameters, parent, location, require)
                     node = NativeAnnotation.parse(type, parameters, parent, location, require)
                     node = TargetAnnotation.parse(type, parameters, parent, location, require)

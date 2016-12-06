@@ -33,7 +33,7 @@ class Variable extends Identifier implements Accessible, Assignable {
         if (name.isIdentifier) {
             var declaration = parent.findVariableDeclaration(name)
             
-            if (declaration != null) {
+            if (declaration) {
                 return new Variable(parent, location, declaration)
             } else {
                 softly throw new InvalidParseException("Could not find declaration for identifier '#name'")

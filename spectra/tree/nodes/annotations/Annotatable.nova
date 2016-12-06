@@ -10,7 +10,7 @@ public interface Annotatable {
     
     //containsAnnotationOfType(Class c) -> Bool
     /*{
-        if (annotations != null) {
+        if (annotations) {
             for (a in annotations) {
                 if (c.isAssignableFrom(a.getClass())) {
                     return true
@@ -30,7 +30,7 @@ public interface Annotatable {
     /*{
         String output = ""
         
-        if (annotations != null) {
+        if (annotations) {
             for (a in annotations) {
                 output += a.generateNovaInput() + (newLine ? '\n' : " ")
             }

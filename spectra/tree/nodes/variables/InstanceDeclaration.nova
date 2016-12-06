@@ -51,7 +51,7 @@ class InstanceDeclaration extends VariableDeclaration {
         
         var declaration = VariableDeclaration.parse(words.takeLast(2).join(" "), parent, location, require)
         
-        if (declaration != null) {
+        if (declaration) {
             var node = new InstanceDeclaration(parent, location)
             
             if (node.parseModifiers(words.take(words.count - 2))) {
@@ -76,7 +76,7 @@ class InstanceDeclaration extends VariableDeclaration {
         return true
     }
     
-    public writeVisibility() => visibility != null ? "#visibility" : ""
+    public writeVisibility() => visibility ? "#visibility" : ""
     public writeStatic() => isStatic ? "static" : ""
     public writeModifiers() => "#writeVisibility() #writeStatic() "
     

@@ -97,7 +97,7 @@ class Catch extends Node {
     }
     
     public writeException() =>
-        exception.toNova() + (variable != null ? " #variable" : "")
+        exception.toNova() + (variable ? " #variable" : "")
     
     public writeNova() =>
         "catch #{soft ? "all" : ""}".trim() + " (#writeException()) #scope.toNova()"

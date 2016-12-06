@@ -43,7 +43,7 @@ class Parameter extends LocalDeclaration {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Parameter {
         var closure = ClosureDeclaration.parse(input, parent, location, require)
         
-        if (closure != null) {
+        if (closure) {
             return closure
         }
         
@@ -58,10 +58,10 @@ class Parameter extends LocalDeclaration {
         
         var declaration = LocalDeclaration.parse(input, parent, location, require)
         
-        if (declaration != null) {
+        if (declaration) {
             var node = new Parameter(parent, location)
             
-            if (defaultValue != null) {
+            if (defaultValue) {
                 node.defaultValue = PlaceholderValue.parse(defaultValue, node, location, require)
             }
             

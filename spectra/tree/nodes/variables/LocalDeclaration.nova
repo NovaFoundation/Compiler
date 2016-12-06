@@ -39,7 +39,7 @@ class LocalDeclaration extends VariableDeclaration implements Assignable {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> LocalDeclaration {
         var declaration = VariableDeclaration.parse(input, parent, location, require)
         
-        if (declaration != null) {
+        if (declaration) {
             var node = new LocalDeclaration(parent, location)
             
             return (LocalDeclaration)declaration.cloneTo(node)

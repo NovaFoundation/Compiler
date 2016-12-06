@@ -40,7 +40,7 @@ class Constructor extends BodyFunction {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Constructor {
         var function = BodyFunction.parse(input, parent, location, require)
         
-        if (function != null) {
+        if (function) {
             if (function.name.equals("construct")) {
                 var node = new Constructor(parent, location)
                 

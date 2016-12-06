@@ -27,7 +27,7 @@ class NodeList<E extends Node> extends Node {
             old.detach()
         }
         
-        if (replacement != null) {
+        if (replacement) {
             addChild(replacement, index, detach)
         }
         

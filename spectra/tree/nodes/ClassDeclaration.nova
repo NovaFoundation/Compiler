@@ -28,7 +28,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     visible ClassDeclaration parentClass => this
     
     visible String location =>
-        parentFile.packageDeclaration.location != null ?
+        parentFile.packageDeclaration.location ?
             parentFile.packageDeclaration.location + "/" + name :
             name
     
@@ -108,7 +108,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     public findVariableDeclaration(String name, Bool searchAncestors = true, Bool searchExtensions = true) -> VariableDeclaration {
         var field = fields.firstWhere({ _.name.equals(name) })
         
-        if (field != null) {
+        if (field) {
             return field
         }
         
@@ -122,7 +122,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
-        until (node != null) {
+        until (node) {
             node = Constructor.parse(input, this, location, require)
             node = BodyFunction.parse(input, this, location, require)
             node = FieldDeclaration.parse(input, this, location, require)
@@ -287,7 +287,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         super.writeModifiers() + writeAbstract()
     
     public writeExtension() =>
-        extendedClass != null ?
+        extendedClass ?
             "extends #extendedClass" :
             ""
     
@@ -297,7 +297,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
             ""
     
     public writeArrayBracketOverload() =>
-        arrayBracketOverload != null ?
+        arrayBracketOverload ?
             arrayBracketOverload.toNova() :
             ""
     

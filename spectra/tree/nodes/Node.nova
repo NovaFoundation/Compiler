@@ -36,10 +36,10 @@ class Node implements Annotatable {
         get {
             var info = ""
             
-            if (parentFile != null) {
+            if (parentFile) {
                 info += "in file #parentFile.name"
             }
-            if (location != null) {
+            if (location) {
                 info += (info.count > 0 ? " " : "") + "on line number #location.lineNumber at offset #location.offset"
             }
             
@@ -111,13 +111,13 @@ class Node implements Annotatable {
         get {
             let consumer = scopeConsumer
             
-            return consumer != null && consumer != this ? consumer.scope : null
+            return consumer && consumer != this ? consumer.scope : null
         }
         
         set {
             let consumer = scopeConsumer
             
-            if (consumer != null && consumer != this) {
+            if (consumer && consumer != this) {
                 consumer.setScope(value)
             }
         }

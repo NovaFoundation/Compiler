@@ -50,7 +50,7 @@ class ArrayInstantiation extends Instantiation {
             var arrayString = input.substring("new".count + 1).trim()
             var arrayData = arrayString.getArrayAccesses()
             
-            if (arrayData.item1 != null) {
+            if (arrayData.item1) {
                 var type = arrayString.substring(end: arrayData.item2[0]).trim()
                 
                 if (!node.parseType(type)) {
@@ -73,7 +73,7 @@ class ArrayInstantiation extends Instantiation {
     parseDimension(String dimension) => true {
         var value = Value.parse(dimension, this)
         
-        if (value != null) {
+        if (value) {
             dimensions.add(value)
         } else {
             return false

@@ -50,7 +50,7 @@ class NumericRange extends Instantiation {
             
             var instantiation = Instantiation.parse("new IntRange(#start, #end)", parent, location, require)
             
-            if (instantiation != null) {
+            if (instantiation) {
                 return (NumericRange)instantiation.cloneTo(new NumericRange(parent, location))
             }
         }

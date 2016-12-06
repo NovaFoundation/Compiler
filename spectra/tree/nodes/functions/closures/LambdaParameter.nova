@@ -19,10 +19,10 @@ class LambdaParameter extends Parameter {
             var lambda = parameters.parentLambda
             var closure = lambda.closureDeclaration
             
-            if (closure != null) {
+            if (closure) {
                 var sourceParameters = closure.parameters
                 
-                return sourceParameters != null && sourceParameters.count > index ? sourceParameters[index] : null
+                return sourceParameters && sourceParameters.count > index ? sourceParameters[index] : null
             }
         }
         
@@ -58,7 +58,7 @@ class LambdaParameter extends Parameter {
         var node = new LambdaParameter(parent, location)
         var parameter = Parameter.parse(input, parent, location, require)
         
-        if (parameter != null) {
+        if (parameter) {
             return (LambdaParameter)parameter.cloneTo(node)
         } else if (!input.isIdentifier) {
             softly throw new InvalidParseException("Invalid lambda parameter name '#input' given", node)
@@ -72,7 +72,7 @@ class LambdaParameter extends Parameter {
     parseFromSourceParamter(String name) => false {
         var source = sourceParameter
         
-        if (source != null) {
+        if (source) {
             source.cloneTo(this)
             
             this.name = name

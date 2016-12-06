@@ -82,19 +82,19 @@ class Assignment extends Operation {
     parseAssignedNode(String input) -> Bool {
         LocalDeclaration declaration = null
         
-        until (declaration != null) {
+        until (declaration) {
             declaration = ImplicitDeclaration.parse(input, this, location, require: false)
             declaration = LocalDeclaration.parse(input, this, location, require: false)
         }
         
-        if (declaration != null) {
+        if (declaration) {
             assigned = declaration
             
             return true
         } else {
             var value = Value.parse(input, this, location, require: false)
             
-            if (value != null) {
+            if (value) {
                 if (value.isAssignable) {
                     assigned = value
                     

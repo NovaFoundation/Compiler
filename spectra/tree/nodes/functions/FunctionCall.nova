@@ -64,7 +64,7 @@ class FunctionCall extends Variable {
         var name = findName(input)
         var arguments = findArguments(input)
         
-        if (name != null && arguments != null) {
+        if (name && arguments) {
             var node = new FunctionCall(parent, location)
             
             node.name = name
@@ -109,7 +109,7 @@ class FunctionCall extends Variable {
     parseArgument(String argument) => true {
         var value = null
         
-        until (value != null) {
+        until (value) {
             value = LambdaExpression.parse(argument, argumentList)
             value = Value.parse(argument, argumentList)
             return false
@@ -144,7 +144,7 @@ class FunctionCall extends Variable {
         if (name.equals("this") && !isAccessed) {
             var constructor = parentClass.constructors.firstWhere({ true })
             
-            if (constructor != null) {
+            if (constructor) {
                 declaration = constructor
                 
                 return true
@@ -155,10 +155,10 @@ class FunctionCall extends Variable {
     searchFunctionDeclaration() => false {
         var ref = referenceClass
         
-        if (ref != null) {
+        if (ref) {
             var func = ref.functions.firstWhere({ _.name.equals(name) })
             
-            if (func != null) {
+            if (func) {
                 declaration = func
                 
                 return true

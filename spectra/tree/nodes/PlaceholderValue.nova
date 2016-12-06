@@ -56,7 +56,7 @@ class PlaceholderValue extends Value {
         new PlaceholderValue(parent, location, input)
     
     public writeChildren() =>
-        nodes != null ?
+        nodes ?
             " #nodes.children.map({ _.toNova() })" :
             ""
     

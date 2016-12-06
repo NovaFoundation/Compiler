@@ -25,7 +25,7 @@ interface GenericCompatible {
                 var params = contents.splitAtCommas().map({ new GenericParameter((Node)this, ((Node)this).location, _) })
                 genericParameters = params
                 
-                if (genericParameters.any({ _ == null })) { // if any generic parameters didnt parse
+                if (genericParameters.any({ !_ })) { // if any generic parameters didnt parse
                     softly throw new InvalidParseException("Failed to parse all generic parameters '#contents'", (Node)this)
                     
                     return false

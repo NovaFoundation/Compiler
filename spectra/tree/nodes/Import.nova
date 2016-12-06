@@ -28,7 +28,7 @@ class Import extends Node {
     }
     
     public getClassLocation(Bool aliased = false) =>
-    	aliased && alias != null ? "#parentLocation/#alias" : importLocation
+    	aliased && alias ? "#parentLocation/#alias" : importLocation
     
     /// Parse the given input into a Import node. If the input cannot be parsed
     /// into a Import node, null is returned.

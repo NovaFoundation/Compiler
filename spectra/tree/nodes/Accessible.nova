@@ -35,7 +35,7 @@ interface Accessible {
             var prev = this
             var current = accessedNode
             
-            while (current != null) {
+            while (current) {
                 prev = current
                 current = current.accessedNode
             }
@@ -105,7 +105,7 @@ interface Accessible {
      */
     public Bool isAccessed => accessingNode != null
     public Bool doesAccess => accessedNode != null
-    public Bool canAccess => false//((Value)this).parent instanceof Parameter || ((Value)this).getAncestorWithScope() != null
+    public Bool canAccess => false//((Value)this).parent instanceof Parameter || ((Value)this).getAncestorWithScope()
     
     /**
      * Get the next accessed node that is of the given class type.
@@ -137,7 +137,7 @@ interface Accessible {
     public getNextAccessingOfType(Class[] types, Bool opposite) -> Accessible {
         Accessible current = accessingNode
         
-        while (current != null && SyntaxUtils.checkTypes(types, ((Object)current).class) == opposite) {
+        while (current && SyntaxUtils.checkTypes(types, ((Object)current).class) == opposite) {
             current = current.accessingNode
         }
         
@@ -179,7 +179,7 @@ interface Accessible {
             return current
         }
         
-        while (current != null && SyntaxUtils.checkTypes(types, ((Object)current).class) != opposite) {
+        while (current && SyntaxUtils.checkTypes(types, ((Object)current).class) != opposite) {
             previous = current
             current  = current.accessingNode
         }
@@ -192,7 +192,7 @@ interface Accessible {
         Accessible previous = null
         Accessible current  = this
         
-        while (current != null) {
+        while (current) {
             if (SyntaxUtils.checkTypes(types, ((Object)current).class) != opposite) {
                 previous = current
             }
@@ -207,7 +207,7 @@ interface Accessible {
         Accessible previous = this
         Accessible current  = this
         
-        while (current != null) {
+        while (current) {
             previous = current
             current = current.accessedNode
         }
@@ -236,7 +236,7 @@ interface Accessible {
     public getNextAccessedOfType(Class[] types) -> Accessible {
         Accessible current = accessedNode
         
-        while (current != null && !SyntaxUtils.checkTypes(types, ((Object)current).class)) {
+        while (current && !SyntaxUtils.checkTypes(types, ((Object)current).class)) {
             current = current.accessedNode
         }
         
@@ -302,16 +302,16 @@ interface Accessible {
         
         Accessible accessing = accessingNode//(skipPriority)
         
-        if (accessing != null || requireAccessingNode) {
+        if (accessing || requireAccessingNode) {
             return accessing
         }
         
         /*MethodDeclaration methodDeclaration = n.parentMethod
         
-        if (methodDeclaration != null) {
+        if (methodDeclaration) {
             ObjectReference id = n.getObjectReferenceNode(methodDeclaration)
             
-            if (id != null) {
+            if (id) {
                 return id
             }
         }*/
@@ -334,15 +334,15 @@ interface Accessible {
     public static parseDotAccess(String input, Node parent, Bool require = true) -> Node {
         var fragments = input.splitAtDotOperator()
         
-        if (fragments != null) {    
+        if (fragments) {    
             var root    = parse(fragments.first, parent, require: require)
             var current = root
             
-            if (current != null) {
+            if (current) {
                 if (fragments.skip(1).all({
                     var accessed = parse(_, parent: (Node)current, require: require)
                     
-                    if (accessed != null) {
+                    if (accessed) {
                         current.accessedNode = accessed
                         
                         return true

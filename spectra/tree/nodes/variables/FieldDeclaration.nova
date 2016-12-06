@@ -65,13 +65,13 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
         
         var declaration = InstanceDeclaration.parse(input, parent, location, require)
         
-        if (declaration != null) {
+        if (declaration) {
             var node = new FieldDeclaration(parent, location)
             
-            if (accessorValue != null) {
+            if (accessorValue) {
                 node.accessorValue = PlaceholderValue.parse(accessorValue, node, location)
                 node.isTwoWayAccessor = twoWay
-            } else if (initializationValue != null) {
+            } else if (initializationValue) {
                 node.initializationValue = PlaceholderValue.parse(initializationValue, node, location)
             }
             
@@ -111,9 +111,9 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
         parseAccessorValue() &
         parseInitializationValue()
     
-    public writeInitializationValue() => initializationValue != null ? " = #initializationValue.toNova()" : ""
+    public writeInitializationValue() => initializationValue ? " = #initializationValue.toNova()" : ""
     public writeAccessorValue() =>
-        accessorValue != null ?
+        accessorValue ?
             (isTwoWayAccessor ? " <=> " : " => ") + accessorValue.toNova() :
             ""
     

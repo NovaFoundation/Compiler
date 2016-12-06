@@ -67,7 +67,7 @@ class ClosureDeclaration extends Parameter implements CallableFunction {
         return null
     }
     
-    public parseType(String type) => type == null || super.parseType(type)
+    public parseType(String type) => !type || super.parseType(type)
     
     static findType(String input, Int endIndex) -> String {
         var typeIndex = input.indexOf("->", start: endIndex + 1)
@@ -84,7 +84,7 @@ class ClosureDeclaration extends Parameter implements CallableFunction {
         ClosureParameter.parse(parameter, parameterList, require: require)
     
     public writeType() =>
-        type != null ?
+        type ?
             "-> #type.toNova()" :
             ""
     

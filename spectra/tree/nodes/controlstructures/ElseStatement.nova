@@ -16,9 +16,9 @@ import "spectra/util/CompilerStringFunctions"
 class ElseStatement extends ControlStructure {
     visible IfStatement inlineIf
     
-    public Scope scope => inlineIf != null ? inlineIf.scope : scope {
+    public Scope scope => inlineIf ? inlineIf.scope : scope {
         set {
-            if (inlineIf != null) {
+            if (inlineIf) {
                 inlineIf.scope = value
             } else {
                 scope = value
@@ -82,5 +82,5 @@ class ElseStatement extends ControlStructure {
     }
     
     public writeNova() =>
-        "else " + (inlineIf != null ? inlineIf.toNova() : scope.toNova())
+        "else " + (inlineIf ? inlineIf.toNova() : scope.toNova())
 }
