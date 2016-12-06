@@ -72,9 +72,9 @@ class FunctionCall extends Variable {
             
             if (!node.parseArguments(arguments)) {
                 softly throw new InvalidParseException("Unable to parse arguments '#arguments'", node)
-            } else if (declaration == null && !node.searchDeclaration()) {
+            } else if (!declaration && !node.searchDeclaration()) {
                 softly throw new InvalidParseException("Could not find declaration for function '#node'", node)
-            } else if (declaration != null && !node.validateDeclarationCompatible()) {
+            } else if (declaration && !node.validateDeclarationCompatible()) {
                 softly throw new InvalidParseException("Given declaration '#declaration' is not compatible with function call '#node'", node)
             } else {
                 return node

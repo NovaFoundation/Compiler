@@ -65,14 +65,14 @@ class SyntaxTree {
                         node = null
                     }
                     
-                    if (node == null) {
+                    if (!node) {
                         Console.writeLine("'#full'")
                         Console.writeLine("\tbeginsScope: '#statements.beginsScope'\n
                                            \tendsScope: '#statements.endsScope'\n
                                            \tparse: '#node'\n")
                     }
                     
-                    if (node != null) {
+                    if (node) {
                         while (!pendingAnnotations.isEmpty) {
                             node.addAnnotation(pendingAnnotations.pop())
                             
@@ -90,7 +90,7 @@ class SyntaxTree {
                 }
                 
                 if (statements.beginsScope) {
-                    if (node == null) {
+                    if (!node) {
                         SyntaxMessage.error("Unable to parse scope declaration '#statement'", parents.peek() ?: root, throwException: false)
                         
                         node = parents.peek().generateTemporaryScopeNode()
@@ -149,7 +149,7 @@ class SyntaxTree {
         let result = new AnnotationSearchResult(statement)
         var annotation = Annotation.parse(statement, require: false)
         
-        while (annotation != null && statement.count > 0) {
+        while (annotation && statement.count > 0) {
             statement = annotation.getRemainingStatement(statement)
             result.annotations.add(annotation)
             result.remainingStatement = statement

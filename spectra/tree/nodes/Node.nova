@@ -68,7 +68,7 @@ class Node implements Annotatable {
     visible Bool isDecoding => false
     visible Bool isValid => parent != null
     visible Bool isUserMade => true
-    visible Bool isWithinStaticContext => parentFunction == null || !parentFunction.isInstance
+    visible Bool isWithinStaticContext => !parentFunction || !parentFunction.isInstance
     visible Bool isWithinExternalContext => parent?.isWithinExternalContext
     
     visible Program program => parent?.program
@@ -97,7 +97,7 @@ class Node implements Annotatable {
     
     visible Node parentWithScope {
         get {
-            if (parent == null) return null
+            if (!parent) return null
             
             return parent.containsScope ? parent : parent.parentWithScope
         }
@@ -135,16 +135,14 @@ class Node implements Annotatable {
         set { parentScope.children.swap(index, value) }
     }
     
-    public getAdjacentNode(Int offset) -> Node {
-        if (parent != null) {
+    public getAdjacentNode(Int offset) -> Node => null {
+        if (parent) {
             Int index = this.index + offset
             
             if (index >= 0 && index < parentScope.children.count) {
                 return (Node)parentScope.children[index]
             }
         }
-        
-        return null
     }
     
     /// Create a new Node. Initializes the data.
@@ -221,12 +219,12 @@ class Node implements Annotatable {
         if (containsScope) {
             let declaration = scope.declarations.firstWhere({ _.name.equals(name) })
             
-            if (declaration != null) {
+            if (declaration) {
                 return declaration
             }
         }
         
-        if (searchAncestors && parent != null) {
+        if (searchAncestors && parent) {
             return parent.findVariableDeclaration(name, searchAncestors)
         }
         
@@ -277,15 +275,15 @@ class Node implements Annotatable {
     public validateTypes() => true
     
     public parsePlaceholders() =>
-        scope != null ?
+        scope ?
             scope.parsePlaceholders() :
             true
     
     public parsePlaceholderChildren(NodeList<PlaceholderValue> nodes) -> Bool =>
-        scopeConsumer != this && scopeConsumer != null ?
+        scopeConsumer && scopeConsumer != this ?
             scopeConsumer.parsePlaceholderChildren(nodes) :
             nodes.children.all(child -> {
-                if (scope != null) {
+                if (scope) {
                     scope.addChild(child)
                     
                     return child.parsePlaceholders()
@@ -297,7 +295,7 @@ class Node implements Annotatable {
     public writeAnnotationSeparator() => " "
     
     public writeAnnotations() =>
-        annotations != null && annotations.count > 0 ?
+        annotations && annotations.count > 0 ?
             annotations.map({ _.toNova() }).join(" ") + writeAnnotationSeparator() :
             ""
     

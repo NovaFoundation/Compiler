@@ -63,7 +63,7 @@ interface Accessible {
                     Priority priority = (Priority)id
                     Node last = priority.getLastAncestorOfType([Priority.class], false)
                     
-                    last = last == null ? priority : last
+                    last = last ?: priority
                     
                     if (this != priority.getContents()) {
                         return (Accessible)priority.getReturnedContents()
@@ -264,11 +264,7 @@ interface Accessible {
         
         Accessible node = null//reference.getLastAccessingOfType([Closure.class, MethodCall.class], true)
         
-        if (node == null) {
-            return reference
-        }
-        
-        return node
+        return node ?: reference
     }
     
     /**

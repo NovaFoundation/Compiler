@@ -69,7 +69,7 @@ class ElseStatement extends ControlStructure {
         if (contents.nextWord().equals("if")) {
             inlineIf = IfStatement.parse(contents, this)
             
-            if (inlineIf == null) {
+            if (!inlineIf) {
                 SyntaxMessage.error("Unable parse else if statement '#input'", this, throwException: false)
                 
                 return false

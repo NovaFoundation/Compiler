@@ -73,7 +73,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         } else if (child.class.isOfType(FunctionDeclaration)) {
             functions.add((FunctionDeclaration)child)
         } else if (child.class.isOfType(ArrayBracketOverload)) {
-            if (arrayBracketOverload == null) {
+            if (!arrayBracketOverload) {
                 arrayBracketOverload = (ArrayBracketOverload)child
             } else {
                 SyntaxErrorException("Array bracket overload already declared for class '#location'", child)
@@ -98,7 +98,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     public findCompatibleFunctions(String name, Value[] argumentTypes = null) =>
         functions.filter(func -> {
             func.name.equals(name) &&
-            (argumentTypes == null || func.compatibleArguments(argumentTypes))
+            (!argumentTypes || func.compatibleArguments(argumentTypes))
         })
     
     public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {

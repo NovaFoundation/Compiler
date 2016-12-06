@@ -109,7 +109,7 @@ class BodyFunction extends FunctionDeclaration {
             if (inlineBody.class.isOfType(Value)) {
                 var type = ((Value)inlineBody).type
                 
-                if (this.type == null) {
+                if (!this.type) {
                     this.type = type
                     
                     implicitType = true

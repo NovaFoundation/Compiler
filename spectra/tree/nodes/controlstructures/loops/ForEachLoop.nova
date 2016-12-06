@@ -80,7 +80,7 @@ class ForEachLoop extends Loop {
     parseIterator(String input) => true {
         iterator = Value.parse(input, this)
         
-        if (iterator == null) {
+        if (!iterator) {
             // return false
         }
     }

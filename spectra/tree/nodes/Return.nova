@@ -48,7 +48,7 @@ class Return extends Node {
             if (contents.count > 0) {
                 node.value = Value.parse(contents, node)
                 
-                if (node.value == null) {
+                if (!node.value) {
                     softly throw new InvalidParseException("Invalid return value '#contents'", node)
                     
                     return null

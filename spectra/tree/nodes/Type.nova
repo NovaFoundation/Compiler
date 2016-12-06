@@ -77,7 +77,7 @@ class Type {
             if (end > 0) {
                 genericArguments = input.substring(genericIndex + 1, end).splitAtCommas().map({ new GenericArgument(parent, location, _) })
                 
-                if (genericArguments.any({ _ == null })) { // if any generic arguments didnt parse
+                if (genericArguments.any({ !_ })) { // if any generic arguments didnt parse
                     return false
                 }
             }
