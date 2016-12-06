@@ -5,12 +5,15 @@ import "spectra/tree/nodes/Type"
 import "spectra/tree/nodes/functions/Parameter"
 import "spectra/tree/nodes/functions/ParameterList"
 import "spectra/tree/nodes/functions/CallableFunction"
+import "spectra/tree/nodes/generics/GenericParameter"
 import "spectra/util/Location"
 
 import "spectra/util/CompilerStringFunctions"
 
 class ClosureDeclaration extends Parameter implements CallableFunction {
     visible ParameterList parameterList <=> parameterList
+    
+    visible GenericParameter[] genericParameters <=> genericParameters
     
     /// Create a new ClosureDeclaration node.
     /// 
