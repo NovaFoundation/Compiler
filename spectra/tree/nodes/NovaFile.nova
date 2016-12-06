@@ -68,6 +68,8 @@ class NovaFile extends Node {
         
         reader.close()
         
+        name = file.rootName
+        
         packageDeclaration = Package.generateDefaultPackage(this)
         importList = new ImportList(this, location)
         classes = new ClassDeclaration[]
@@ -90,8 +92,8 @@ class NovaFile extends Node {
     addClass(ClassDeclaration child) {
         classes.add(child)
         
-        if (name == null) {
-            name = classes[0].name
+        if (child.isPublic && !child.name.equals(name)) {
+            SyntaxMessage.error("Class '#child.name' must have the same name as file '#name'", child)
         }
     }
     
@@ -125,7 +127,7 @@ class NovaFile extends Node {
     }
     
     public addAutoImports() =>
-        packageDeclaration.files.filter({ _ != this }).forEach({
+        packageDeclaration.files?.filter({ _ != this }).forEach({
             addImport(_.classDeclaration.location)
         })
     
