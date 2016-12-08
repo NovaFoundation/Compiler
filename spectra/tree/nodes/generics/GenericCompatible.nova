@@ -9,9 +9,7 @@ import "spectra/tree/nodes/Type"
 import "spectra/util/CompilerStringFunctions"
 
 interface GenericCompatible {
-    visible GenericParameter[] genericParameters => null {
-        set {}
-    }
+    visible GenericParameter[] genericParameters
     
     public parseGenericParameters(String input, Bool requireWholeString = false) => true {
         var genericIndex = input.indexOf('<')
