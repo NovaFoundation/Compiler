@@ -19,9 +19,7 @@ class Type {
     
     visible GenericArgument[] genericArguments = new GenericArgument[0]
     
-    public construct(String name = null) {
-        this.name = name
-    }
+    public construct(public String name = null) {}
     
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Type {
         var node = new Type(input)
