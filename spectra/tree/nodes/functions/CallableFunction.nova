@@ -14,7 +14,7 @@ import "spectra/SyntaxMessage"
 import "spectra/util/CompilerStringFunctions"
 
 interface CallableFunction extends GenericCompatible {
-    visible ParameterList parameterList => null
+    visible ParameterList parameterList
     visible Parameter[] parameters => parameterList.parameters
     
     public parseParameter(String parameter, Bool require = true) =>
