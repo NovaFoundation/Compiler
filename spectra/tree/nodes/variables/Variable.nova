@@ -12,9 +12,6 @@ import "spectra/tree/nodes/operations/Assignable"
 import "spectra/util/CompilerStringFunctions"
 
 class Variable extends Identifier implements Accessible, Assignable {
-    public Bool safeNavigation <=> safeNavigation
-    public Accessible accessedNode <=> accessedNode
-    
     public VariableDeclaration declaration
     
     public Type type => declaration.type

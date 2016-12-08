@@ -11,10 +11,6 @@ import "spectra/util/Location"
 import "spectra/util/CompilerStringFunctions"
 
 class ClosureDeclaration extends Parameter implements CallableFunction {
-    visible ParameterList parameterList <=> parameterList
-    
-    visible GenericParameter[] genericParameters <=> genericParameters
-    
     /// Create a new ClosureDeclaration node.
     /// 
     /// #exampleInputs

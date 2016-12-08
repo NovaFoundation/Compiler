@@ -25,8 +25,6 @@ import "spectra/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class LambdaExpression extends Value implements CallableFunction {
-    visible ParameterList parameterList <=> parameterList
-    
     visible Int index =>
         parentFunctionCall.arguments.indexOf(this, defaultReturnValue: parentFunctionCall.arguments.count)
     

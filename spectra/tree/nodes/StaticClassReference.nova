@@ -11,9 +11,6 @@ import "spectra/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class StaticClassReference extends Identifier implements Accessible {
-    public Bool safeNavigation <=> safeNavigation
-    public Accessible accessedNode <=> accessedNode
-    
     /// Create a new StaticClassReference node.
     /// 
     /// #exampleInputs

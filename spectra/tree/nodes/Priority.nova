@@ -12,9 +12,6 @@ import "spectra/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class Priority extends Value implements Accessible {
-    public Bool safeNavigation <=> safeNavigation
-    public Accessible accessedNode <=> accessedNode
-    
     visible Value value
     visible Value returnedValue => (Value)value.returnedNode
     
