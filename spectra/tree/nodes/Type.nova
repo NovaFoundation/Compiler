@@ -10,18 +10,17 @@ import "spectra/tree/nodes/generics/GenericParameter"
 
 import "spectra/util/CompilerStringFunctions"
 
+[AutoFinal]
 class Type {
-    public String name
-    
     visible Bool isGeneric => false
     
-    visible Int arrayDimensions = 0
+    visible var Int arrayDimensions = 0
     
-    visible GenericArgument[] genericArguments = new GenericArgument[0]
+    visible var GenericArgument[] genericArguments = new GenericArgument[0]
     
-    public construct(public String name = null) {}
+    public construct(public var String name = null) {}
     
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Type {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Type => null {
         var node = new Type(input)
         
         if (!node.parseGenericArguments(input, parent, location)) {
@@ -41,36 +40,32 @@ class Type {
             
             return node
         }
-        
-        return null
     }
     
-    getGenericParameter(Node parent) -> GenericParameter {
+    getGenericParameter(Node parent) -> GenericParameter => null {
         if (parent.parentFunction != null) {
-            var param = parent.parentFunction.genericParameters.firstWhere({ _.type.name.equals(name) })
+            let param = parent.parentFunction.genericParameters.firstWhere({ _.type.name.equals(name) })
             
             if (param) {
                 return param
             }
         }
         if (parent.parentClass) {
-            var param = parent.parentClass.genericParameters.firstWhere({ _.type.name.equals(name) })
+            let param = parent.parentClass.genericParameters.firstWhere({ _.type.name.equals(name) })
             
             if (param) {
                 return param
             }
         }
-        
-        return null
     }
     
     parseGenericArguments(String input, Node parent, Location location) => true {
-        var genericIndex = input.indexOf('<')
+        let genericIndex = input.indexOf('<')
         
         if (genericIndex > 0) {
             name = input.substring(end: genericIndex)
             
-            var end = input.findEndingMatch(genericIndex, '<', '>')
+            let end = input.findEndingMatch(genericIndex, '<', '>')
             
             if (end > 0) {
                 genericArguments = input.substring(genericIndex + 1, end).splitAtCommas().map({ new GenericArgument(parent, location, _) })
@@ -82,11 +77,11 @@ class Type {
         }
     }
     
-    parseArray(Node parent, Bool require) -> Bool {
+    parseArray(Node parent, Bool require) => true {
         var start = name.indexOf('[')
         
         if (start > 0) {
-            var first = start
+            let first = start
             var end = name.findEndingMatch(start, '[', ']')
             var last = end
             
@@ -112,8 +107,6 @@ class Type {
                 name = (name.substring(0, first) + name.substring(last + 1)).trim()
             }
         }
-        
-        return true
     }
     
     public writeArray() =>
