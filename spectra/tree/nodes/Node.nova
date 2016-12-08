@@ -149,10 +149,7 @@ class Node implements Annotatable {
     /// 
     /// parent:   The Node to act as the parent temporarily.
     /// location: The location of the Node in the source file.
-    public construct(Node parent = null, Location location = Location.INVALID) {
-        this.parent = parent
-        this.location = location
-    }
+    public construct(public var Node parent = null, visible var Location location = Location.INVALID) {}
     
     [Override]
     public addAnnotation(Annotation annotation) {
