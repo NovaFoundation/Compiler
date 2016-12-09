@@ -151,7 +151,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed ClassDeclaration node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClassDeclaration {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClassDeclaration => null {
         var index = input.nextWordIndex("class")
         
         if (index >= 0) {
@@ -180,8 +180,6 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         } else if (require) {
             SyntaxMessage.error("Invalid class declaration '#input'", parent)
         }
-        
-        return null
     }
     
     parseModifiers(String input, Int index, Bool require) -> Bool {

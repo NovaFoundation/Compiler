@@ -40,7 +40,7 @@ class Return extends Node {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed Return node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Return {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Return => null {
         if (input.nextWord().equals("return")) {
             var node = new Return(parent, location)
             var contents = input.substring(7).trim()
@@ -57,8 +57,6 @@ class Return extends Node {
             
             return node
         }
-        
-        return null
     }
     
     public writeValue() =>

@@ -42,14 +42,12 @@ class ArrayAccess extends Node {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed ArrayAccess node, if successful; null otherwise.
-    public parse(String[] input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayAccess {
+    public parse(String[] input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayAccess => null {
         var node = new ArrayAccess(parent, location)
         
         if (node.parseDimensions(input)) {
             return node
         }
-        
-        return null
     }
     
     public parseDimension(String dimension) =>

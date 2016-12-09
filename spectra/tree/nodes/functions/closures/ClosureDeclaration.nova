@@ -38,7 +38,7 @@ class ClosureDeclaration extends Parameter implements CallableFunction {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed ClosureDeclaration node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClosureDeclaration {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ClosureDeclaration => null {
         var parenIndex = input.indexOf('(')
         
         if (parenIndex > 0) {
@@ -59,8 +59,6 @@ class ClosureDeclaration extends Parameter implements CallableFunction {
                 }
             }
         }
-        
-        return null
     }
     
     public parseType(String type) => !type || super.parseType(type)

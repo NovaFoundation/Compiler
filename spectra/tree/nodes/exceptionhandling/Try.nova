@@ -50,7 +50,7 @@ class Try extends ExceptionHandler {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed Try node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Try {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Try => null {
         if (input.nextWord().equals(IDENTIFIER)) {
             var node = new Try(parent, location)
             
@@ -60,8 +60,6 @@ class Try extends ExceptionHandler {
                 return node
             }
         }
-        
-        return null
     }
     
     public writeNova() =>

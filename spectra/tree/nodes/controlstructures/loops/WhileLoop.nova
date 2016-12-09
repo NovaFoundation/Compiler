@@ -43,7 +43,7 @@ class WhileLoop extends Loop {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed WhileLoop node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> WhileLoop {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> WhileLoop => null {
         if (input.nextWord().equals("while")) {
             var node = new WhileLoop(parent, location)
             
@@ -63,8 +63,6 @@ class WhileLoop extends Loop {
                 }
             }
         }
-        
-        return null
     }
     
     parseCondition(String input) =>
