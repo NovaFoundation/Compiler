@@ -52,7 +52,7 @@ class ElseStatement extends ControlStructure {
     ///           be parsed.
     /// return:   The parsed ElseStatement node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ElseStatement => null {
-        if (input.nextWord().equals("else")) {
+        if (input.nextWord() == "else") {
             var contents = input.substring("else".count).trim()
             
             var node = new ElseStatement(parent, location)
@@ -64,7 +64,7 @@ class ElseStatement extends ControlStructure {
     }
     
     parseContents(String input, String contents) => true {
-        if (contents.nextWord().equals("if")) {
+        if (contents.nextWord() == "if") {
             inlineIf = IfStatement.parse(contents, this)
             
             if (!inlineIf) {

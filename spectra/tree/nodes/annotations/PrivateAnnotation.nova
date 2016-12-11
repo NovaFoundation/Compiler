@@ -35,7 +35,7 @@ class PrivateAnnotation extends Annotation {
     ///           be parsed.
     /// return:   The parsed PrivateAnnotation node, if successful; null otherwise.
     public static parse(String type, String parameters, Node parent = null, Location location = Location.INVALID, Bool require = true) -> PrivateAnnotation => null {
-        if (type.equals("Private") && parameters.count == 0) {
+        if (type == "Private" && parameters.count == 0) {
             var node = new PrivateAnnotation(parent, location)
             
             return node

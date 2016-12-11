@@ -56,7 +56,7 @@ class Literal extends Value implements Accessible {
     }
     
     static getLiteralType(String input) -> String => null {
-        if (input.equals("null")) {
+        if (input == "null") {
             return "Object"
         } else if (input.count >= 2 && input[0] == '"' && input.chars.last == '"') {
             return "String"
@@ -70,7 +70,7 @@ class Literal extends Value implements Accessible {
     }
     
     formatValue() -> Bool {
-        if (type.name.equals("String")) {
+        if (type.name == "String") {
             
         }
         

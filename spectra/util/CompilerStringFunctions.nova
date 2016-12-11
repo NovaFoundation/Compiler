@@ -35,7 +35,7 @@ extension CompilerStringFunctions {
         no set
     }
     public Bool String.isBool {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
-        get { return this.equals("true") || this.equals("false") }
+        get { return this == "true" || this == "false" }
         no set
     }
     
@@ -675,7 +675,7 @@ extension CompilerStringFunctions {
         var pendingCompletion = STMT_PRE_CONT_CHARS.contains(chars[prevCharIndex]) && !containsUnaryOperator(prevCharIndex, prevWordBounds.end, direction: -1)
         
         if (pendingCompletion && chars[prevCharIndex] == '>') {
-            if (substring(prevCharIndex - 1, prevCharIndex + 1).equals("=>")) {
+            if (substring(prevCharIndex - 1, prevCharIndex + 1) == "=>") {
                 
             } else if (searchGenericType(prevCharIndex, true)) {
                 pendingCompletion = false
@@ -683,11 +683,11 @@ extension CompilerStringFunctions {
         }
         
         // Whether or not the next statement needs a fragment before it to complete the statement
-        let requiresCompletion = STMT_POST_CONT_CHARS.contains(chars[nextCharIndex]) && (!containsUnaryOperator(nextCharIndex, nextNextCharIndex) || findGroupedSymbols(nextCharIndex).equals("-"))
+        let requiresCompletion = STMT_POST_CONT_CHARS.contains(chars[nextCharIndex]) && (!containsUnaryOperator(nextCharIndex, nextNextCharIndex) || findGroupedSymbols(nextCharIndex) == "-")
         
         let prevWord = prevWordBounds.extractString(this)
         
-        return pendingCompletion ^ requiresCompletion || (prevWord.equals("return") && pendingCompletion /*&& parentStack.check().parentMethod.type*/)
+        return pendingCompletion ^ requiresCompletion || (prevWord == "return" && pendingCompletion /*&& parentStack.check().parentMethod.type*/)
     }
     
     private static validBounds(Bounds bounds, Int stopIndex, Int direction) =>
@@ -792,10 +792,10 @@ extension CompilerStringFunctions {
             for (var i = start; i >= 0; i--) {
                 String c = "#chars[i]"
                 
-                if (c.equals(">")) {
+                if (c == ">") {
                     index = stack == 0 ? i : index
                     stack++
-                } else if (c.equals("<")) {
+                } else if (c == "<") {
                     stack--
                 }
                 

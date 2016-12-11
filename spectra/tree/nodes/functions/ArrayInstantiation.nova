@@ -44,7 +44,7 @@ class ArrayInstantiation extends Instantiation {
     ///           be parsed.
     /// return:   The parsed ArrayInstantiation node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayInstantiation => null {
-        if (input.nextWord().equals("new")) {
+        if (input.nextWord() == "new") {
             var node = new ArrayInstantiation(parent, location)
             
             var arrayString = input.substring("new".count + 1).trim()

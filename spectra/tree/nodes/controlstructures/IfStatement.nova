@@ -43,7 +43,7 @@ class IfStatement extends ControlStructure {
     ///           be parsed.
     /// return:   The parsed IfStatement node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> IfStatement => null {
-        if (input.nextWord().equals("if")) {
+        if (input.nextWord() == "if") {
             input = input.substring("if".count).trim()
             
             var node = new IfStatement(parent, location)

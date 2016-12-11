@@ -17,9 +17,9 @@ class InstanceDeclaration extends VariableDeclaration {
     
     public String visibility = ""
     
-    public Bool isPublic => visibility.equals("public")
-    public Bool isPrivate => visibility.count == 0 || visibility.equals("private")
-    public Bool isProtected => visibility.equals("protected")
+    public Bool isPublic => visibility == "public"
+    public Bool isPrivate => visibility.count == 0 || visibility == "private"
+    public Bool isProtected => visibility == "protected"
     
     /// Create a new InstanceDeclaration node.
     /// 

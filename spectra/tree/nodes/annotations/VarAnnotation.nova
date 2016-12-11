@@ -35,7 +35,7 @@ class VarAnnotation extends Annotation {
     ///           be parsed.
     /// return:   The parsed VarAnnotation node, if successful; null otherwise.
     public static parse(String type, String parameters, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VarAnnotation => null {
-        if (type.equals("Var") && parameters.count == 0) {
+        if (type == "Var" && parameters.count == 0) {
             var node = new VarAnnotation(parent, location)
             
             return node

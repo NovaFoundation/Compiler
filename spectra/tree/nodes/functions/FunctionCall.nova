@@ -141,7 +141,7 @@ class FunctionCall extends Variable {
     
     /// Search for the declaration of the constructor if the function call is 'this(...)'
     searchThisDeclaration() => false {
-        if (name.equals("this") && !isAccessed) {
+        if (name == "this" && !isAccessed) {
             var constructor = parentClass.constructors.firstWhere({ true })
             
             if (constructor) {

@@ -35,7 +35,7 @@ class ImmutableAnnotation extends Annotation {
     ///           be parsed.
     /// return:   The parsed ImmutableAnnotation node, if successful; null otherwise.
     public static parse(String type, String parameters, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ImmutableAnnotation => null {
-        if (type.equals("Immutable") && parameters.count == 0) {
+        if (type == "Immutable" && parameters.count == 0) {
             var node = new ImmutableAnnotation(parent, location)
             
             return node

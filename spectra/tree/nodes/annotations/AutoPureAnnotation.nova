@@ -35,7 +35,7 @@ class AutoPureAnnotation extends Annotation {
     ///           be parsed.
     /// return:   The parsed AutoPureAnnotation node, if successful; null otherwise.
     public static parse(String type, String parameters, Node parent = null, Location location = Location.INVALID, Bool require = true) -> AutoPureAnnotation => null {
-        if (type.equals("AutoPure") && parameters.count == 0) {
+        if (type == "AutoPure" && parameters.count == 0) {
             var node = new AutoPureAnnotation(parent, location)
             
             return node

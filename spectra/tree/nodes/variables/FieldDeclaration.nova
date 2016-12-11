@@ -52,7 +52,7 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
             var accessorOperator = input[accessorIndex] == '<' ? "<=>" : "=>"
             
             accessorValue = input.substring(accessorIndex + accessorOperator.count).trim()
-            twoWay = accessorOperator.equals("<=>")
+            twoWay = accessorOperator == "<=>"
             input = input.substring(end: accessorIndex).trim()
         } else {
             var initializationValueIndex = input.indexOf('=')

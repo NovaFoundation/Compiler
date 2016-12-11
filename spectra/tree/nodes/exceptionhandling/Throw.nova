@@ -45,12 +45,12 @@ class Throw extends ExceptionHandler {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Throw => null {
         var soft = false
         
-        if (input.nextWord().equals("softly")) {
+        if (input.nextWord() == "softly") {
             soft = true
             input = input.substring("softly ".count).trim()
         }
         
-        if (input.nextWord().equals("throw")) {
+        if (input.nextWord() == "throw") {
             var node = new Throw(parent, location)
             node.soft = soft
             

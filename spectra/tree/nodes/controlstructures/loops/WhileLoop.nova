@@ -44,7 +44,7 @@ class WhileLoop extends Loop {
     ///           be parsed.
     /// return:   The parsed WhileLoop node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> WhileLoop => null {
-        if (input.nextWord().equals("while")) {
+        if (input.nextWord() == "while") {
             var node = new WhileLoop(parent, location)
             
             var contents = input.substring("while".count).trim()

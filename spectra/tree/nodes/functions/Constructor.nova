@@ -41,7 +41,7 @@ class Constructor extends BodyFunction {
         var function = BodyFunction.parse(input, parent, location, require)
         
         if (function) {
-            if (function.name.equals("construct")) {
+            if (function.name == "construct") {
                 var node = new Constructor(parent, location)
                 
                 node = (Constructor)function.cloneTo(node)

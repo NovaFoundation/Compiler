@@ -73,7 +73,7 @@ class Instantiation extends FunctionCall {
     ///           be parsed.
     /// return:   The parsed Instantiation node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Instantiation => null {
-        if (input.nextWord().equals("new")) {
+        if (input.nextWord() == "new") {
             var node = new Instantiation(parent, location)
             
             var callString = input.substring("new".count + 1).trim()
@@ -84,7 +84,7 @@ class Instantiation extends FunctionCall {
                 var clazz = parent.parentFile.getImportedClass(className)
                 
                 if (clazz) {
-                    FunctionDeclaration constructor = clazz.functions.firstWhere({ _.name.equals("construct") })
+                    FunctionDeclaration constructor = clazz.functions.firstWhere({ _.name == "construct" })
                     
                     if (constructor) {
                         var parameters = callString.substring(parenthesisIndex)

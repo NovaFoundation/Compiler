@@ -39,7 +39,7 @@ class ArrayBracketOverload extends Node {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayBracketOverload {
         var bracketIndex = input.indexOf('[')
         
-        if (bracketIndex > 0 && input.substring(end: bracketIndex).trim().equals("this")) {
+        if (bracketIndex > 0 && input.substring(end: bracketIndex).trim() == "this") {
             var end = input.findEndingMatch(bracketIndex, '[', ']')
             
             if (end > bracketIndex) {

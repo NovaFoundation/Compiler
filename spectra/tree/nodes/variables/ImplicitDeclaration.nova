@@ -42,7 +42,7 @@ class ImplicitDeclaration extends LocalDeclaration {
     ///           be parsed.
     /// return:   The parsed ImplicitDeclaration node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ImplicitDeclaration {
-        if (input.nextWord().equals("var")) {
+        if (input.nextWord() == "var") {
             var values = input.splitValues()
             
             if (values.count == 2) {
