@@ -57,7 +57,7 @@ class Package extends Node {
             node.location = packageLocation
             
             if (node.validateLocation() && node.validateAlias()) {
-                filesMap.put(node.location, filesMap.get(node.location) ?: new NovaFile[])
+                filesMap.add(node.location, filesMap.get(node.location) ?: new NovaFile[])
                 filesMap[node.location].add(parent.parentFile)
                 
                 return node
