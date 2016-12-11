@@ -25,6 +25,8 @@ class SyntaxTree {
     
     visible Spectra compiler
     
+    NovaFile[][] fileGroups
+    
     public construct(Spectra compiler, Program root) {
         pendingAnnotations = new Stack()
         parents = new Stack()
@@ -34,11 +36,34 @@ class SyntaxTree {
         this.compiler = compiler
         this.root = root
         
+        fileGroups = new NovaFile[][]
+        fileGroups.add(root.files)
+        
         root.tree = this
     }
     
+    // var tempL(NovaFile file)
+    
+    public processFiles(func(NovaFile)) {
+        // this.tempL = func
+        
+        // let requests = new AsyncResult[]
+        
+        // fileGroups.forEach(files -> {
+        //     requests.add(Async.request({
+        //         files.forEach(file -> {
+        //             tempL(file)
+        //         })
+        //     }))
+        // })
+        
+        // requests.forEach({ _.waitForCompletion() })
+        
+        root.files.forEach(func)
+    }
+    
     public formTree() {
-        root.files.forEach((file, i) -> {
+        processFiles(file -> {
             var statements = file.source.getStatements(parents)
             
             parents.push(file)
