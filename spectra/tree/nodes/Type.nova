@@ -13,6 +13,9 @@ import "spectra/util/CompilerStringFunctions"
 [AutoFinal]
 class Type {
     visible Bool isGeneric => false
+    visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(name) })
+    
+    visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
     
     visible var Int arrayDimensions = 0
     
@@ -34,7 +37,7 @@ class Type {
                 var param = node.getGenericParameter(parent)
                 
                 if (param) {
-                    node = node.cloneTo(new GenericType())
+                    node = new GenericType(node, param)
                 }
             }
             
@@ -43,7 +46,7 @@ class Type {
     }
     
     getGenericParameter(Node parent) -> GenericParameter => null {
-        if (parent.parentFunction != null) {
+        if (parent.parentFunction) {
             let param = parent.parentFunction.genericParameters.firstWhere({ _.type.name.equals(name) })
             
             if (param) {
@@ -108,6 +111,10 @@ class Type {
             }
         }
     }
+    
+    public isValid(Node parent) =>
+        isPrimitiveType ||
+        parent.parentFile.imports.any({ _.className.equals(name) })
     
     public writeArray() =>
         "[]".repeat(arrayDimensions)
