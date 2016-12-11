@@ -51,6 +51,7 @@ class Annotation extends Node {
                     node = OverrideAnnotation.parse(type, parameters, parent, location, require)
                     node = NativeAnnotation.parse(type, parameters, parent, location, require)
                     node = TargetAnnotation.parse(type, parameters, parent, location, require)
+                    node = AutoFinalAnnotation.parse(type, parameters, parent, location, require)
                 }
                 
                 return node
