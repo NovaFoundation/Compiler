@@ -31,9 +31,7 @@ class Value extends Node {
     
     public ClassDeclaration typeClass => parentFile.imports.firstWhere({ _.className.equals(type.name) })?.classDeclaration
     
-    visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
-    
-    visible Bool isPrimitiveType => PRIMITIVE_TYPES.any({ _.equals(type.name) })
+    visible Bool isPrimitiveType => type.isPrimitiveType
     
     /// Create a new Value node.
     /// 
@@ -112,10 +110,10 @@ class Value extends Node {
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
     
     public parseType(String input) =>
-        input && (type = Type.parse(input))
+        input && (type = Type.parse(input, this))
     
     public validateTypes() -> Bool {
-        if (type && !isPrimitiveType && !parentFile.imports.any({ _.className.equals(type.name) })) {
+        if (type && !type.isValid(this)) {
             invalidTypeError(throwException: false)
             
             return false
