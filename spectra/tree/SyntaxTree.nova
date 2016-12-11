@@ -47,7 +47,7 @@ class SyntaxTree {
     public processFiles(func(NovaFile)) {
         // this.tempL = func
         
-        // let requests = new AsyncResult[]
+        // let requests = new Task[]
         
         // fileGroups.forEach(files -> {
         //     requests.add(Async.request({
