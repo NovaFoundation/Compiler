@@ -60,7 +60,7 @@ class ArrayInstantiation extends Instantiation {
                 } else {
                     node.declaration = new VariableDeclaration(parent, location)
                     node.declaration.name = type
-                    node.declaration.type = new Type(type)
+                    node.declaration.type = Type.parse(type, node)
                     
                     return node
                 }
