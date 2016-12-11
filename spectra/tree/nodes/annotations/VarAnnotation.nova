@@ -1,0 +1,48 @@
+package "spectra/tree/nodes/annotations"
+
+import "spectra/tree/nodes/Node"
+import "spectra/util/Location"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @Annotation extension that represents
+/// 
+/// author: Braden Steffaniak
+class VarAnnotation extends Annotation {
+    /// Create a new VarAnnotation node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the VarAnnotation node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    /// Parse the given input into a VarAnnotation node. If the input cannot be parsed
+    /// into a VarAnnotation node, null is returned.
+    /// 
+    /// #exampleInputs:
+    ///     Example inputs:
+    ///     * 
+    ///     * 
+    ///     * 
+    /// 
+    /// input:    The input string to parse into a VarAnnotation instance.
+    /// parent:   The parent of the VarAnnotation node.
+    /// location: The location of the input text in the source file.
+    /// require:  Whether or not to throw a syntax error if the input could not
+    ///           be parsed.
+    /// return:   The parsed VarAnnotation node, if successful; null otherwise.
+    public static parse(String type, String parameters, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VarAnnotation {
+        if (type.equals("Var") && parameters.count == 0) {
+            var node = new VarAnnotation(parent, location)
+            
+            return node
+        }
+        
+        return null
+    }
+    
+    public writeNova() => "[Var]"
+}
