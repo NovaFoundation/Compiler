@@ -5,10 +5,26 @@ import "spectra/tree/nodes/Node"
 import "spectra/tree/nodes/Value"
 import "spectra/tree/nodes/Type"
 
+[AutoFinal]
 class GenericType extends Type {
     visible Bool isGeneric => true
+    visible Bool isPrimitiveType => false
     
-    public construct(String name = null) {
-        super(name)
+    visible var GenericParameter parameter
+    
+    public construct(String name = null) => super(name)
+    
+    public construct(Type type, GenericParameter parameter) {
+        type.cloneTo(this)
+        
+        this.parameter = parameter
+    }
+    
+    public isValid(Node parent) => true
+    
+    public cloneTo(GenericType other) => other {
+        super.cloneTo(other)
+        
+        other.parameter = parameter
     }
 }
