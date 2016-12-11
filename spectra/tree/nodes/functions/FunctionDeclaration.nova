@@ -77,7 +77,7 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
                 if (!node.isStatic) {
                     node.objectReference = new Parameter(node.parameterList)
                     node.objectReference.name = "this"
-                    node.objectReference.type = Type.parse(node.parentClass.name)
+                    node.objectReference.type = node.parentClass.type
                 }
                 
                 return node
