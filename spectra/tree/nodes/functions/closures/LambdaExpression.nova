@@ -149,7 +149,7 @@ class LambdaExpression extends Value implements CallableFunction {
     }
     
     public parseParameters(String parameters, Bool require = true) =>
-        parameters == null ||
+        !parameters ||
         CallableFunction.super.parseParameters(parameters, require)
     
     /// @CallableFunction.parseParameter override that allows typeless parameters. 
