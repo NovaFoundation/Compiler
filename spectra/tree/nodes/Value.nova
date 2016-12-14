@@ -104,21 +104,17 @@ class Value extends Node {
         return node
     }
     
-    
-    
     public static parse(PlaceholderValue placeholder, Bool require = true) =>
         parse(placeholder.value, placeholder.parent, placeholder.location, require)
     
     public parseType(String input) =>
         input && (type = Type.parse(input, this))
     
-    public validateTypes() -> Bool {
+    public validateTypes() => true {
         if (type && !type.isValid(this)) {
             invalidTypeError(throwException: false)
             
             return false
-        } else {
-            return true
         }
     }
     
