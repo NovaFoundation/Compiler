@@ -16,10 +16,6 @@ import "spectra/util/CompilerStringFunctions"
 class FunctionDeclaration extends InstanceDeclaration implements CallableFunction, GenericCompatible {
     visible FunctionDeclaration parentFunction => this
     
-    visible GenericParameter[] genericParameters <=> genericParameters
-    
-    visible ParameterList parameterList <=> parameterList
-    
     visible Parameter objectReference
     
     /// Create a new FunctionDeclaration node.
@@ -39,9 +35,7 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
             return objectReference
         }
         
-        var parameter = parameters.firstWhere({ _.name.equals(name) })
-        
-        if (parameter) {
+        if (let parameter = parameters.firstWhere({ _.name.equals(name) })) {
             return parameter
         }
         
@@ -64,16 +58,14 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     ///           be parsed.
     /// return:   The parsed FunctionDeclaration node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> FunctionDeclaration => null {
-        var signature  = findSignature(input)
-        var parameters = findParameters(input)
-        var returnType = findReturnType(input)
-        
-        if (signature && parameters && returnType) {
+        if ((let signature  = findSignature(input)) &&
+            (let parameters = findParameters(input)) &&
+            (let returnType = findReturnType(input))) {
             var node = new FunctionDeclaration(parent, location)
             
             if (node.parseSignature(signature, require) &&
                 node.parseParameters(parameters, require) &&
-                (returnType.count == 0 || node.parseType(returnType))) {
+                node.parseType(returnType)) {
                 if (!node.isStatic) {
                     node.objectReference = new Parameter(node.parameterList)
                     node.objectReference.name = "this"
@@ -89,15 +81,10 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
         }
     }
     
-    static findSignature(String input) -> String {
-        var start = input.indexOf('(')
-        
-        if (start < 0) {
-            return null
-        }
-        
-        return input.substring(end: start).trim()
-    }
+    static findSignature(String input) =>
+        (let start = input.indexOf('(')) >= 0 ?
+            input.substring(end: start).trim() :
+            null
     
     static findReturnType(String input) -> String {
         var start = input.indexOf('(')
@@ -149,6 +136,9 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
                 return parseModifier(word)
             }
         }, false)
+    
+    public parseType(String input) =>
+        input.count == 0 || super.parseType(input)
     
     public parsePlaceholders() =>
         parameters.all({ _.parsePlaceholders() }, false) &
