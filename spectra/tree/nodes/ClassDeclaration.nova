@@ -43,14 +43,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     public FunctionDeclaration[] functions = new FunctionDeclaration[]
     
     //[Immutable]
-    public ImmutableArray<Constructor> constructors {
-        get {
-            //[Immutable]
-            return functions.filter({ _.class.isOfType(Constructor) }).toImmutable()
-        }
-        
-        no set
-    }
+    public ImmutableArray<Constructor> constructors => functions.filter({ _.class.isOfType(Constructor) }).toImmutable()
     
     visible ArrayBracketOverload arrayBracketOverload
     
@@ -85,15 +78,11 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         super.addChild(child)
     }
     
-    public replace(Node toReplace, Node replacement) -> Bool {
-        if (toReplace.class.isOfType(FieldDeclaration)) {
-            return fields.replace((FieldDeclaration)toReplace, (FieldDeclaration)replacement)
-        } else if (toReplace.class.isOfType(FunctionDeclaration)) {
-            return functions.replace((FunctionDeclaration)toReplace, (FunctionDeclaration)replacement)
-        } else {
-            return false
-        }
-    }
+    public replace(Node toReplace, Node replacement) -> Bool =>
+        toReplace.class.isOfType(FieldDeclaration) &&
+            fields.replace((FieldDeclaration)toReplace, (FieldDeclaration)replacement) ||
+        toReplace.class.isOfType(FunctionDeclaration) &&
+            functions.replace((FunctionDeclaration)toReplace, (FunctionDeclaration)replacement)
     
     public findCompatibleFunctions(String name, Value[] argumentTypes = null) =>
         functions.filter(func -> {
