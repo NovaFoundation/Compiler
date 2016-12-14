@@ -3,6 +3,7 @@ package "spectra/tree/nodes/variables"
 import "spectra/tree/nodes/Node"
 import "spectra/tree/nodes/Value"
 import "spectra/tree/nodes/PlaceholderValue"
+import "spectra/tree/nodes/functions/BodyFunction"
 import "spectra/tree/nodes/operations/Assignable"
 import "spectra/SyntaxErrorException"
 import "spectra/util/Location"
@@ -23,6 +24,10 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+    }
+    
+    public generateTemporaryScopeNode() -> Node {
+        return new BodyFunction(this)
     }
     
     /// Parse the given input into a FieldDeclaration node. If the input cannot be parsed
