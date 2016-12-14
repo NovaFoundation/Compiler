@@ -6,6 +6,8 @@ import "spectra/util/Location"
 import "spectra/tree/nodes/Node"
 import "spectra/tree/nodes/Scope"
 import "spectra/tree/nodes/Value"
+import "spectra/tree/nodes/variables/LocalDeclaration"
+import "spectra/tree/nodes/variables/VariableDeclaration"
 import "spectra/tree/nodes/controlstructures/ControlStructure"
 
 import "spectra/util/CompilerStringFunctions"
@@ -16,7 +18,7 @@ import "spectra/util/CompilerStringFunctions"
 /// since: 
 /// version: 
 class ForEachLoop extends Loop {
-    visible String variableName
+    visible LocalDeclaration variable
     visible Value iterator
     
     /// Create a new ForEachLoop node.
@@ -27,6 +29,14 @@ class ForEachLoop extends Loop {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+    }
+    
+    public findVariableDeclaration(String name, Bool searchAncestors = true) -> VariableDeclaration {
+        if (variable.name == name) {
+            return variable
+        }
+        
+        return super.findVariableDeclaration(name, searchAncestors)
     }
     
     /// Parse the given input into a ForEachLoop node. If the input cannot be parsed
@@ -45,7 +55,7 @@ class ForEachLoop extends Loop {
     ///           be parsed.
     /// return:   The parsed ForEachLoop node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ForEachLoop => null {
-        if (input.nextWord().equals("for")) {
+        if (input.nextWord() == "for") {
             var node = new ForEachLoop(parent, location)
             
             var contents = input.substring("for".count).trim()
@@ -79,14 +89,20 @@ class ForEachLoop extends Loop {
         iterator = Value.parse(input, this)
         
         if (!iterator) {
-            // return false
+            return false
         }
     }
     
     parseVariable(String input) => true {
-        this.variableName = input
+        if (input.isIdentifier) {
+            variable = new LocalDeclaration(this)
+            variable.name = input
+            variable.type = iterator.type // needs to be the generic argument
+        } else {
+            return false
+        }
     }
     
     public writeNova() =>
-        "for (#variableName in #iterator) #scope.toNova()"
+        "for (#variable.name in #iterator.toNova()) #scope.toNova()"
 }
