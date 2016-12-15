@@ -11,6 +11,7 @@ import "spectra/util/CompilerStringFunctions"
 /// author: Braden Steffaniak
 /// since: 
 /// version: 
+[AutoFinal]
 class Skeleton extends Node {
     /// Create a new Skeleton node.
     /// 
@@ -39,7 +40,7 @@ class Skeleton extends Node {
     /// return:   The parsed Skeleton node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Skeleton => null {
         if (false) {
-            var node = new Skeleton(parent, location)
+            let node = new Skeleton(parent, location)
             
             
             
