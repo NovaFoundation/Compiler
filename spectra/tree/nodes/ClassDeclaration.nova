@@ -62,12 +62,12 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     
     public addChild(Node child) {
         if (child.class.isOfType(FieldDeclaration)) {
-            fields.add((FieldDeclaration)child)
+            fields.add(child)
         } else if (child.class.isOfType(FunctionDeclaration)) {
-            functions.add((FunctionDeclaration)child)
+            functions.add(child)
         } else if (child.class.isOfType(ArrayBracketOverload)) {
             if (!arrayBracketOverload) {
-                arrayBracketOverload = (ArrayBracketOverload)child
+                arrayBracketOverload = child
             } else {
                 SyntaxErrorException("Array bracket overload already declared for class '#location'", child)
             }
