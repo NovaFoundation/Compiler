@@ -36,7 +36,7 @@ class LambdaExpression extends Value implements CallableFunction {
     visible FunctionDeclaration inferredFunctionDeclaration {
         get {
             ClassDeclaration reference = parentFunctionCall.referenceClass
-            var similar = reference.functions.filter({ _.name.equals(parentFunctionCall.name) })
+            var similar = reference?.functions.filter({ _.name.equals(parentFunctionCall.name) })
             
             return null
         }
