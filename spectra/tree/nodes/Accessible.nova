@@ -319,43 +319,35 @@ interface Accessible {
         return n.parentClass
     }
     
-    public static parse(String input, Node parent = null, Bool require = true) -> Accessible {
+    public static parse(String input, Node parent = null, Bool require = true) -> Accessible => null {
         var node = Value.parse(input, parent, require: require)
         
-        if (node.class.isOfType(Accessible)) {
-            return (Accessible)node
-        } else {
+        if (!node.class.isOfType(Accessible)) {
             softly throw new InvalidParseException("Could not parse Accessible '#input', received '#node'")
-            
-            return null
+        } else {
+            return (Accessible)node
         }
     }
     
-    public static parseDotAccess(String input, Node parent, Bool require = true) -> Node {
-        var fragments = input.splitAtDotOperator()
-        
-        if (fragments) {    
-            var root    = parse(fragments.first, parent, require: require)
-            var current = root
-            
-            if (current) {
+    public static parseDotAccess(String input, Node parent, Bool require = true) -> Node => null {
+        if (let fragments = input.splitAtDotOperator()) {
+            if (let root = parse(fragments.first, parent, require: require)) {
+                var current = root
+                
                 if (fragments.skip(1).all({
-                    var accessed = parse(_, parent: (Node)current, require: require)
-                    
-                    if (accessed) {
+                    if (let accessed = parse(_, parent: (Node)current, require: require)) {
                         current.accessedNode = accessed
+                        current = accessed
                         
                         return true
+                    } else {
+                        return false
                     }
-                    
-                    return false
                 })) {
                     return root
                 }
             }
         }
-        
-        return null
     }
     
     public cloneTo(Accessible other) => other {
