@@ -103,7 +103,6 @@ interface Accessible {
      */
     public Bool isAccessed => accessingNode != null
     public Bool doesAccess => accessedNode != null
-    public Bool canAccess => false//((Value)this).parent instanceof Parameter || ((Value)this).getAncestorWithScope()
     
     /**
      * Get the next accessed node that is of the given class type.
