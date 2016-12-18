@@ -26,9 +26,7 @@ interface Accessible {
      * 
      * @return The next node that is accessed by the specified node.
      */
-    public Accessible accessedNode => null {
-        set {}
-    }
+    public Accessible accessedNode
     
     public Accessible returnedNode {
         get {
