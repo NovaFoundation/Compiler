@@ -3,10 +3,29 @@ package "spectra/tree/nodes/annotations"
 import "nova/datastruct/HashMap"
 import "nova/datastruct/ImmutableHashMap"
 
+import "spectra/tree/nodes/Node"
+
 trait Modifier {
     visible static immutable HashMap<String, Class> MODIFIERS
+    
+    visible String aliasUsed
     
     static {
         
     }
+    
+    public apply(Node to, String alias) => true {
+        if (to != ((Annotation)this).parent) {
+            if (onAppliedAsModifier(to, false)) {
+                to.addAnnotation((Annotation)this)
+                
+                aliasUsed = alias
+            } else {
+                return false
+            }
+        }
+    }
+    
+    public onAppliedAsModifier(Node toNode, Bool throwError = true) =>
+        ((Annotation)this).onApplied(toNode, throwError)
 }
