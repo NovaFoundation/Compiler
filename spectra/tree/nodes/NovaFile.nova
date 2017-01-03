@@ -54,7 +54,7 @@ class NovaFile extends Node {
         "nova/Object",
         "nova/String",
         "nova/System",
-        "nova/Class",
+        "nova/meta/Class",
     ]
     
     public construct(File file, Node parent = null, Location location = Location.INVALID) {
