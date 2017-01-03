@@ -64,6 +64,8 @@ class SyntaxTree {
     
     public formTree() {
         processFiles(file -> {
+            Console.log("Forming tree for file '#file'")
+            
             var statements = file.source.getStatements(parents)
             
             parents.push(file)
@@ -144,6 +146,8 @@ class SyntaxTree {
     
     public validateTypes() {
         root.files.forEach(file -> {
+            Console.log("Validating types for file '#file'")
+            
             if (!file.classes.all({ _.validateTypes() }, false)) {
                 Console.writeLine("Invalid types in file '#file'")
             }
@@ -154,6 +158,8 @@ class SyntaxTree {
     
     public parseStatements() {
         root.files.forEach(file -> {
+            Console.log("Parsing placeholders for file '#file'")
+            
             if (!file.classes.all({
                 try {
                     return _.parsePlaceholders()
