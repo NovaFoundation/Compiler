@@ -8,7 +8,7 @@ import "spectra/tree/nodes/Type"
 
 import "spectra/util/CompilerStringFunctions"
 
-interface GenericCompatible {
+trait GenericCompatible {
     visible GenericParameter[] genericParameters
     
     public parseGenericParameters(String input, Bool requireWholeString = false) => true {

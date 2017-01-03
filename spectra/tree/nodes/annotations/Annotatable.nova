@@ -3,7 +3,7 @@ package "spectra/tree/nodes/annotations"
 /**
  * @author    Braden Steffaniak
  */
-public interface Annotatable {
+public trait Annotatable {
     visible Annotation[] annotations
     
     public addAnnotation(Annotation annotation)

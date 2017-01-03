@@ -13,7 +13,7 @@ import "spectra/SyntaxMessage"
 
 import "spectra/util/CompilerStringFunctions"
 
-interface CallableFunction extends GenericCompatible {
+trait CallableFunction extends GenericCompatible {
     visible ParameterList parameterList
     visible Parameter[] parameters => parameterList.parameters
     

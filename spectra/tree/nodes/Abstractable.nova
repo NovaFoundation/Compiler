@@ -1,6 +1,6 @@
 package "spectra/tree/nodes"
 
-interface Abstractable {
+trait Abstractable {
     public Bool isAbstract => false {
         set {}
     }

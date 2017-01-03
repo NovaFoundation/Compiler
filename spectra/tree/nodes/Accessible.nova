@@ -10,7 +10,7 @@ import "spectra/tree/nodes/functions/FunctionCall"
 
 import "spectra/util/CompilerStringFunctions"
 
-interface Accessible {
+trait Accessible {
     public Bool safeNavigation
     
     /**

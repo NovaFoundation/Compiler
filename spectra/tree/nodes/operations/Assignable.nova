@@ -3,7 +3,7 @@ package "spectra/tree/nodes/operations"
 import "spectra/tree/nodes/Value"
 import "spectra/tree/nodes/variables/VariableDeclaration"
 
-interface Assignable {
+trait Assignable {
     public onAssigned(Value value) {}
     public onAssignedTo(VariableDeclaration declaration) {}
 }

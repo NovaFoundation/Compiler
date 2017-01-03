@@ -3,7 +3,7 @@ package "spectra/tree/nodes/annotations"
 import "nova/datastruct/HashMap"
 import "nova/datastruct/ImmutableHashMap"
 
-interface Modifier {
+trait Modifier {
     visible static immutable HashMap<String, Class> MODIFIERS
     
     static {
