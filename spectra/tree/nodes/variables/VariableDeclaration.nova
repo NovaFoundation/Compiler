@@ -56,9 +56,7 @@ class VariableDeclaration extends Identifier {
         return null
     }
     
-    public parseModifier(String modifier) -> Bool {
-        return false
-    }
+    public parseModifier(String modifier) => false//Modifier.MODIFIERS[modifier]?.functions.apply(this, modifier)
     
     public parseModifiers(String modifiers) =>
         parseModifiers(modifiers.split(/\s+/))
