@@ -85,22 +85,22 @@ class ForEachLoop extends Loop {
         }
     }
     
-    parseIterator(String input) => true {
-        iterator = Value.parse(input, this)
-        
-        if (!iterator) {
-            return false
-        }
-    }
+    parseIterator(String input) =>
+        (iterator = Value.parse(input, parent)) != null
     
-    parseVariable(String input) => true {
+    parseVariable(String input) => variable != null {
         if (input.isIdentifier) {
             variable = new LocalDeclaration(this)
             variable.name = input
             variable.type = iterator.type // needs to be the generic argument
-        } else {
-            return false
         }
+    }
+    
+    public cloneTo(ForEachLoop other) => other {
+        super.cloneTo(other)
+        
+        other.variable = variable
+        other.iterator = iterator
     }
     
     public writeNova() =>
