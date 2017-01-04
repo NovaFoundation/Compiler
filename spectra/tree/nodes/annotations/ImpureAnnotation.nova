@@ -42,5 +42,5 @@ class ImpureAnnotation extends Annotation implements Modifier {
         }
     }
     
-    public writeNova() => "[Impure]"
+    public writeNova() => aliasUsed ?: "[Impure]"
 }

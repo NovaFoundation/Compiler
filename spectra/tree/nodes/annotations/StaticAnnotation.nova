@@ -42,5 +42,5 @@ class StaticAnnotation extends Annotation implements Modifier {
         }
     }
     
-    public writeNova() => "[Static]"
+    public writeNova() => aliasUsed ?: "[Static]"
 }

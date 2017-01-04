@@ -42,5 +42,5 @@ class PrivateAnnotation extends Annotation implements VisibilityModifier {
         }
     }
     
-    public writeNova() => "[Private]"
+    public writeNova() => aliasUsed ?: "[Private]"
 }

@@ -42,5 +42,5 @@ class FinalAnnotation extends Annotation implements Modifier {
         }
     }
     
-    public writeNova() => "[Final]"
+    public writeNova() => aliasUsed ?: "[Final]"
 }

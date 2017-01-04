@@ -42,5 +42,5 @@ class PublicAnnotation extends Annotation implements VisibilityModifier {
         }
     }
     
-    public writeNova() => "[Public]"
+    public writeNova() => aliasUsed ?: "[Public]"
 }

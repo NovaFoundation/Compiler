@@ -42,5 +42,5 @@ class VarAnnotation extends Annotation implements Modifier {
         }
     }
     
-    public writeNova() => "[Var]"
+    public writeNova() => aliasUsed ?: "[Var]"
 }
