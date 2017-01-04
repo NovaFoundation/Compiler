@@ -41,4 +41,6 @@ trait Modifier {
     
     public onAppliedAsModifier(Node toNode, Bool throwError = true) =>
         ((Annotation)this).onApplied(toNode, throwError)
+    
+    public writeNova() => aliasUsed
 }
