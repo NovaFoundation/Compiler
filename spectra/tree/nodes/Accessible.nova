@@ -10,7 +10,7 @@ import "spectra/tree/nodes/functions/FunctionCall"
 
 import "spectra/util/CompilerStringFunctions"
 
-trait Accessible {
+trait Accessible extends Value {
     public Bool safeNavigation
     
     /**
@@ -46,16 +46,12 @@ trait Accessible {
     
     public Accessible accessingNode {
         get {
-            var n = (Node)this
-            
-            if (n.parent.class.isOfType(Accessible)) {
-                return (Accessible)n.parent
+            if (parent.class.isOfType(Accessible)) {
+                return (Accessible)parent
             }
             
-            /*Node n = (Node)this
-            
-            if (canAccess && n.parent.class.isOfType(Accessible) && !n.parent.class.isOfType(VariableDeclaration) && !n.parent.containsScope) {
-                Accessible id = (Accessible)n.parent
+            /*if (canAccess && parent.class.isOfType(Accessible) && !parent.class.isOfType(VariableDeclaration) && !parent.containsScope) {
+                let id = (Accessible)parent
                 
                 if (!skipPriority && id instanceof Priority) {
                     Priority priority = (Priority)id
@@ -72,7 +68,7 @@ trait Accessible {
                 
                 if (id instanceof TernaryOperation && ((TernaryOperation) id).isDecoding()) {
                     
-                } else if (id.isDecodingAccessedNode(n) || id.accessedNode == this) {
+                } else if (id.isDecodingAccessedNode(this) || id.accessedNode == this) {
                     return id
                 }
             }*/
@@ -86,10 +82,10 @@ trait Accessible {
     visible ClassDeclaration referenceClass {
         get {
             if (isAccessed) {
-                return ((Value)accessingNode).typeClass
+                return accessingNode.typeClass
             }
             
-            return ((Node)this).parentClass
+            return parentClass
         }
         
         no set
@@ -134,7 +130,7 @@ trait Accessible {
     public getNextAccessingOfType(Class[] types, Bool opposite) -> Accessible {
         Accessible current = accessingNode
         
-        while (current && SyntaxUtils.checkTypes(types, ((Object)current).class) == opposite) {
+        while (current && SyntaxUtils.checkTypes(types, current.class) == opposite) {
             current = current.accessingNode
         }
         
@@ -172,11 +168,11 @@ trait Accessible {
         Accessible previous = null
         Accessible current  = this
         
-        if (inclusive && SyntaxUtils.checkTypes(types, ((Object)current).class) != opposite) {
+        if (inclusive && SyntaxUtils.checkTypes(types, current.class) != opposite) {
             return current
         }
         
-        while (current && SyntaxUtils.checkTypes(types, ((Object)current).class) != opposite) {
+        while (current && SyntaxUtils.checkTypes(types, current.class) != opposite) {
             previous = current
             current  = current.accessingNode
         }
@@ -190,7 +186,7 @@ trait Accessible {
         Accessible current  = this
         
         while (current) {
-            if (SyntaxUtils.checkTypes(types, ((Object)current).class) != opposite) {
+            if (SyntaxUtils.checkTypes(types, current.class) != opposite) {
                 previous = current
             }
             
@@ -295,25 +291,17 @@ trait Accessible {
      * @return The Node that represents the calling Identifier.
      */
     public getReferenceNode(Bool requireAccessingNode = false, Bool skipPriority = false) -> Accessible {
-        Value n = null//(Value)this
-        
         Accessible accessing = accessingNode//(skipPriority)
         
         if (accessing || requireAccessingNode) {
             return accessing
         }
         
-        /*MethodDeclaration methodDeclaration = n.parentMethod
-        
-        if (methodDeclaration) {
-            ObjectReference id = n.getObjectReferenceNode(methodDeclaration)
-            
-            if (id) {
-                return id
-            }
+        /*if (let methodDeclaration = parentMethod && let id = getObjectReferenceNode(methodDeclaration)) {
+            return id
         }*/
         
-        return n.parentClass
+        return parentClass
     }
     
     public static parse(String input, Node parent = null, Bool require = true) -> Accessible => null {
@@ -332,7 +320,7 @@ trait Accessible {
                 var current = root
                 
                 if (fragments.skip(1).all({
-                    if (let accessed = parse(_, parent: (Node)current, require: require)) {
+                    if (let accessed = parse(_, parent: current, require: require)) {
                         current.accessedNode = accessed
                         current = accessed
                         
@@ -353,5 +341,5 @@ trait Accessible {
     }
     
     public writeAccessedNodes() -> String =>
-        doesAccess ? ".#{((Node)accessedNode).toNova()}#{accessedNode.writeAccessedNodes()}" : ""
+        doesAccess ? ".#{accessedNode.toNova()}#{accessedNode.writeAccessedNodes()}" : ""
 }
