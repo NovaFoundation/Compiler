@@ -42,5 +42,5 @@ class ImmutableAnnotation extends Annotation implements Modifier {
         }
     }
     
-    public writeNova() => aliasUsed ?: "[Immutable]"
+    public writeNova() => Modifier.super.writeNova() ?: super.writeNova()
 }
