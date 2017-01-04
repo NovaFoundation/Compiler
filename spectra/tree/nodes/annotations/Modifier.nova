@@ -6,12 +6,25 @@ import "nova/datastruct/ImmutableHashMap"
 import "spectra/tree/nodes/Node"
 
 trait Modifier {
-    visible static immutable HashMap<String, Class> MODIFIERS
+    visible static final immutable HashMap<String, Class> MODIFIERS
     
     visible String aliasUsed
     
     static {
+        let modifiers = new HashMap<String, Class>()
         
+        for (class in Class.ALL.filter({ _.isOfType(Modifier) })) {
+            let alias = "x"
+            // for (alias in class.fieldMap.aliases) {
+            //     if (modifiers[alias]) {
+            //         // error error werrororr! already contains key
+            //     } else {
+                    modifiers[alias] = class
+            //     }
+            // }
+        }
+        
+        MODIFIERS = modifiers.toImmutable()
     }
     
     public apply(Node to, String alias) => true {
