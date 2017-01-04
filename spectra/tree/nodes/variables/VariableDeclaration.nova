@@ -4,6 +4,8 @@ import "spectra/tree/nodes/Node"
 import "spectra/SyntaxErrorException"
 import "spectra/util/Location"
 import "spectra/tree/nodes/Identifier"
+import "spectra/tree/nodes/annotations/Modifier"
+import "spectra/tree/nodes/annotations/Annotation.AnnotationFunctionMap"
 
 import "spectra/util/CompilerStringFunctions"
 
@@ -56,13 +58,15 @@ class VariableDeclaration extends Identifier {
         return null
     }
     
-    public parseModifier(String modifier) => false /*{
+    public parseModifier(String modifier) => false {
         if (let c = Modifier.MODIFIERS[modifier]) {
-            let m = (Modifier)((AnnotationFunctionMap)c.functions).construct(this)
+            // let map = (AnnotationFunctionMap)c.functionMap
             
-            return m.apply(this, modifier)
+            // let m = (Modifier)((AnnotationFunctionMap)c.functionMap).construct(this)
+            
+            // return m.apply(this, modifier)
         }
-    }*/
+    }
     
     public parseModifiers(String modifiers) =>
         parseModifiers(modifiers.split(/\s+/))
