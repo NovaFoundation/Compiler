@@ -28,9 +28,9 @@ trait Modifier extends Annotation {
     }
     
     public apply(Node to, String alias) => true {
-        if (to != ((Annotation)this).parent) {
+        if (to != this.parent) {
             if (onAppliedAsModifier(to, false)) {
-                to.addAnnotation((Annotation)this)
+                to.addAnnotation(this)
                 
                 aliasUsed = alias
             } else {
@@ -40,7 +40,7 @@ trait Modifier extends Annotation {
     }
     
     public onAppliedAsModifier(Node toNode, Bool throwError = true) =>
-        ((Annotation)this).onApplied(toNode, throwError)
+        onApplied(toNode, throwError)
     
     public writeNova() => aliasUsed ?: super.writeNova()
 }
