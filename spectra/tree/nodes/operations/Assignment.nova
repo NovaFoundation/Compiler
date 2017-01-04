@@ -16,7 +16,7 @@ class Assignment extends Operation {
     public Value assigned <=> operands[0]
     public Value assignment <=> operands[1]
     
-    public Node scopeConsumer => assignment.returnedNode
+    public Node scopeConsumer => assignment ? assignment.returnedNode : null
     
     visible Type type => assignment.returnedNode.type
     
