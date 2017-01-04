@@ -41,6 +41,4 @@ class AutoPureAnnotation extends Annotation {
             return node
         }
     }
-    
-    public writeNova() => "[AutoPure]"
 }

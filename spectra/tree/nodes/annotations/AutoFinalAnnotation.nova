@@ -41,6 +41,4 @@ class AutoFinalAnnotation extends Annotation {
             return node
         }
     }
-    
-    public writeNova() => "[AutoFinal]"
 }
