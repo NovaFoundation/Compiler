@@ -1,5 +1,5 @@
 package "spectra/tree/nodes/annotations"
 
-trait VisibilityModifier {
+trait VisibilityModifier implements Modifier {
     
 }
