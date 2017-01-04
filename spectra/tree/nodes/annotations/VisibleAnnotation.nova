@@ -42,5 +42,5 @@ class VisibleAnnotation extends Annotation implements VisibilityModifier {
         }
     }
     
-    public writeNova() => aliasUsed ?: "[Visible]"
+    public writeNova() => VisibilityModifier.super.writeNova() ?: super.writeNova()
 }
