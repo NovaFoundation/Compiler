@@ -54,5 +54,5 @@ class TargetAnnotation extends Annotation {
         }
     }
     
-    public writeNova() => "[Target #{opposite ? "not " : ""}" + "#{targets.join(" ")}]"
+    public writeNova() => "[#label #{opposite ? "not " : ""}" + "#{targets.join(" ")}]"
 }
