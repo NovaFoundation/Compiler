@@ -8,7 +8,7 @@ import "spectra/util/CompilerStringFunctions"
 /// @Annotation extension that represents
 /// 
 /// author: Braden Steffaniak
-class StaticAnnotation extends Annotation {
+class StaticAnnotation extends Annotation implements Modifier {
     /// Create a new StaticAnnotation node.
     /// 
     /// #exampleInputs

@@ -8,7 +8,7 @@ import "spectra/util/CompilerStringFunctions"
 /// @Annotation extension that represents
 /// 
 /// author: Braden Steffaniak
-class OverrideAnnotation extends Annotation {
+class OverrideAnnotation extends Annotation implements Modifier {
     /// Create a new OverrideAnnotation node.
     /// 
     /// #exampleInputs

@@ -8,7 +8,7 @@ import "spectra/util/CompilerStringFunctions"
 /// @Annotation extension that represents
 /// 
 /// author: Braden Steffaniak
-class VarAnnotation extends Annotation {
+class VarAnnotation extends Annotation implements Modifier {
     /// Create a new VarAnnotation node.
     /// 
     /// #exampleInputs

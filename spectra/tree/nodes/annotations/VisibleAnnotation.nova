@@ -8,7 +8,7 @@ import "spectra/util/CompilerStringFunctions"
 /// @Annotation extension that represents
 /// 
 /// author: Braden Steffaniak
-class VisibleAnnotation extends Annotation {
+class VisibleAnnotation extends Annotation implements Modifier {
     /// Create a new VisibleAnnotation node.
     /// 
     /// #exampleInputs
