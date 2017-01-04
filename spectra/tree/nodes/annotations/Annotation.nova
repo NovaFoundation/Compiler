@@ -9,6 +9,11 @@ import "spectra/util/CompilerStringFunctions"
 ///
 /// author: Braden Steffaniak
 class Annotation extends Node {
+    visible String label =>
+        this.class.name.endsWith("Annotation") ?
+            this.class.name.trimEnd("Annotation".count) :
+            null
+    
     /// Create a new Annotation node.
     /// 
     /// #exampleInputs
@@ -73,4 +78,6 @@ class Annotation extends Node {
     public static getRemainingStatement(String input) => input.substring(input.findEndingMatch(0, '[', ']') + 1).trim()
     
     public onApplied(Node appliedTo, Bool throwError = true) => true
+    
+    public writeNova() => "[#{label}]"
 }
