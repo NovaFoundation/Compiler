@@ -41,6 +41,4 @@ class PublicAnnotation extends Annotation implements VisibilityModifier {
             return node
         }
     }
-    
-    public writeNova() => VisibilityModifier.super.writeNova() ?: super.writeNova()
 }

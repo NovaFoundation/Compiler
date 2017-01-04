@@ -41,6 +41,4 @@ class VarAnnotation extends Annotation implements Modifier {
             return node
         }
     }
-    
-    public writeNova() => Modifier.super.writeNova() ?: super.writeNova()
 }
