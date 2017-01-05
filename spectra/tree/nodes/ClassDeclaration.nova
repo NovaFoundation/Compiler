@@ -32,12 +32,8 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
             parentFile.packageDeclaration.location + "/" + name :
             name
     
-    public Bool isAbstract <=> isAbstract
-    
     public Type extendedClass
     public Type[] implementedInterfaces = new Type[0]
-    
-    visible GenericParameter[] genericParameters <=> genericParameters
     
     public FieldDeclaration[] fields = new FieldDeclaration[]
     public FunctionDeclaration[] functions = new FunctionDeclaration[]
@@ -58,6 +54,8 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+        
+        genericParameters = new GenericParameter[0]
     }
     
     public addChild(Node child) {
