@@ -128,7 +128,7 @@ class NovaFile extends Node {
     
     public addAutoImports() =>
         packageDeclaration.files?.filter({ _ != this }).forEach({
-            addImport(_.classDeclaration.location)
+            _.classes.filterNull().forEach({ addImport(_.location) })
         })
     
     public addImport(String location) -> Import {
