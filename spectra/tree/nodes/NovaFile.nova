@@ -23,6 +23,11 @@ class NovaFile extends Node {
     visible ClosureDeclaration[] closures = new ClosureDeclaration[]
     visible ClosureContext[] contexts = new ClosureContext[]
     
+    visible String fileLocation =>
+        packageDeclaration.location ?
+            packageDeclaration.location + "/" + name + ".nova" :
+            name + ".nova"
+    
     public ClassDeclaration classDeclaration => classes.firstWhere({ _.name.equals(name) })
     
     public ClassDeclaration[] classes
