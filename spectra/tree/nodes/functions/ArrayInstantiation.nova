@@ -69,12 +69,14 @@ class ArrayInstantiation extends Instantiation {
     }
     
     parseDimension(String dimension) => true {
-        var value = Value.parse(dimension, this)
-        
-        if (value) {
-            dimensions.add(value)
-        } else {
-            return false
+        if (dimension.count > 0) {
+            var value = Value.parse(dimension, this)
+            
+            if (value) {
+                dimensions.add(value)
+            } else {
+                return false
+            }
         }
     }
     
@@ -82,7 +84,9 @@ class ArrayInstantiation extends Instantiation {
         dimensions.all(parseDimension, false)
     
     public writeDimensions() =>
-        dimensions.map({ "[#{_.toNova()}]" }).join()
+        dimensions.count > 0 ?
+            dimensions.map({ "[#{_.toNova()}]" }).join() :
+            "[]"
     
     public writeNova() => "new #writeType()" + writeDimensions()
 }
