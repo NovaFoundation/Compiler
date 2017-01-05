@@ -784,18 +784,18 @@ extension CompilerStringFunctions {
         return Bounds.EMPTY
     }
     
-    public searchGenericType(String this, Int start, Bool backwards = true) -> String {
+    public searchGenericType(String this, Int start, Bool backwards = true) -> String => null {
         if (backwards) {
-            var stack = 0
-            var index = 0
+            var Int stack = 0
+            var Int index = 0
             
             for (var i = start; i >= 0; i--) {
-                String c = "#chars[i]"
+                let c = chars[i]
                 
-                if (c == ">") {
+                if (c == '>') {
                     index = stack == 0 ? i : index
                     stack++
-                } else if (c == "<") {
+                } else if (c == '<') {
                     stack--
                 }
                 
@@ -810,8 +810,6 @@ extension CompilerStringFunctions {
         } else {
             throw new UnimplementedOperationException("forwards checking not implemented yet... Looks like its time to do that.")
         }
-        
-        return null
     }
     
     /**
