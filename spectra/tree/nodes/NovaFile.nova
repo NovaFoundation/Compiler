@@ -103,6 +103,7 @@ class NovaFile extends Node {
         until (node) {
             node = ClassDeclaration.parse(input, this, location, require)
             node = TraitDeclaration.parse(input, this, location, require)
+            node = InterfaceDeclaration.parse(input, this, location, require)
             node = Import.parse(input, this, location, require)
             node = Package.parse(input, this, location, require)
         }
@@ -120,24 +121,27 @@ class NovaFile extends Node {
             imports.firstWhere({ _.className.equals(name) })?.classDeclaration
     
     addDefaultImports() {
-        for (i in DEFAULT_IMPORTS) {
-            if (i.count > 0) {
-                addImport(i).used = true
+        for (import in DEFAULT_IMPORTS) {
+            addImport(import, false).used = true
+        }
+    }
+    
+    public addAutoImports() {
+        for (file in packageDeclaration.files.filter({ _ != this })) {
+            for (class in file.classes.filterNull()) {
+                addImport(class.location, false)
             }
         }
     }
     
-    public addAutoImports() =>
-        packageDeclaration.files?.filter({ _ != this }).forEach({
-            _.classes.filterNull().forEach({ addImport(_.location) })
-        })
-    
-    public addImport(String location) -> Import {
+    public addImport(String location, Bool userAdded = true) -> Import {
         if (containsImport(location)) return null
         
-        var node = Import.parse("import \"#location\"", this, this.location)
+        let node = Import.parse("import \"#location\"", this, this.location)
         
         if (node) {
+            node.userAdded = userAdded
+            
             imports.add(node)
         } else {
             SyntaxMessage.error("Invalid import location '#location'", this)
@@ -152,7 +156,7 @@ class NovaFile extends Node {
     
     public toNova() =>
         (packageDeclaration.toNova() + "\n\n" +
-        imports.filter({ !_.isDefault }).map({ _.toNova() + "\n" }).join() + "\n" +
+        imports.filter({ _.userAdded }).map({ _.toNova() + "\n" }).join() + "\n" +
         classes.map({ _.toNova() }).join("\n")).trim()
     
     public toString() => "#{name}.nova"
