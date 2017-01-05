@@ -137,8 +137,6 @@ class SyntaxTree {
             if (parents.peek() != file) {
                 SyntaxMessage.error("Missing ending brace", file, throwException: false)
             }
-            
-            file.addAutoImports()
         })
         
         phase = 2
@@ -146,6 +144,8 @@ class SyntaxTree {
     
     public validateTypes() {
         root.files.forEach(file => {
+            file.addAutoImports()
+            
             Console.log("Validating types for file '#file'")
             
             if (!file.classes.all({ _.validateTypes() }, false)) {
