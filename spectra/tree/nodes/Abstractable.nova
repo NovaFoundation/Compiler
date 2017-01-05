@@ -1,9 +1,7 @@
 package "spectra/tree/nodes"
 
 trait Abstractable {
-    public Bool isAbstract => false {
-        set {}
-    }
+    public Bool isAbstract
     
     public writeAbstract() => isAbstract ? "abstract " : ""
     
