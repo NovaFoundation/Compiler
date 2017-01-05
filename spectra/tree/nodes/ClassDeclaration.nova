@@ -106,6 +106,22 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         return super.findVariableDeclaration(name, searchAncestors)
     }
     
+    public findFunction(String name, Bool searchAncestors = true) -> FunctionDeclaration => null {
+        FunctionDeclaration function
+        
+        if (function = functions.firstWhere({ _.name.equals(name) })) {
+            return function
+        }
+        
+        if (searchAncestors) {
+            if (function = extendedClass?.getClass(parentFile)?.findFunction(name)) {
+                return function
+            } else if (function = implementedInterfaces.firstNonNull({ _.getClass(parentFile)?.findFunction(name) })) {
+                return function
+            }
+        }
+    }
+    
     public parseStatement(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Node {
         Node node = null
         
