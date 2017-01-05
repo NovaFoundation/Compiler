@@ -102,6 +102,7 @@ class NovaFile extends Node {
         
         until (node) {
             node = ClassDeclaration.parse(input, this, location, require)
+            node = TraitDeclaration.parse(input, this, location, require)
             node = Import.parse(input, this, location, require)
             node = Package.parse(input, this, location, require)
         }
