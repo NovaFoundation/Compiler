@@ -100,7 +100,7 @@ class Spectra {
             let compileTimer = new Timer().start()
             let fileTimer = new Timer().start()
             
-            files = parentDir.getChildFiles(true).filter({ _.extension.toLowerCase().equals(".nova") }).map({ new NovaFile(_) })
+            files = parentDir.getChildFiles(true).filter({ _.extension.toLowerCase() == ".nova" }).map({ new NovaFile(_) })
             
             fileTimer.stop()
             
@@ -121,8 +121,8 @@ class Spectra {
                 
                 let separator = "============================="
                 Console.writeLine(tree.root.files
-                    //.filter({ _.name.equals("String") })
-                    .map(file -> { "#separator #file.name #separator\n#{file.toNova().formatIndentation()}" }).join("\n"))
+                    //.filter({ _.name == "String" })
+                    .map(file => { "#separator #file.name #separator\n#{file.toNova().formatIndentation()}" }).join("\n"))
                 
                 outputTimer.stop()
             } catch (SyntaxErrorException e) {
