@@ -163,4 +163,13 @@ class FieldDeclaration extends InstanceDeclaration implements Assignable {
             ""
     
     public writeNova() => super.writeNova() + writeInitializationValue() + writeAccessorValue()
+    
+    public cloneTo(FieldDeclaration other) => other {
+        super.cloneTo(other)
+        
+        other.initializationValue = initializationValue
+        other.accessorValue = accessorValue
+        other.isTwoWayAccessor = isTwoWayAccessor
+        other.extraDeclarations = extraDeclarations
+    }
 }
