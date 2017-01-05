@@ -7,7 +7,7 @@ import "spectra/util/Location"
 import "spectra/util/CompilerStringFunctions"
 
 class Import extends Node {
-    public Bool used
+    public Bool used, userAdded
     
     public String alias, importLocation
     
@@ -24,7 +24,7 @@ class Import extends Node {
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
         
-        
+        userAdded = true
     }
     
     public getClassLocation(Bool aliased = false) =>
