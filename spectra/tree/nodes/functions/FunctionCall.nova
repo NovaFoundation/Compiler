@@ -153,12 +153,8 @@ class FunctionCall extends Variable {
     }
     
     searchFunctionDeclaration() => false {
-        var ref = referenceClass
-        
-        if (ref) {
-            var func = ref.functions.firstWhere({ _.name.equals(name) })
-            
-            if (func) {
+        if (let ref = referenceClass) {
+            if (let func = ref.findFunction(name)) {
                 declaration = func
                 
                 return true
