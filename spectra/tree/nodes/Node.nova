@@ -259,7 +259,7 @@ class Node implements Annotatable {
     /// cloneChildren: Whether or not to clone the children of the
     ///                Node as well.
     /// return:        A clone of the specified Node.
-    public clone(Node parent = null, Location location = Location.INVALID, Bool cloneChildren = true) =>
+    public clone(Node parent = parent, Location location = location, Bool cloneChildren = true) =>
         cloneTo(new Node(parent, location))
     
     public cloneTo(Node other) => other {
