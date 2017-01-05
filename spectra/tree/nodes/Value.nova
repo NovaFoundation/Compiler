@@ -29,7 +29,10 @@ class Value extends Node {
     
     public Bool isAssignable => this.class.isOfType(Assignable)
     
-    public ClassDeclaration typeClass => parentFile.imports.firstWhere({ _.className?.equals(type?.name) })?.classDeclaration
+    public ClassDeclaration typeClass =>
+        type ?
+            parentFile.imports.firstWhere(x => { x.className && x.className == type.name })?.classDeclaration :
+            null
     
     visible Bool isPrimitiveType => type.isPrimitiveType
     
