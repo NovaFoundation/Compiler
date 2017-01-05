@@ -37,10 +37,10 @@ class Node implements Annotatable {
             var info = ""
             
             if (parentFile) {
-                info += "in file #parentFile.name"
+                info += "#parentFile.file.location"
             }
             if (location) {
-                info += (info.count > 0 ? " " : "") + "on line number #location.lineNumber at offset #location.offset"
+                info += (info.count > 0 ? ":" : "at location ") + "#location.lineNumber:#location.offset"
             }
             
             return info
