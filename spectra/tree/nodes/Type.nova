@@ -2,7 +2,6 @@ package "spectra/tree/nodes"
 
 import "spectra/SyntaxMessage"
 import "spectra/InvalidParseException"
-import "spectra/tree/nodes/Node"
 import "spectra/util/Location"
 import "spectra/tree/nodes/generics/GenericType"
 import "spectra/tree/nodes/generics/GenericArgument"
@@ -17,19 +16,24 @@ class Type {
     
     visible static String[] PRIMITIVE_TYPES = ["Bool", "Byte", "Short", "Int", "Long", "Float", "Double", "Char"]
     
-    visible var Int arrayDimensions = 0
-    
     visible var GenericArgument[] genericArguments = new GenericArgument[0]
+    
+    public var String name
+    
+    public getClass(NovaFile file) =>
+        file.imports.firstWhere({ _.className == name })?.classDeclaration
     
     public construct(public var String name = null) {}
     
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Type => null {
+        if (let array = ArrayType.parse(input, parent, location, require)) {
+            return array
+        }
+        
         var node = new Type(input)
         
         if (!node.parseGenericArguments(input, parent, location)) {
             softly throw new InvalidParseException("Unable to parse generic arguments for type '#input'", parent)
-        } else if (!node.parseArray(parent, require)) {
-            softly throw new InvalidParseException("Unable to parse array dimensions for type '#input'", parent)
         } else if (!node.name.isIdentifier) {
             softly throw new InvalidParseException("Invalid type '#input'", parent)
         } else {
@@ -80,44 +84,9 @@ class Type {
         }
     }
     
-    parseArray(Node parent, Bool require) => true {
-        var start = name.indexOf('[')
-        
-        if (start > 0) {
-            let first = start
-            var end = name.findEndingMatch(start, '[', ']')
-            var last = end
-            
-            while (end > start) {
-                last = end
-                
-                arrayDimensions++
-                
-                if (name.substring(start + 1, end).trim().count > 0) {
-                    SyntaxMessage.errorIf("Type declaration '#name' cannot have contents within the array brackets", parent, condition: require)
-                    
-                    return false
-                }
-                
-                start = name.indexOf('[', end + 1)
-                
-                if (start < 0) break
-                
-                end = name.findEndingMatch(start, '[', ']')
-            }
-            
-            if (last > first) {
-                name = (name.substring(0, first) + name.substring(last + 1)).trim()
-            }
-        }
-    }
-    
     public isValid(Node parent) =>
         isPrimitiveType ||
         parent.parentFile.imports.any({ _.className.equals(name) })
-    
-    public writeArray() =>
-        "[]".repeat(arrayDimensions)
     
     public writeGenericParameters() =>
         genericArguments.count > 0 ?
@@ -126,11 +95,10 @@ class Type {
     
     public toString() => writeNova()
     public toNova() => writeNova()
-    public writeNova() => "#name" + writeArray() + writeGenericParameters()
+    public writeNova() => "#name" + writeGenericParameters()
     
     public cloneTo(Type other) => other {
         other.name = name
-        other.arrayDimensions = arrayDimensions
         other.genericArguments = genericArguments
     }
 }
