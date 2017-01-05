@@ -79,17 +79,10 @@ trait Accessible extends Value {
         no set
     }
     
-    visible ClassDeclaration referenceClass {
-        get {
-            if (isAccessed) {
-                return accessingNode.typeClass
-            }
-            
-            return parentClass
-        }
-        
-        no set
-    }
+    visible ClassDeclaration referenceClass =>
+        isAccessed ?
+            accessingNode.typeClass :
+            parentClass
     
     /**
      * Get whether this specified identifier node was accessed through
