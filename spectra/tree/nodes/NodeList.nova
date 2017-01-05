@@ -72,7 +72,7 @@ class NodeList<E extends Node> extends Node {
     /// clone:     Whether or not to clone the children and not remove
     ///            them from the previous owner.
     public inheritChildren(NodeList oldParent, Bool clone = false) =>
-        oldParent.children.forEach(child -> {
+        oldParent.children.forEach(child => {
             addChild(clone ? child.clone(this, child.location, true) : child)
         })
     
@@ -87,5 +87,5 @@ class NodeList<E extends Node> extends Node {
         return node
     }
     
-    public slaughterChildren() => children.forEach(head -> head.detach())
+    public slaughterChildren() => children.forEach(head => head.detach())
 }

@@ -92,7 +92,7 @@ class LambdaExpression extends Value implements CallableFunction {
     ///           be parsed.
     /// return:   The parsed LambdaExpression node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> LambdaExpression => null {
-        var arrowIndex = input.findOperatorOnTopLevel("->", start: 1)
+        var arrowIndex = input.findOperatorOnTopLevel("=>", start: 1)
         
         String parameters = null
         

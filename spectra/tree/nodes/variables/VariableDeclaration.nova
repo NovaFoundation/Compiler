@@ -72,10 +72,10 @@ class VariableDeclaration extends Identifier {
         parseModifiers(modifiers.split(/\s+/))
     
     public parseModifiers(String[] modifiers) =>
-        modifiers.all(x -> { x.count == 0 || parseModifier(x) })
+        modifiers.all(x => { x.count == 0 || parseModifier(x) })
     
     public getInvalidModifiers(String modifiers) =>
-        modifiers.split(/\s+/).filter(x -> { x.count > 0 && !parseModifier(x) })
+        modifiers.split(/\s+/).filter(x => { x.count > 0 && !parseModifier(x) })
     
     public writeModifiers() => ""
     

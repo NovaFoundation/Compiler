@@ -60,7 +60,7 @@ class Operation extends Value {
     }
     
     parseOperators(String input, Int[] matches) =>
-        matches.forEach(start -> {
+        matches.forEach(start => {
             var end = input.nextIndexThatDoesntContain(Operator.OPERATOR_SYMBOLS, start: start)
             var operator = new Operator(this, location, input.substring(start, end))
             
@@ -83,7 +83,7 @@ class Operation extends Value {
         
         var prev = 0
         
-        if (!matches.all(start -> {
+        if (!matches.all(start => {
             if (prev > start) {
                 softly throw new InvalidParseException("Invalid operator location in operation '#input' (current operands: #operands)", this)
                 

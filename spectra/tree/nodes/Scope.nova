@@ -101,7 +101,7 @@ class Scope extends NodeList {
     }
     
     public parsePlaceholders() =>
-        children.all(child -> {
+        children.all(child => {
             if (child.class.isOfType(PlaceholderValue)) {
                 var placeholder = (PlaceholderValue)child
                 

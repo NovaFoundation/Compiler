@@ -49,9 +49,9 @@ class SyntaxTree {
         
         // let requests = new Task[]
         
-        // fileGroups.forEach(files -> {
+        // fileGroups.forEach(files => {
         //     requests.add(Async.request({
-        //         files.forEach(file -> {
+        //         files.forEach(file => {
         //             tempL(file)
         //         })
         //     }))
@@ -63,7 +63,7 @@ class SyntaxTree {
     }
     
     public formTree() {
-        processFiles(file -> {
+        processFiles(file => {
             Console.log("Forming tree for file '#file'")
             
             var statements = file.source.getStatements(parents)
@@ -145,7 +145,7 @@ class SyntaxTree {
     }
     
     public validateTypes() {
-        root.files.forEach(file -> {
+        root.files.forEach(file => {
             Console.log("Validating types for file '#file'")
             
             if (!file.classes.all({ _.validateTypes() }, false)) {
@@ -157,7 +157,7 @@ class SyntaxTree {
     }
     
     public parseStatements() {
-        root.files.forEach(file -> {
+        root.files.forEach(file => {
             Console.log("Parsing placeholders for file '#file'")
             
             if (!file.classes.all({

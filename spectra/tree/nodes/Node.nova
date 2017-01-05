@@ -279,7 +279,7 @@ class Node implements Annotatable {
     public parsePlaceholderChildren(NodeList<PlaceholderValue> nodes) -> Bool =>
         scopeConsumer && scopeConsumer != this ?
             scopeConsumer.parsePlaceholderChildren(nodes) :
-            nodes.children.all(child -> {
+            nodes.children.all(child => {
                 if (scope) {
                     scope.addChild(child)
                     

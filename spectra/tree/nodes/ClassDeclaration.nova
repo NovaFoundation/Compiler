@@ -85,7 +85,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
             functions.replace((FunctionDeclaration)toReplace, (FunctionDeclaration)replacement)
     
     public findCompatibleFunctions(String name, Value[] argumentTypes = null) =>
-        functions.filter(func -> {
+        functions.filter(func => {
             func.name.equals(name) &&
             (!argumentTypes || func.compatibleArguments(argumentTypes))
         })

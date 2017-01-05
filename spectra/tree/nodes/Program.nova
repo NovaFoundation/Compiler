@@ -28,7 +28,7 @@ class Program extends NodeList<NovaFile> {
     }
     
     public getClassDeclaration(String location) =>
-        files.firstWhere(f -> { f.classDeclaration && f.classDeclaration.location.equals(location) })?.classDeclaration
+        files.firstWhere(f => { f.classDeclaration && f.classDeclaration.location.equals(location) })?.classDeclaration
     
     public toString() => "Program"
 }

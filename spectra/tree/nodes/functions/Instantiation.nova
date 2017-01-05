@@ -39,7 +39,7 @@ class Instantiation extends FunctionCall {
     }
     
     public parsePlaceholderChildren(NodeList<PlaceholderValue> nodes) -> Bool =>
-        nodes.children.all(placeholder -> {
+        nodes.children.all(placeholder => {
             addChild(placeholder)
             
             var property = parseStatement(placeholder.value, objectNotation)

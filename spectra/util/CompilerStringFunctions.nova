@@ -300,7 +300,7 @@ extension CompilerStringFunctions {
      *      is returned instead.
      */
     public findEndingQuote(String this, Int start, Int direction = 1) =>
-        findEndingChar('"', start, direction, (str, c, i, dir) -> {
+        findEndingChar('"', start, direction, (str, c, i, dir) => {
             i += dir
             
             if (dir > 0 && i < str.count - 3 && str[i] == '#' && str[i + 1] == '{') {
@@ -438,7 +438,7 @@ extension CompilerStringFunctions {
     public findOperatorIndices(String this, String[] operators = Operator.BINARY_OPERATORS, Bool includeEdges = true) -> Int[] {
         let matches = new Int[0]
         System.overheadTimer.start()
-        operators.forEach(operator -> {
+        operators.forEach(operator => {
             Int index = 0
             
             while ((index = findStringOnTopLevel(operator, start: index)) >= 0) {   
@@ -836,7 +836,7 @@ extension CompilerStringFunctions {
         var sameLine = false
         var inParen  = false
         
-        matches.forEach(match -> {
+        matches.forEach(match => {
             let c = this.chars[match.start]
             
             if (c == '{' || c == '(') {
