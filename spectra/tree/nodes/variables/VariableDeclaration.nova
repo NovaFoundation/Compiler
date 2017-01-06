@@ -6,7 +6,7 @@ import "spectra/util/Location"
 import "spectra/tree/nodes/Identifier"
 import "spectra/tree/nodes/annotations/Modifier"
 import "spectra/tree/nodes/annotations/PureAnnotation"
-import "spectra/tree/nodes/annotations/Annotation.AnnotationFunctionMap"
+import "spectra/tree/nodes/annotations/PureAnnotation.PureAnnotationFunctionMap"
 
 import "spectra/util/CompilerStringFunctions"
 
@@ -59,10 +59,10 @@ class VariableDeclaration extends Identifier {
     
     public parseModifier(String modifier) => false {
         if (let c = Modifier.MODIFIERS[modifier]) {
-            let map = (AnnotationFunctionMap)c.functionMap
+            let map = (PureAnnotationFunctionMap)c.functionMap
             
-            let mod = new PureAnnotation()
-            mod.aliasUsed = modifier
+            let mod = map.construct()
+            mod.apply(this, modifier)
             
             let m = map.writeNova(mod)
             Console.log("Wrote #m")
