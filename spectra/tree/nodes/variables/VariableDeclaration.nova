@@ -5,6 +5,7 @@ import "spectra/SyntaxErrorException"
 import "spectra/util/Location"
 import "spectra/tree/nodes/Identifier"
 import "spectra/tree/nodes/annotations/Modifier"
+import "spectra/tree/nodes/annotations/PureAnnotation"
 import "spectra/tree/nodes/annotations/Annotation.AnnotationFunctionMap"
 
 import "spectra/util/CompilerStringFunctions"
@@ -42,7 +43,7 @@ class VariableDeclaration extends Identifier {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed VariableDeclaration node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration {
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration => null {
         var words = input.splitValues()
         
         if (words.count == 2) {
@@ -54,15 +55,17 @@ class VariableDeclaration extends Identifier {
                 return node
             }
         }
-        
-        return null
     }
     
     public parseModifier(String modifier) => false {
         if (let c = Modifier.MODIFIERS[modifier]) {
-            // let map = (AnnotationFunctionMap)c.functionMap
+            let map = (AnnotationFunctionMap)c.functionMap
             
-            // let m = (Modifier)((AnnotationFunctionMap)c.functionMap).construct(this)
+            let mod = new PureAnnotation()
+            mod.aliasUsed = modifier
+            
+            let m = map.writeNova(mod)
+            Console.log("Wrote #m")
             
             // return m.apply(this, modifier)
         }

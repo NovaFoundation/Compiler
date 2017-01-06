@@ -14,12 +14,12 @@ trait Modifier extends Annotation {
         let modifiers = new HashMap<String, Class>()
         
         for (class in Class.ALL.filter({ _.isOfType(Modifier) })) {
-            let alias = "x"
+            let alias = "pure"
             // for (alias in class.fieldMap.aliases) {
             //     if (modifiers[alias]) {
             //         // error error werrororr! already contains key
             //     } else {
-                    modifiers[alias] = class
+                    modifiers[alias] = PureAnnotation//class
             //     }
             // }
         }
