@@ -122,7 +122,7 @@ class Value extends Node {
         }
     }
     
-    public invalidTypeError(Type type = this.type, Bool throwException = true) =>
+    public invalidTypeError(Type type = type, Bool throwException = true) =>
         SyntaxMessage.error("Invalid type '#type'", this, throwException: throwException)
     
     public writeType() => "#type.toNova()"
