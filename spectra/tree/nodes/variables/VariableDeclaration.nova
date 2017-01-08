@@ -5,8 +5,7 @@ import "spectra/SyntaxErrorException"
 import "spectra/util/Location"
 import "spectra/tree/nodes/Identifier"
 import "spectra/tree/nodes/annotations/Modifier"
-import "spectra/tree/nodes/annotations/PureAnnotation"
-import "spectra/tree/nodes/annotations/PureAnnotation.PureAnnotationFunctionMap"
+import "spectra/tree/nodes/annotations/Modifier.ModifierFunctionMap"
 
 import "spectra/util/CompilerStringFunctions"
 
@@ -59,9 +58,9 @@ class VariableDeclaration extends Identifier {
     
     public parseModifier(String modifier) => false {
         if (let c = Modifier.MODIFIERS[modifier]) {
-            let map = (PureAnnotationFunctionMap)c.functionMap
+            let map = c.functionMap
             
-            let mod = map.construct()
+            let mod = map.default()
             mod.apply(this, modifier)
             
             let m = map.writeNova(mod)
