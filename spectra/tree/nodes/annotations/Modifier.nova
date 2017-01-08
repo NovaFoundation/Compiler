@@ -3,6 +3,7 @@ package "spectra/tree/nodes/annotations"
 import "nova/datastruct/HashMap"
 import "nova/datastruct/ImmutableHashMap"
 
+import "spectra/InvalidParseException"
 import "spectra/tree/nodes/Node"
 
 trait Modifier extends Annotation {
@@ -31,6 +32,10 @@ trait Modifier extends Annotation {
     }
     
     public apply(Node to, String alias) => true {
+        if (!aliases.contains(alias)) {
+            throw new InvalidParseException("Invalid modifier '#alias' given when expected " + aliases.map({ "'#_'" }).toEnglish("or"), this)
+        }
+        
         if (to != this.parent) {
             if (onAppliedAsModifier(to, false)) {
                 to.addAnnotation(this)
