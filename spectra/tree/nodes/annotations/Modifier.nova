@@ -8,7 +8,8 @@ import "spectra/tree/nodes/Node"
 trait Modifier extends Annotation {
     visible static final immutable HashMap<String, Class<Modifier>> MODIFIERS
     
-    visible String aliasUsed
+    visible static immutable String[] aliases => new String[0]
+    visible String alias
     
     public static default() -> Modifier => new PublicAnnotation()
     
@@ -16,12 +17,12 @@ trait Modifier extends Annotation {
         let modifiers = new HashMap<String, Class<Modifier>>()
         
         for (class in Class.ALL.filter({ _.isOfType(Modifier) })) {
-            let alias = "pure"
+            let alias = "public"
             // for (alias in class.fieldMap.aliases) {
             //     if (modifiers[alias]) {
             //         // error error werrororr! already contains key
             //     } else {
-                    modifiers[alias] = PureAnnotation//class
+                    modifiers[alias] = PublicAnnotation//class
             //     }
             // }
         }
@@ -34,7 +35,7 @@ trait Modifier extends Annotation {
             if (onAppliedAsModifier(to, false)) {
                 to.addAnnotation(this)
                 
-                aliasUsed = alias
+                this.alias = alias
             } else {
                 return false
             }
@@ -44,5 +45,5 @@ trait Modifier extends Annotation {
     public onAppliedAsModifier(Node toNode, Bool throwError = true) =>
         onApplied(toNode, throwError)
     
-    public writeNova() => aliasUsed ?: super.writeNova()
+    public writeNova() => alias ?: super.writeNova()
 }
