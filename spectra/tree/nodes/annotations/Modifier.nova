@@ -6,12 +6,12 @@ import "nova/datastruct/ImmutableHashMap"
 import "spectra/tree/nodes/Node"
 
 trait Modifier extends Annotation {
-    visible static final immutable HashMap<String, Class> MODIFIERS
+    visible static final immutable HashMap<String, Class<Modifier>> MODIFIERS
     
     visible String aliasUsed
     
     static {
-        let modifiers = new HashMap<String, Class>()
+        let modifiers = new HashMap<String, Class<Modifier>>()
         
         for (class in Class.ALL.filter({ _.isOfType(Modifier) })) {
             let alias = "pure"
