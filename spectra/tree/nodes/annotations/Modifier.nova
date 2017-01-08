@@ -10,6 +10,8 @@ trait Modifier extends Annotation {
     
     visible String aliasUsed
     
+    public static default() -> Modifier => new PublicAnnotation()
+    
     static {
         let modifiers = new HashMap<String, Class<Modifier>>()
         
