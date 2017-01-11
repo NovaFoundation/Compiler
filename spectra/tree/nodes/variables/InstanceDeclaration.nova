@@ -61,19 +61,6 @@ class InstanceDeclaration extends VariableDeclaration {
         
         return null
     }
-    
-    [Override]
-    public parseModifier(String modifier) -> Bool {
-        if (super.parseModifier(modifier)) return true
-        
-        match (modifier)
-            case "public"    fallthrough
-            case "private"   fallthrough
-            case "visible"   fallthrough
-            case "protected" visibility = modifier
-            case "static"    isStatic   = true
-            default return false
-        return true
     }
     
     public cloneTo(InstanceDeclaration other) => other {
