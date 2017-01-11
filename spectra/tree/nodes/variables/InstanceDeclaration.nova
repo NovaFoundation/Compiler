@@ -54,8 +54,10 @@ class InstanceDeclaration extends VariableDeclaration {
         if (declaration) {
             let node = new InstanceDeclaration(parent, location)
             
-            if (node.parseModifiers(words.take(words.count - 2))) {
-                return (InstanceDeclaration)declaration.cloneTo(node)
+            declaration.cloneTo(node)
+            
+            if (node.parseModifiers(words.skipLast(2))) {
+                return node
             }
         }
     }
