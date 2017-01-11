@@ -293,7 +293,8 @@ class Node implements Annotatable {
     
     public writeAnnotations() =>
         annotations && annotations.count > 0 ?
-            annotations.map({ _.toNova() }).join(" ") + writeAnnotationSeparator() :
+            annotations.filter({ !_.isModifier }).map({ _.toNova() + writeAnnotationSeparator() }).join() +
+                annotations.filter({ _.isModifier }).map({ _.toNova() + " " }).join() :
             ""
     
     public toNova() -> String => writeAnnotations() + writeNova()
