@@ -178,7 +178,7 @@ class SyntaxTree {
     
     public static searchAnnotations(var String statement) -> AnnotationSearchResult {
         let result = new AnnotationSearchResult(statement)
-        var annotation = Annotation.parse(statement, require: false)
+        var annotation = Annotation.parse(input: statement, require: false)
         
         while (annotation && statement.count > 0) {
             statement = annotation.getRemainingStatement(statement)

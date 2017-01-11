@@ -14,6 +14,18 @@ class Annotation extends Node {
             this.class.name.trimEnd("Annotation".count) :
             null
     
+    final static immutable Class<Annotation>[] ANNOTATIONS
+    
+    static {
+        let array = new Class<Annotation>[]
+        
+        Class.ALL.filter({ _.isOfType(Annotation) }).forEach({
+            array.add(_)
+        })
+        
+        ANNOTATIONS = array.toImmutable()
+    }
+    
     visible Bool isModifier => this.class.isOfType(Modifier) && ((Modifier)this).alias
     
     /// Create a new Annotation node.
