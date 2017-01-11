@@ -60,13 +60,7 @@ class VariableDeclaration extends Identifier {
         if (let c = Modifier.MODIFIERS[modifier]) {
             let map = c.functionMap
             
-            let mod = map.default()
-            mod.apply(this, modifier)
-            
-            let m = map.writeNova(mod)
-            Console.log("Wrote #m")
-            
-            // return m.apply(this, modifier)
+            return map.default().apply(this, modifier)
         }
     }
     
