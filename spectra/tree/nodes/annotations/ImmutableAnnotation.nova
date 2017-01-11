@@ -9,6 +9,8 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class ImmutableAnnotation extends Annotation implements Modifier {
+    visible static immutable String[] aliases => ["immutable"]
+    
     /// Create a new ImmutableAnnotation node.
     /// 
     /// #exampleInputs

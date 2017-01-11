@@ -9,6 +9,8 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class PureAnnotation extends Annotation implements Modifier {
+    visible static immutable String[] aliases => ["pure"]
+    
     /// Create a new PureAnnotation node.
     /// 
     /// #exampleInputs

@@ -9,6 +9,8 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class ImpureAnnotation extends Annotation implements Modifier {
+    visible static immutable String[] aliases => ["impure"]
+    
     /// Create a new ImpureAnnotation node.
     /// 
     /// #exampleInputs

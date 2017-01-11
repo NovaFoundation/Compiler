@@ -9,6 +9,8 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class OverrideAnnotation extends Annotation implements Modifier {
+    visible static immutable String[] aliases => ["override"]
+    
     /// Create a new OverrideAnnotation node.
     /// 
     /// #exampleInputs

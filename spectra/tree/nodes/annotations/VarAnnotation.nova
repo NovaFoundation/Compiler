@@ -9,6 +9,8 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class VarAnnotation extends Annotation implements Modifier {
+    visible static immutable String[] aliases => ["var"]
+    
     /// Create a new VarAnnotation node.
     /// 
     /// #exampleInputs

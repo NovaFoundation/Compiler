@@ -9,6 +9,8 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class StaticAnnotation extends Annotation implements Modifier {
+    visible static immutable String[] aliases => ["static"]
+    
     /// Create a new StaticAnnotation node.
     /// 
     /// #exampleInputs
