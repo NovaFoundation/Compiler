@@ -38,7 +38,7 @@ trait Modifier extends Annotation {
             throw new InvalidParseException("Invalid modifier '#alias' given when expected " + aliases.map({ "'#_'" }).toEnglish("or"), this)
         }
         
-        if (to != this.parent) {
+        if (to != parent) {
             if (onAppliedAsModifier(to, false)) {
                 to.addAnnotation(this)
                 
