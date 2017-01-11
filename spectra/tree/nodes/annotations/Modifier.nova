@@ -4,6 +4,7 @@ import "nova/datastruct/HashMap"
 import "nova/datastruct/ImmutableHashMap"
 
 import "spectra/InvalidParseException"
+import "spectra/SyntaxErrorException"
 import "spectra/tree/nodes/Node"
 
 trait Modifier extends Annotation {
@@ -17,15 +18,16 @@ trait Modifier extends Annotation {
     static {
         let modifiers = new HashMap<String, Class<Modifier>>()
         
-        for (class in Class.ALL.filter({ _.isOfType(Modifier) })) {
-            let alias = "public"
-            // for (alias in class.fieldMap.aliases) {
-            //     if (modifiers[alias]) {
-            //         // error error werrororr! already contains key
-            //     } else {
-                    modifiers[alias] = PublicAnnotation//class
-            //     }
-            // }
+        for (class in Class.ALL.filter(x => { x.isOfType(Modifier) && !x.isInterface })) {
+            Class<Modifier> c = (Class)class
+            
+            for (alias in c.propertyMap.aliases()) {
+                if (modifiers[alias]) {
+                    throw new SyntaxErrorException("Redefinition of alias '#alias' in class #c")// error error werrororr! already contains key
+                } else {
+                    modifiers[alias] = c
+                }
+            }
         }
         
         MODIFIERS = modifiers.toImmutable()
