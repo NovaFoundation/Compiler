@@ -59,32 +59,15 @@ class Annotation extends Node {
             var end = input.findEndingMatch(0, '[', ']')
             
             if (end > 1) {
-                var node = null
                 var contents = input.substring(1, end).trim()
                 
                 var bounds = contents.nextWordBounds()
                 var type = contents.substring(bounds)
                 var parameters = contents.substring(bounds.end).trim()
                 
-                until (node) {
-                    node = OverrideAnnotation.parse(type, parameters, parent, location, require)
-                    node = NativeAnnotation.parse(type, parameters, parent, location, require)
-                    node = AbstractAnnotation.parse(type, parameters, parent, location, require)
-                    node = FinalAnnotation.parse(type, parameters, parent, location, require)
-                    node = PublicAnnotation.parse(type, parameters, parent, location, require)
-                    node = VisibleAnnotation.parse(type, parameters, parent, location, require)
-                    node = PrivateAnnotation.parse(type, parameters, parent, location, require)
-                    node = StaticAnnotation.parse(type, parameters, parent, location, require)
-                    node = ImmutableAnnotation.parse(type, parameters, parent, location, require)
-                    node = PureAnnotation.parse(type, parameters, parent, location, require)
-                    node = ImpureAnnotation.parse(type, parameters, parent, location, require)
-                    node = VarAnnotation.parse(type, parameters, parent, location, require)
-                    node = TargetAnnotation.parse(type, parameters, parent, location, require)
-                    node = AutoFinalAnnotation.parse(type, parameters, parent, location, require)
-                    node = AutoPureAnnotation.parse(type, parameters, parent, location, require)
-                }
-                
-                return node
+                return ANNOTATIONS.firstNonNull({
+                    _.functionMap.parse(type, parameters, parent, location, require)
+                })
             }
         }
     }
