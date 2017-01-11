@@ -78,5 +78,9 @@ class Annotation extends Node {
     
     public onApplied(Node appliedTo, Bool throwError = true) => true
     
+    public invalidApplication(Node toNode) {
+        throw new SyntaxErrorException("#this.class.location cannot be applied to #toNode.class.location", this)
+    }
+    
     public writeNova() => "[#{label}]"
 }
