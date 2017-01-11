@@ -12,7 +12,7 @@ trait Modifier extends Annotation {
     visible static immutable String[] aliases => new String[0]
     visible String alias
     
-    public static default() -> Modifier => new PublicAnnotation()
+    public static default() -> Modifier => null
     
     static {
         let modifiers = new HashMap<String, Class<Modifier>>()
