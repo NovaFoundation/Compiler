@@ -48,11 +48,12 @@ class InstanceDeclaration extends VariableDeclaration {
     /// return:   The parsed InstanceDeclaration node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> InstanceDeclaration {
         var words = input.splitValues()
+        let words = input.splitValues()
         
-        var declaration = VariableDeclaration.parse(words.takeLast(2).join(" "), parent, location, require)
+        let declaration = VariableDeclaration.parse(words.takeLast(2).join(" "), parent, location, require)
         
         if (declaration) {
-            var node = new InstanceDeclaration(parent, location)
+            let node = new InstanceDeclaration(parent, location)
             
             if (node.parseModifiers(words.take(words.count - 2))) {
                 return (InstanceDeclaration)declaration.cloneTo(node)
