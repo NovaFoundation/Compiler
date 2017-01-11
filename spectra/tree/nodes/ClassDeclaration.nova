@@ -285,10 +285,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
         functions.all({ _.parsePlaceholders() }, false)
     
     public writeHeader() =>
-        "#writeModifiers() #identifier #{name}#writeGenericParameters() #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
-    
-    public writeModifiers() =>
-        super.writeModifiers() + writeAbstract()
+        "#identifier #{name}#writeGenericParameters() #writeExtension() #writeImplementedInterfaces()".replace(/\s+/, " ").trim()
     
     public writeExtension() =>
         extendedClass ?

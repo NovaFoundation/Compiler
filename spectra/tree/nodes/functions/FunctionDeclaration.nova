@@ -150,7 +150,7 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     public writeReturnType() => type ? " -> #type" : ""
     
     public writeHeader() =>
-        "#writeModifiers() #name".replace(/\s+/, " ").trim() +
+        "#name".replace(/\s+/, " ").trim() +
         writeGenericParameters() +
         "#parameterList.toNova()" +
         writeReturnType()

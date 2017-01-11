@@ -76,10 +76,6 @@ class InstanceDeclaration extends VariableDeclaration {
         return true
     }
     
-    public writeVisibility() => visibility ? "#visibility" : ""
-    public writeStatic() => isStatic ? "static" : ""
-    public writeModifiers() => "#writeVisibility() #writeStatic() "
-    
     public cloneTo(InstanceDeclaration other) => other {
         super.cloneTo(other)
         

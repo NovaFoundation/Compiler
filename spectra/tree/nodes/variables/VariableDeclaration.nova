@@ -73,9 +73,7 @@ class VariableDeclaration extends Identifier {
     public getInvalidModifiers(String modifiers) =>
         modifiers.split(/\s+/).filter(x => { x.count > 0 && !parseModifier(x) })
     
-    public writeModifiers() => ""
-    
-    public writeNova() => "#writeModifiers() #writeType() #name".replace(/\s+/, " ").trim()
+    public writeNova() => "#writeType() #name".replace(/\s+/, " ").trim()
     
     public cloneTo(VariableDeclaration other) => other {
         super.cloneTo(other)
