@@ -11,6 +11,8 @@ import "spectra/util/CompilerStringFunctions"
 class NativeAnnotation extends Annotation implements Modifier {
     visible static immutable String[] aliases => ["native"]
     
+    public static default() -> Modifier => new NativeAnnotation()
+    
     /// Create a new NativeAnnotation node.
     /// 
     /// #exampleInputs

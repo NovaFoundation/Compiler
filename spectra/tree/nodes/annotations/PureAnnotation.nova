@@ -11,6 +11,8 @@ import "spectra/util/CompilerStringFunctions"
 class PureAnnotation extends Annotation implements Modifier {
     visible static immutable String[] aliases => ["pure"]
     
+    public static default() -> Modifier => new PureAnnotation()
+    
     /// Create a new PureAnnotation node.
     /// 
     /// #exampleInputs

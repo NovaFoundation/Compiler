@@ -11,6 +11,8 @@ import "spectra/util/CompilerStringFunctions"
 class AbstractAnnotation extends Annotation implements Modifier {
     visible static immutable String[] aliases => ["abstract"]
     
+    public static default() -> Modifier => new AbstractAnnotation()
+    
     /// Create a new AbstractAnnotation node.
     /// 
     /// #exampleInputs

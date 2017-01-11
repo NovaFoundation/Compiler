@@ -11,6 +11,8 @@ import "spectra/util/CompilerStringFunctions"
 class PrivateAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => ["private"]
     
+    public static default() -> Modifier => new PrivateAnnotation()
+    
     /// Create a new PrivateAnnotation node.
     /// 
     /// #exampleInputs

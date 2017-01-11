@@ -11,6 +11,8 @@ import "spectra/util/CompilerStringFunctions"
 class VisibleAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => ["visible"]
     
+    public static default() -> Modifier => new VisibleAnnotation()
+    
     /// Create a new VisibleAnnotation node.
     /// 
     /// #exampleInputs

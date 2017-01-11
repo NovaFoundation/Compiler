@@ -10,6 +10,7 @@ import "spectra/util/CompilerStringFunctions"
 /// author: Braden Steffaniak
 class PublicAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => new ImmutableArray<String>(["public"])
+    public static default() -> Modifier => new PublicAnnotation()
     
     /// Create a new PublicAnnotation node.
     /// 
