@@ -77,7 +77,7 @@ class Annotation extends Node {
     
     public static getRemainingStatement(String input) => input.substring(input.findEndingMatch(0, '[', ']') + 1).trim()
     
-    public onApplied(Node appliedTo, Bool throwError = true) => true
+    public onApplied(Node toNode, Bool throwError = true) => true
     
     public checkApplication(Node toNode, Bool throwError = true) => true {
         if (applicationTypes && !applicationTypes.any({ toNode.class.isOfType(_) })) {
