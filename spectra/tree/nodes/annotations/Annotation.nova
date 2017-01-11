@@ -1,5 +1,6 @@
 package "spectra/tree/nodes/annotations"
 
+import "spectra/SyntaxErrorException"
 import "spectra/tree/nodes/Node"
 import "spectra/util/Location"
 
@@ -77,6 +78,16 @@ class Annotation extends Node {
     public static getRemainingStatement(String input) => input.substring(input.findEndingMatch(0, '[', ']') + 1).trim()
     
     public onApplied(Node appliedTo, Bool throwError = true) => true
+    
+    public checkApplication(Node toNode, Bool throwError = true) => true {
+        if (applicationTypes && !applicationTypes.any({ toNode.class.isOfType(_) })) {
+            if (throwError) {
+                invalidApplication(toNode)
+            } else {
+                return false
+            }
+        }
+    }
     
     public invalidApplication(Node toNode) {
         throw new SyntaxErrorException("#this.class.location cannot be applied to #toNode.class.location", this)
