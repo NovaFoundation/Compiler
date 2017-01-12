@@ -74,7 +74,7 @@ class ImplicitDeclaration extends LocalDeclaration {
         }
     }
     
-    public writeType() => "var"
+    public writeType() => ""
     
     public cloneTo(ImplicitDeclaration other) => other {
         super.cloneTo(other)
