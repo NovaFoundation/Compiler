@@ -130,11 +130,9 @@ class FunctionDeclaration extends InstanceDeclaration implements CallableFunctio
     
     public parseSignature(String signature, Bool require) =>
         signature.splitValues().filterEmpty().all((word, index, words) => {
-            if (index == ((Array)words).count - 1) {
-                return parseName(word)
-            } else {
-                return parseModifier(word)
-            }
+            index == words.count - 1 ?
+                parseName(word) :
+                parseModifier(word)
         }, false)
     
     public parseType(String input) =>
