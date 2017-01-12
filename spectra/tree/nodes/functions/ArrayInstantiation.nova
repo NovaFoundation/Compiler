@@ -85,7 +85,7 @@ class ArrayInstantiation extends Instantiation {
                 return false
             }
         } else {
-            dimensions.add(null)
+            dimensions.add(new EmptyArrayBracket(this))
         }
     }
     
