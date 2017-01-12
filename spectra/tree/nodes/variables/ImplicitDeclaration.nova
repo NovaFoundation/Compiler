@@ -21,6 +21,8 @@ class ImplicitDeclaration extends LocalDeclaration {
     public Type type => implicitReference.type
     
     visible static immutable Class<Modifier>[] IMPLICIT_ANNOTATIONS = [VarAnnotation, FinalAnnotation]
+    visible static immutable String[] IMPLICIT_ANNOTATION_ALIASES = IMPLICIT_ANNOTATIONS.reduce((v, a) => (Array)v + a.propertyMap.aliases().toMutable(), new String[0])
+    
     /// Create a new ImplicitDeclaration node.
     /// 
     /// #exampleInputs
