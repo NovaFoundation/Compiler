@@ -2,6 +2,7 @@ package "spectra/tree/nodes/variables"
 
 import "spectra/tree/nodes/Node"
 import "spectra/SyntaxErrorException"
+import "spectra/InvalidParseException"
 import "spectra/util/Location"
 import "spectra/tree/nodes/Identifier"
 import "spectra/tree/nodes/annotations/Modifier"
@@ -68,6 +69,20 @@ class VariableDeclaration extends Identifier {
             
             return map.default().apply(this, modifier)
         }
+    }
+    
+    public parseModifiersAndGetRemaining(String[] words) -> String[] {
+        var Int i = 0
+        
+        for (word in words) {
+            if (!parseModifier(word)) {
+               break 
+            }
+            
+            i++
+        }
+        
+        return words.skip(i)
     }
     
     public parseModifiers(String modifiers) =>
