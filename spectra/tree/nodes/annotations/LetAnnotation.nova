@@ -1,8 +1,7 @@
 package "spectra/tree/nodes/annotations"
 
 import "spectra/tree/nodes/Node"
-import "spectra/tree/nodes/variables/LocalDeclaration"
-import "spectra/tree/nodes/variables/FieldDeclaration"
+import "spectra/tree/nodes/variables/VariableDeclaration"
 import "spectra/util/Location"
 
 import "spectra/util/CompilerStringFunctions"
@@ -14,7 +13,7 @@ class LetAnnotation extends FinalAnnotation {
     visible static immutable String[] aliases => ["let"]
     
     public static default() -> Modifier => new LetAnnotation()
-    visible static immutable Class<Node>[] applicationTypes => [LocalDeclaration, FieldDeclaration]
+    visible static immutable Class<Node>[] applicationTypes => [VariableDeclaration]
     
     /// Create a new LetAnnotation node.
     /// 
