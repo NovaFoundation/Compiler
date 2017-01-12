@@ -23,7 +23,7 @@ trait Modifier extends Annotation {
             
             for (alias in c.propertyMap.aliases()) {
                 if (modifiers[alias]) {
-                    throw new SyntaxErrorException("Redefinition of alias '#alias' in class #c")// error error werrororr! already contains key
+                    throw new SyntaxErrorException("Redefinition of alias '#alias' in class #c")
                 } else {
                     modifiers[alias] = c
                 }
