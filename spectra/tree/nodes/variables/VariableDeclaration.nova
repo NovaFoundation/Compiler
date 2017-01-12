@@ -45,13 +45,19 @@ class VariableDeclaration extends Identifier {
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> VariableDeclaration => null {
         var words = input.splitValues()
         
-        if (words.count == 2) {
+        if (words.count >= 2) {
             var node = new VariableDeclaration(parent, location)
             
-            node.name = words.last
+            words = node.parseModifiersAndGetRemaining(words)
             
-            if (node.name.isIdentifier && node.parseType(words.first)) {
-                return node
+            if (words.count != 2) {
+                softly throw new InvalidParseException("Variable declaration must contain a type", node)
+            } else {
+                node.name = words.last
+                
+                if (node.name.isIdentifier && node.parseType(words.first)) {
+                    return node
+                }
             }
         }
     }
