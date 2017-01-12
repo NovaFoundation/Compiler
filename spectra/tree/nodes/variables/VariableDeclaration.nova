@@ -63,14 +63,6 @@ class VariableDeclaration extends Identifier {
         }
     }
     
-    public parseModifier(String modifier) => false {
-        if (let c = Modifier.MODIFIERS[modifier]) {
-            let map = c.functionMap
-            
-            return map.default().apply(this, modifier)
-        }
-    }
-    
     public parseModifiersAndGetRemaining(String[] words) -> String[] {
         var Int i = 0
         
@@ -85,11 +77,19 @@ class VariableDeclaration extends Identifier {
         return words.skip(i)
     }
     
+    public parseModifier(String modifier) => false {
+        if (let c = Modifier.MODIFIERS[modifier]) {
+            let map = c.functionMap
+            
+            return map.default().apply(this, modifier)
+        }
+    }
+    
     public parseModifiers(String modifiers) =>
         parseModifiers(modifiers.split(/\s+/))
     
     public parseModifiers(List<String> modifiers) =>
-        modifiers.all(x => { x.count == 0 || parseModifier(x) })
+        modifiers.filterEmpty().all({ parseModifier(_) })
     
     public getInvalidModifiers(String modifiers) =>
         modifiers.split(/\s+/).filter(x => { x.count > 0 && !parseModifier(x) })
