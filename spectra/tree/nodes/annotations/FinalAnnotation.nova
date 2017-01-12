@@ -11,7 +11,7 @@ import "spectra/util/CompilerStringFunctions"
 /// 
 /// author: Braden Steffaniak
 class FinalAnnotation extends Annotation implements Modifier {
-    visible static immutable String[] aliases => ["let", "final"]
+    visible static immutable String[] aliases => ["final"]
     
     public static default() -> Modifier => new FinalAnnotation()
     visible static immutable Class<Node>[] applicationTypes => [LocalDeclaration, FieldDeclaration]
