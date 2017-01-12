@@ -47,4 +47,8 @@ class VisibleAnnotation extends Annotation implements VisibilityModifier {
             return node
         }
     }
+    
+    public onApplied(Node toNode, Bool throwError = true) => true {
+        ((InstanceDeclaration)toNode).visibility = "visible"
+    }
 }
