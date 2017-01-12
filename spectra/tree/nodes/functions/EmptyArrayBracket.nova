@@ -1,0 +1,29 @@
+package "spectra/tree/nodes/functions"
+
+import "spectra/SyntaxErrorException"
+import "spectra/InvalidParseException"
+import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/Value"
+import "spectra/util/Location"
+
+import "spectra/util/CompilerStringFunctions"
+
+/// @Value extension that represents 
+///
+/// author: Braden Steffaniak
+/// since: 
+/// version: 
+[AutoFinal]
+class EmptyArrayBracket extends Value {
+    /// Create a new EmptyArrayBracket node.
+    /// 
+    /// #exampleInputs
+    /// 
+    /// parent:   The parent of the EmptyArrayBracket node.
+    /// location: The location of the input text in the source file.
+    public construct(Node parent = null, Location location = Location.INVALID) {
+        super(parent, location)
+    }
+    
+    public writeNova() => ""
+}
