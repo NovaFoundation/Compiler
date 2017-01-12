@@ -4,6 +4,7 @@ import "spectra/SyntaxErrorException"
 import "spectra/InvalidParseException"
 import "spectra/util/Location"
 import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/ArrayType"
 import "spectra/tree/nodes/Value"
 import "spectra/tree/nodes/Type"
 import "spectra/tree/nodes/variables/VariableDeclaration"
@@ -17,6 +18,8 @@ import "spectra/util/CompilerStringFunctions"
 /// version: 
 class ArrayInstantiation extends Instantiation {
     visible Value[] dimensions = new Value[]
+    
+    visible ArrayType arrayType => (ArrayType)declaration.type
     
     /// Create a new ArrayInstantiation node.
     /// 
