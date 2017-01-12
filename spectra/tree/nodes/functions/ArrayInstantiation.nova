@@ -84,6 +84,8 @@ class ArrayInstantiation extends Instantiation {
             } else {
                 return false
             }
+        } else {
+            dimensions.add(null)
         }
     }
     
