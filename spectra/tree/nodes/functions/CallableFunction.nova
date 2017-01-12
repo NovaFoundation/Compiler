@@ -43,7 +43,7 @@ trait CallableFunction implements GenericCompatible {
     
     public parseName(String name) => false {
         if (!parseGenericParameters(name)) {
-            softly throw new InvalidParseException("Unable to parse generic parameters for class '#name'", (Node)this)
+            toss new InvalidParseException("Unable to parse generic parameters for class '#name'", (Node)this)
         } else {
             if (genericParameters.count > 0) {
                 name = name.substring(end: name.indexOf('<')).trim()

@@ -56,7 +56,7 @@ class WhileLoop extends Loop {
                     contents = contents.substring(1, end).trim()
                     
                     if (!node.parseCondition(contents)) {
-                        softly throw new InvalidParseException("Unable to parse while loop condition '#contents'", node)
+                        toss new InvalidParseException("Unable to parse while loop condition '#contents'", node)
                     } else {
                         return node
                     }

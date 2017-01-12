@@ -24,7 +24,7 @@ trait GenericCompatible {
                 genericParameters = params
                 
                 if (genericParameters.any({ !_ })) { // if any generic parameters didnt parse
-                    softly throw new InvalidParseException("Failed to parse all generic parameters '#contents'", (Node)this)
+                    toss new InvalidParseException("Failed to parse all generic parameters '#contents'", (Node)this)
                     
                     return false
                 } else {

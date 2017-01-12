@@ -49,7 +49,7 @@ class Return extends Node {
                 node.value = Value.parse(contents, node)
                 
                 if (!node.value) {
-                    softly throw new InvalidParseException("Invalid return value '#contents'", node)
+                    toss new InvalidParseException("Invalid return value '#contents'", node)
                     
                     return null
                 }

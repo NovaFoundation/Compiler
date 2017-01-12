@@ -32,7 +32,7 @@ class ArrayType extends Type {
                 let dimensions = input.substring(start).trim()
                 
                 if (!node.parseDimensions(dimensions, input, parent)) {
-                    softly throw new InvalidParseException("Could not parse array dimensions '#dimensions'", parent)
+                    toss new InvalidParseException("Could not parse array dimensions '#dimensions'", parent)
                 } else {
                     return node
                 }
@@ -51,7 +51,7 @@ class ArrayType extends Type {
             arrayDimensions++
             
             if (dimensions.substring(start + 1, end).trim().count > 0) {
-                softly throw new InvalidParseException("Type declaration '#input' cannot have contents within the array brackets", parent)
+                toss new InvalidParseException("Type declaration '#input' cannot have contents within the array brackets", parent)
                 
                 return false
             }

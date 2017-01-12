@@ -301,7 +301,7 @@ trait Accessible extends Value {
         var node = Value.parse(input, parent, require: require)
         
         if (!node.class.isOfType(Accessible)) {
-            softly throw new InvalidParseException("Could not parse Accessible '#input', received '#node'")
+            toss new InvalidParseException("Could not parse Accessible '#input', received '#node'")
         } else {
             return (Accessible)node
         }

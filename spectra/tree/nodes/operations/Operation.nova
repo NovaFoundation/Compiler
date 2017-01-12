@@ -50,12 +50,12 @@ class Operation extends Value {
             node.parseOperators(input, matches)
             
             if (!node.parseOperands(input, matches)) {
-                softly throw new InvalidParseException("Failed to parse operands for '#input'", node)
+                toss new InvalidParseException("Failed to parse operands for '#input'", node)
             } else {
                 return node
             }
         } else {
-            softly throw new InvalidParseException("No operators in '#input'")
+            toss new InvalidParseException("No operators in '#input'")
         }
     }
     
@@ -85,7 +85,7 @@ class Operation extends Value {
         
         if (!matches.all(start => {
             if (prev > start) {
-                softly throw new InvalidParseException("Invalid operator location in operation '#input' (current operands: #operands)", this)
+                toss new InvalidParseException("Invalid operator location in operation '#input' (current operands: #operands)", this)
                 
                 return false
             } else {

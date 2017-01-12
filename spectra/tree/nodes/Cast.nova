@@ -47,12 +47,12 @@ class Cast extends Value {
             let end = input.findEndingMatch(0, '(', ')')
             
             if (end < 0) {
-                softly throw new InvalidParseException("Failed to find ending parenthesis", node)
+                toss new InvalidParseException("Failed to find ending parenthesis", node)
             } else {
                 if (!node.parseType(let contents = input.substring(1, end).trim())) {
-                    softly throw new InvalidParseException("Failed to parse cast type '#contents'")
+                    toss new InvalidParseException("Failed to parse cast type '#contents'")
                 } else if (!node.parseValue(let value = input.substring(end + 1).trim())) {
-                    softly throw new InvalidParseException("Failed to parse casted value '#value'")
+                    toss new InvalidParseException("Failed to parse casted value '#value'")
                 } else {
                     return node
                 }

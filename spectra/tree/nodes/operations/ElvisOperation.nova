@@ -53,11 +53,11 @@ class ElvisOperation extends Value {
             var otherwise = input.substring(index + 2).trim()
             
             if (!node.parseCondition(condition)) {
-                softly throw new InvalidParseException("Unable to parse elvis operation condition '#condition'", node)
+                toss new InvalidParseException("Unable to parse elvis operation condition '#condition'", node)
             } else if (!node.parseOtherwise(otherwise)) {
-                softly throw new InvalidParseException("Unable to parse elvis operation otherwise value '#otherwise'", node)
+                toss new InvalidParseException("Unable to parse elvis operation otherwise value '#otherwise'", node)
             } else if (!node.parseType()) {
-                softly throw new InvalidParseException("Unable to parse elvis operation type for '#input'", node)
+                toss new InvalidParseException("Unable to parse elvis operation type for '#input'", node)
             } else {
                 return node
             }

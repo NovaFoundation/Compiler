@@ -33,9 +33,9 @@ class Type {
         var node = new Type(input)
         
         if (!node.parseGenericArguments(input, parent, location)) {
-            softly throw new InvalidParseException("Unable to parse generic arguments for type '#input'", parent)
+            toss new InvalidParseException("Unable to parse generic arguments for type '#input'", parent)
         } else if (!node.name.isIdentifier) {
-            softly throw new InvalidParseException("Invalid type '#input'", parent)
+            toss new InvalidParseException("Invalid type '#input'", parent)
         } else {
             if (parent) {
                 var param = node.getGenericParameter(parent)

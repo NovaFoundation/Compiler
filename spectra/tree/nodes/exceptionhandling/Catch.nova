@@ -71,7 +71,7 @@ class Catch extends Node {
                 }
                 
                 if (!node.parseException(contents)) {
-                    softly throw new InvalidParseException("Unable to parse exception '#contents'", node)
+                    toss new InvalidParseException("Unable to parse exception '#contents'", node)
                 } else {
                     return node
                 }

@@ -57,7 +57,7 @@ class Throw extends ExceptionHandler {
             var exception = input.substring("throw ".count).trim()
             
             if (!node.parseException(exception)) {
-                softly throw new InvalidParseException("Unable to parse thrown exception '#exception'")
+                toss new InvalidParseException("Unable to parse thrown exception '#exception'")
             } else {
                 return node
             }

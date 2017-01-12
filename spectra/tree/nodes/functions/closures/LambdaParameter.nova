@@ -61,9 +61,9 @@ class LambdaParameter extends Parameter {
         if (parameter) {
             return (LambdaParameter)parameter.cloneTo(node)
         } else if (!input.isIdentifier) {
-            softly throw new InvalidParseException("Invalid lambda parameter name '#input' given", node)
+            toss new InvalidParseException("Invalid lambda parameter name '#input' given", node)
         } else if (!node.parseFromSourceParamter(input)) {
-            softly throw new InvalidParseException("Could not parse lambda parameter '#input'", node)
+            toss new InvalidParseException("Could not parse lambda parameter '#input'", node)
         } else {
             return node
         }
@@ -80,6 +80,6 @@ class LambdaParameter extends Parameter {
             return true
         }
         
-        softly throw new InvalidParseException("Could not find corresponding closure parameter for lambda parameter '#name'", this)
+        toss new InvalidParseException("Could not find corresponding closure parameter for lambda parameter '#name'", this)
     }
 }

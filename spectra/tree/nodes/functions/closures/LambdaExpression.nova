@@ -109,9 +109,9 @@ class LambdaExpression extends Value implements CallableFunction {
             var operation = input.substring(arrowIndex > 0 ? arrowIndex : 0).trim()
             
             if (!node.parseOperation(operation)) {
-                softly throw new InvalidParseException("Could not parse lambda expression operation '#operation'", node)
+                toss new InvalidParseException("Could not parse lambda expression operation '#operation'", node)
             } else if (!node.parseParameters(parameters)) {
-                softly throw new InvalidParseException("Could not parse lambda expression parameters '#parameters'", node)
+                toss new InvalidParseException("Could not parse lambda expression parameters '#parameters'", node)
             } else {
                 return node
             }
@@ -127,7 +127,7 @@ class LambdaExpression extends Value implements CallableFunction {
             return input.substring(start + 1, end).trim()
         }
         
-        softly throw new InvalidParseException("Could not find lambda expression operation in '#input'", this)
+        toss new InvalidParseException("Could not find lambda expression operation in '#input'", this)
     }
     
     parseOperation(String input) => false {

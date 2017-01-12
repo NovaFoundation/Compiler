@@ -52,9 +52,9 @@ class UnaryOperation extends Value {
             var match = matches.first
             
             if (!node.parseOperator(input, match)) {
-                softly throw new InvalidParseException("Could not parse unary operator for '#input'", node)
+                toss new InvalidParseException("Could not parse unary operator for '#input'", node)
             } else if (!node.parseOperand(input, match)) {
-                softly throw new InvalidParseException("Could not parse unary operand for '#input'", node)
+                toss new InvalidParseException("Could not parse unary operand for '#input'", node)
             } else {
                 return node
             }

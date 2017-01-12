@@ -51,8 +51,10 @@ class VariableDeclaration extends Identifier {
             
             words = node.parseModifiersAndGetRemaining(words)
             
-            if (words.count != 2) {
-                softly throw new InvalidParseException("Variable declaration must contain a type", node)
+            if (words.count < 2) {
+                toss new InvalidParseException("Variable declaration '#input' must contain a type", node)
+            } else if (words.count > 2) {
+                toss new InvalidParseException("Invalid variable declaration '#input'", node)
             } else {
                 node.name = words.last
                 

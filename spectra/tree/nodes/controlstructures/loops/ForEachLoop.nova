@@ -73,9 +73,9 @@ class ForEachLoop extends Loop {
                         var iterator = contents.substring(inIndex + "in".count + 1).trim()
                         
                         if (!node.parseIterator(iterator)) {
-                            softly throw new InvalidParseException("Unable to parse for each loop iterator '#iterator'", node)
+                            toss new InvalidParseException("Unable to parse for each loop iterator '#iterator'", node)
                         } else if (!node.parseVariable(variable)) {
-                            softly throw new InvalidParseException("Unable to parse for each loop variable '#variable'", node)
+                            toss new InvalidParseException("Unable to parse for each loop variable '#variable'", node)
                         } else {
                             return node
                         }

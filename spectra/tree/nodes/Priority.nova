@@ -48,7 +48,7 @@ class Priority extends Value implements Accessible {
             var value = input.substring(1, input.count - 1).trim()
             
             if (!node.parseValue(value)) {
-                softly throw new InvalidParseException("Invalid value '#value'", node)
+                toss new InvalidParseException("Invalid value '#value'", node)
             } else {
                 return node
             }

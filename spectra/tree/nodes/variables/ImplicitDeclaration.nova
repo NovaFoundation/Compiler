@@ -57,12 +57,12 @@ class ImplicitDeclaration extends LocalDeclaration {
             words = node.parseModifiersAndGetRemaining(words)
             
             if (words.count != 1) {
-                softly throw new InvalidParseException("Invalid implicit declaration '#input'", node)
+                toss new InvalidParseException("Invalid implicit declaration '#input'", node)
             } else {
                 node.name = words.first
                 
                 if (!node.name.isIdentifier) {
-                    softly throw new InvalidParseException("Invalid implicit declaration name '#node.name'", node)
+                    toss new InvalidParseException("Invalid implicit declaration name '#node.name'", node)
                 } else {
                     node.implicitReference = DEFAULT_IMPLICIT_REFERENCE
                     

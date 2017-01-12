@@ -54,9 +54,9 @@ class ArrayInstantiation extends Instantiation {
                 var type = arrayString.substring(end: arrayData.item2[0]).trim()
                 
                 if (!node.parseType(type)) {
-                    softly throw new InvalidParseException("Unable to parse array type '#type'", node)
+                    toss new InvalidParseException("Unable to parse array type '#type'", node)
                 } else if (!node.parseDimensions(arrayData.item1)) {
-                    softly throw new InvalidParseException("Unable to parse array dimensions '#arrayString.substring(arrayData.item2[0]).trim()'")
+                    toss new InvalidParseException("Unable to parse array dimensions '#arrayString.substring(arrayData.item2[0]).trim()'")
                 } else {
                     node.declaration = new VariableDeclaration(parent, location)
                     node.declaration.name = type

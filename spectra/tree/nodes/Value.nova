@@ -101,7 +101,7 @@ class Value extends Node {
             node = TernaryOperation.parse(input, parent, location, require)
             node = UnaryOperation.parse(input, parent, location, require)
             node = Operation.parse(input, parent, location, require)
-            softly throw new InvalidParseException("Could not parse value '#input'")
+            toss new InvalidParseException("Could not parse value '#input'")
             return null
         }
         

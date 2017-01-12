@@ -173,11 +173,11 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
                 var name = input.substring(nameStartIndex, nameEndIndex)
                 
                 if (!node.parseGenericParameters(name)) {
-                    softly throw new InvalidParseException("Unable to parse generic parameters for #identifier '#name'", node)
+                    toss new InvalidParseException("Unable to parse generic parameters for #identifier '#name'", node)
                 } else if (!node.parseName(name, require)) {
-                    softly throw new InvalidParseException("Unable to parse name for #identifier '#input'", node)
+                    toss new InvalidParseException("Unable to parse name for #identifier '#input'", node)
                 } else if (!node.parseInheritence(input, nameEndIndex, require)) {
-                    softly throw new InvalidParseException("Unable to parse inheritence for #identifier '#input'", node)
+                    toss new InvalidParseException("Unable to parse inheritence for #identifier '#input'", node)
                 } else {
                     return node
                 }

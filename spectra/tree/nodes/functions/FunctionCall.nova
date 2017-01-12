@@ -71,11 +71,11 @@ class FunctionCall extends Variable {
             node.declaration = declaration
             
             if (!node.parseArguments(arguments)) {
-                softly throw new InvalidParseException("Unable to parse arguments '#arguments'", node)
+                toss new InvalidParseException("Unable to parse arguments '#arguments'", node)
             } else if (!declaration && !node.searchDeclaration()) {
-                softly throw new InvalidParseException("Could not find declaration for function '#node'", node)
+                toss new InvalidParseException("Could not find declaration for function '#node'", node)
             } else if (declaration && !node.validateDeclarationCompatible()) {
-                softly throw new InvalidParseException("Given declaration '#declaration' is not compatible with function call '#node'", node)
+                toss new InvalidParseException("Given declaration '#declaration' is not compatible with function call '#node'", node)
             } else {
                 return node
             }
@@ -159,10 +159,10 @@ class FunctionCall extends Variable {
                 
                 return true
             } else {
-                softly throw new InvalidParseException("Could not find declaration for function call '#this' in class '#ref'", this)
+                toss new InvalidParseException("Could not find declaration for function call '#this' in class '#ref'", this)
             }
         } else {
-            softly throw new InvalidParseException("Could not get reference class for function call '#this'", this)
+            toss new InvalidParseException("Could not get reference class for function call '#this'", this)
         }
     }
     

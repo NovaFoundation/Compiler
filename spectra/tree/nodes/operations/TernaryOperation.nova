@@ -58,13 +58,13 @@ class TernaryOperation extends Value {
                 var falseValue = input.substring(colonIndex + 1).trim()
                 
                 if (!node.parseCondition(condition)) {
-                    softly throw InvalidParseException("Could not parse ternary condition '#condition'", node)
+                    toss InvalidParseException("Could not parse ternary condition '#condition'", node)
                 } else if (!node.parseTrueValue(trueValue)) {
-                    softly throw InvalidParseException("Could not parse ternary true value '#trueValue'", node)
+                    toss InvalidParseException("Could not parse ternary true value '#trueValue'", node)
                 } else if (!node.parseFalseValue(falseValue)) {
-                    softly throw InvalidParseException("Could not parse ternary false value '#falseValue'", node)
+                    toss InvalidParseException("Could not parse ternary false value '#falseValue'", node)
                 } else if (!node.parseType()) {
-                    softly throw InvalidParseException("Could not parse type for ternary operation '#input'", node)
+                    toss InvalidParseException("Could not parse type for ternary operation '#input'", node)
                 } else {
                     return node
                 }

@@ -33,7 +33,7 @@ class Variable extends Identifier implements Accessible, Assignable {
             if (declaration) {
                 return new Variable(parent, location, declaration)
             } else {
-                softly throw new InvalidParseException("Could not find declaration for identifier '#name'")
+                toss new InvalidParseException("Could not find declaration for identifier '#name'")
             }
         }
     }
