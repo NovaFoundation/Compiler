@@ -1,6 +1,7 @@
 package "spectra/tree/nodes/annotations"
 
 import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/variables/InstanceDeclaration"
 import "spectra/util/Location"
 
 import "spectra/util/CompilerStringFunctions"
@@ -12,6 +13,7 @@ class VisibleAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => ["visible"]
     
     public static default() -> Modifier => new VisibleAnnotation()
+    visible static immutable Class<Node>[] applicationTypes => [InstanceDeclaration]
     
     /// Create a new VisibleAnnotation node.
     /// 
