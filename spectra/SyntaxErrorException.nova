@@ -11,6 +11,8 @@ class SyntaxErrorException extends Exception {
         
         node = node ?: program
         
-        node.program.compiler.errors.add(message)
+        if (node) {
+            node.program.compiler.errors.add(message)
+        }
     }
 }
