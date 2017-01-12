@@ -168,7 +168,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
             }
             
             let nameStartIndex = input.nextNonWhitespaceIndex(index + identifier.count + 1)
-            let nameEndIndex = input.nextWhitespaceIndex(nameStartIndex + 1)
+            let nameEndIndex = input.nextWhitespaceIndex(nameStartIndex + 1, defaultReturnValue: input.count)
             
             if (nameStartIndex < nameEndIndex) {
                 var name = input.substring(nameStartIndex, nameEndIndex)
