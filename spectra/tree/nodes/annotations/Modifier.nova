@@ -50,7 +50,7 @@ trait Modifier extends Annotation {
     }
     
     public onAppliedAsModifier(Node toNode, Bool throwError = true) =>
-        onApplied(toNode, throwError)
+        checkApplication(toNode, throwError) && onApplied(toNode, throwError)
     
     public writeNova() => alias ?: super.writeNova()
 }
