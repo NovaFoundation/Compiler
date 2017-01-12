@@ -2,6 +2,7 @@ package "spectra/tree/nodes/variables"
 
 import "spectra/tree/nodes/Node"
 import "spectra/tree/nodes/Identifier"
+import "spectra/tree/nodes/functions/BodyFunction"
 import "spectra/tree/nodes/variables/LocalDeclaration"
 import "spectra/SyntaxErrorException"
 import "spectra/util/Location"
@@ -19,6 +20,10 @@ class ArrayBracketOverload extends Node {
     /// location: The location of the input text in the source file.
     public construct(Node parent = null, Location location = Location.INVALID) {
         super(parent, location)
+    }
+    
+    public generateTemporaryScopeNode() -> Node {
+        return new BodyFunction(this)
     }
     
     /// Parse the given input into a ArrayBracketOverload node. If the input cannot be parsed
