@@ -63,9 +63,13 @@ class ArrayInstantiation extends Instantiation {
                 } else {
                     node.declaration = new VariableDeclaration(parent, location)
                     node.declaration.name = type
-                    node.declaration.type = Type.parse(type, node)
+                    node.declaration.type = ArrayType.parse(type + "[]".repeat(node.dimensions.count), node)
                     
-                    return node
+                    if (!node.declaration.type) {
+                        toss new InvalidParseException("Unable to parse array type '#type'", node)
+                    } else {
+                        return node
+                    }
                 }
             }
         }
