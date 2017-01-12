@@ -41,16 +41,22 @@ class ImplicitDeclaration extends LocalDeclaration {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed ImplicitDeclaration node, if successful; null otherwise.
-        if (input.nextWord() == "var") {
-            var values = input.splitValues()
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ImplicitDeclaration => null {
+        var words = input.splitValues()
+        
+        if (words.containsAny(IMPLICIT_ANNOTATION_ALIASES)) {
+            let node = new ImplicitDeclaration(parent, location)
             
-            if (values.count == 2) {
-                var node = new ImplicitDeclaration(parent, location)
+            words = node.parseModifiersAndGetRemaining(words)
+            
+            if (words.count != 1) {
+                softly throw new InvalidParseException("Invalid implicit declaration '#input'", node)
+            } else {
+                node.name = words.first
                 
-                node.name = values[1]
-                
-                if (node.name.isIdentifier) {
+                if (!node.name.isIdentifier) {
+                    softly throw new InvalidParseException("Invalid implicit declaration name '#node.name'", node)
+                } else {
                     node.implicitReference = DEFAULT_IMPLICIT_REFERENCE
                     
                     return node
