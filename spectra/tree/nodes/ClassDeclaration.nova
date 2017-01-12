@@ -40,8 +40,7 @@ class ClassDeclaration extends InstanceDeclaration implements Abstractable, Gene
     public FieldDeclaration[] fields = new FieldDeclaration[]
     public FunctionDeclaration[] functions = new FunctionDeclaration[]
     
-    //[Immutable]
-    public ImmutableArray<Constructor> constructors => functions.filter({ _.class.isOfType(Constructor) }).toImmutable()
+    public immutable Constructor[] constructors => functions.filter({ _.class.isOfType(Constructor) })
     
     visible ArrayBracketOverload arrayBracketOverload
     
