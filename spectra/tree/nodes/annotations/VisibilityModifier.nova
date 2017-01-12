@@ -1,5 +1,18 @@
 package "spectra/tree/nodes/annotations"
 
+import "spectra/SyntaxErrorException"
+import "spectra/tree/nodes/Node"
+
 trait VisibilityModifier extends Annotation implements Modifier {
-    
+    public checkApplication(Node toNode, Bool throwError = true) -> Bool {
+        if (toNode.annotations && toNode.annotations.any({ _.class.isOfType(VisibilityModifier) })) {
+            if (throwError) {
+                throw new SyntaxErrorException("Duplicate visibility modifier #this.class.location applied to #toNode.class.location", this)
+            } else {
+                return false
+            }
+        }
+        
+        return super.checkApplication(toNode, throwError)
+    }
 }
