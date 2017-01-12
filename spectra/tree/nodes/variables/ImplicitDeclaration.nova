@@ -3,6 +3,10 @@ package "spectra/tree/nodes/variables"
 import "spectra/tree/nodes/Node"
 import "spectra/tree/nodes/Value"
 import "spectra/tree/nodes/Type"
+import "spectra/tree/nodes/annotations/Modifier"
+import "spectra/tree/nodes/annotations/VarAnnotation"
+import "spectra/tree/nodes/annotations/FinalAnnotation"
+import "spectra/InvalidParseException"
 import "spectra/util/Location"
 
 import "spectra/util/CompilerStringFunctions"
@@ -16,6 +20,7 @@ class ImplicitDeclaration extends LocalDeclaration {
     
     public Type type => implicitReference.type
     
+    visible static immutable Class<Modifier>[] IMPLICIT_ANNOTATIONS = [VarAnnotation, FinalAnnotation]
     /// Create a new ImplicitDeclaration node.
     /// 
     /// #exampleInputs
