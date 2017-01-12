@@ -45,4 +45,8 @@ class StaticAnnotation extends Annotation implements Modifier {
             return node
         }
     }
+    
+    public onApplied(Node toNode, Bool throwError = true) => true {
+        ((InstanceDeclaration)toNode).isStatic = true
+    }
 }
