@@ -12,6 +12,7 @@ class PrivateAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => ["private"]
     
     public static default() -> Modifier => new PrivateAnnotation()
+    visible static immutable Class<Node>[] applicationTypes => VisibilityModifier.applicationTypes
     
     /// Create a new PrivateAnnotation node.
     /// 

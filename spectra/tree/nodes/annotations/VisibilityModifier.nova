@@ -2,8 +2,11 @@ package "spectra/tree/nodes/annotations"
 
 import "spectra/SyntaxErrorException"
 import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/variables/InstanceDeclaration"
 
 trait VisibilityModifier extends Annotation implements Modifier {
+    visible static immutable Class<Node>[] applicationTypes => [InstanceDeclaration]
+    
     public checkApplication(Node toNode, Bool throwError = true) -> Bool {
         if (toNode.annotations && toNode.annotations.any({ _.class.isOfType(VisibilityModifier) })) {
             if (throwError) {

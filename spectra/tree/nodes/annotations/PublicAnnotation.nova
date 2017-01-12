@@ -13,7 +13,7 @@ class PublicAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => ["public"]
     
     public static default() -> Modifier => new PublicAnnotation()
-    visible static immutable Class<Node>[] applicationTypes => [InstanceDeclaration]
+    visible static immutable Class<Node>[] applicationTypes => VisibilityModifier.applicationTypes
     
     /// Create a new PublicAnnotation node.
     /// 

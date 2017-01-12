@@ -1,6 +1,8 @@
 package "spectra/tree/nodes/annotations"
 
 import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/variables/LocalDeclaration"
+import "spectra/tree/nodes/variables/FieldDeclaration"
 import "spectra/util/Location"
 
 import "spectra/util/CompilerStringFunctions"
@@ -12,6 +14,7 @@ class VarAnnotation extends Annotation implements Modifier {
     visible static immutable String[] aliases => ["var"]
     
     public static default() -> Modifier => new VarAnnotation()
+    visible static immutable Class<Node>[] applicationTypes => [LocalDeclaration, FieldDeclaration]
     
     /// Create a new VarAnnotation node.
     /// 

@@ -13,7 +13,7 @@ class VisibleAnnotation extends Annotation implements VisibilityModifier {
     visible static immutable String[] aliases => ["visible"]
     
     public static default() -> Modifier => new VisibleAnnotation()
-    visible static immutable Class<Node>[] applicationTypes => [InstanceDeclaration]
+    visible static immutable Class<Node>[] applicationTypes => VisibilityModifier.applicationTypes
     
     /// Create a new VisibleAnnotation node.
     /// 

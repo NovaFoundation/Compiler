@@ -1,6 +1,8 @@
 package "spectra/tree/nodes/annotations"
 
 import "spectra/tree/nodes/Node"
+import "spectra/tree/nodes/functions/FunctionDeclaration"
+import "spectra/tree/nodes/variables/FieldDeclaration"
 import "spectra/util/Location"
 
 import "spectra/util/CompilerStringFunctions"
@@ -12,6 +14,7 @@ class OverrideAnnotation extends Annotation implements Modifier {
     visible static immutable String[] aliases => ["override"]
     
     public static default() -> Modifier => new OverrideAnnotation()
+    visible static immutable Class<Node>[] applicationTypes => [FunctionDeclaration, FieldDeclaration]
     
     /// Create a new OverrideAnnotation node.
     /// 
