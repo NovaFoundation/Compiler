@@ -15,6 +15,8 @@ class Annotation extends Node {
             this.class.name.trimEnd("Annotation".count) :
             null
     
+    visible static immutable Class<Node>[] applicationTypes => null
+    
     final visible static immutable Class<Annotation>[] ANNOTATIONS
     
     static {
