@@ -48,13 +48,13 @@ class ArrayInstantiation extends Instantiation {
     /// return:   The parsed ArrayInstantiation node, if successful; null otherwise.
     public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> ArrayInstantiation => null {
         if (input.nextWord() == "new") {
-            var node = new ArrayInstantiation(parent, location)
+            let node = new ArrayInstantiation(parent, location)
             
-            var arrayString = input.substring("new".count + 1).trim()
-            var arrayData = arrayString.getArrayAccesses()
+            let arrayString = input.substring("new".count + 1).trim()
+            let arrayData = arrayString.getArrayAccesses()
             
             if (arrayData.item1) {
-                var type = arrayString.substring(end: arrayData.item2[0]).trim()
+                let type = arrayString.substring(end: arrayData.item2[0]).trim()
                 
                 if (!node.parseType(type)) {
                     toss new InvalidParseException("Unable to parse array type '#type'", node)
@@ -77,7 +77,7 @@ class ArrayInstantiation extends Instantiation {
     
     parseDimension(String dimension) => true {
         if (dimension.count > 0) {
-            var value = Value.parse(dimension, this)
+            let value = Value.parse(dimension, this)
             
             if (value) {
                 dimensions.add(value)
