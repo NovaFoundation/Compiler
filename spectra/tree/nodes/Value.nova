@@ -19,7 +19,7 @@ import "spectra/tree/nodes/functions/Instantiation"
 import "spectra/util/CompilerStringFunctions"
 
 class Value extends Node {
-    visible static Byte VALUE = 1, POINTER = 2, REFERENCE = 3, DOUBLE_POINTER = 4
+    visible static final Byte VALUE = 1, POINTER = 2, REFERENCE = 3, DOUBLE_POINTER = 4
     
     public ArrayAccess arrayAccess
     
