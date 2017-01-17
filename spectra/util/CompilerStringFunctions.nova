@@ -15,16 +15,16 @@ import "spectra/util/Bounds"
 
 [AutoFinal]
 extension CompilerStringFunctions {
-    static Char[] WHITESPACE = " \t\n\r".chars
+    static Char[] WHITESPACE = " \t\n\r".chars.toCharArray()
     
-    static Char[] EITHER_STATEMENT_END_CHARS = "\n;{}".chars
+    static Char[] EITHER_STATEMENT_END_CHARS = "\n;{}".chars.toCharArray()
     
-    static Char[] SYMBOLS_CHARS             = "-+~!=%^&|*/\\><,\"'[]{};:?()".chars
-    static Char[] STMT_PRE_CONT_CHARS       = "-+~!=%^&|*/\\><,.[".chars
-    static Char[] STMT_POST_CONT_CHARS      = "-+~!=%^&|*/\\><,.]".chars
-    static Char[] INVALID_DECLARATION_CHARS = "-+~!=%^|/\"\\'{};()".chars
+    static Char[] SYMBOLS_CHARS             = "-+~!=%^&|*/\\><,\"'[]{};:?()".chars.toCharArray()
+    static Char[] STMT_PRE_CONT_CHARS       = "-+~!=%^&|*/\\><,.[".chars.toCharArray()
+    static Char[] STMT_POST_CONT_CHARS      = "-+~!=%^&|*/\\><,.]".chars.toCharArray()
+    static Char[] INVALID_DECLARATION_CHARS = "-+~!=%^|/\"\\'{};()".chars.toCharArray()
     
-    static Char[] WORD_BOUNDARIES = " \t\n\r-+~!=%^&|*/\\><,\"'[]{};:?()".chars
+    static Char[] WORD_BOUNDARIES = " \t\n\r-+~!=%^&|*/\\><,\"'[]{};:?()".chars.toCharArray()
     
     public Bool String.isIdentifier {//=> count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/)
         get { return count > 0 && matches(/[A-Za-z_][A-Za-z0-9_]*/) }
@@ -52,7 +52,7 @@ extension CompilerStringFunctions {
         return true
     }
     
-    public getArrayAccesses(String this) -> Tuple2<Array<String>, IntArray> {
+    public getArrayAccesses(String this) -> Tuple2<Array<String>, Array<Int>> {
         var String[] array = null
         var bracketIndex = count - 1
         
@@ -76,7 +76,7 @@ extension CompilerStringFunctions {
             }
         }
         
-        IntArray i = new IntArray()
+        let i = new Int[]
         i.add(bracketIndex + 1)
         
         return new Tuple2(array, i)

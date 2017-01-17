@@ -86,13 +86,13 @@ class Operator extends Node {
     
     static {
         for (operator in OPERATORS) {
-            for (c in operator.chars) {
+            for (c in operator.chars.toCharArray()) {
                 OPERATOR_SYMBOLS.addUnique(c)
             }
         }
         
         for (unary in UNARY_OPERATORS) {
-            for (c in unary.chars) {
+            for (c in unary.chars.toCharArray()) {
                 UNARY_OPERATOR_CHARS.addUnique(c)
             }
         }
