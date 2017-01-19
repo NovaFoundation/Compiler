@@ -8,7 +8,7 @@ import "spectra/tree/nodes/Type"
 
 import "spectra/util/CompilerStringFunctions"
 
-trait GenericCompatible {
+trait GenericCompatible extends Node {
     visible GenericParameter[] genericParameters
     
     public parseGenericParameters(String input, Bool requireWholeString = false) => true {
@@ -20,11 +20,11 @@ trait GenericCompatible {
             if (end > 0 && (!requireWholeString || end == input.count - 1)) {
                 var contents = input.substring(genericIndex + 1, end)
                 
-                var params = contents.splitAtCommas().map({ new GenericParameter((Node)this, ((Node)this).location, _) })
+                var params = contents.splitAtCommas().map({ new GenericParameter(this, this.location, _) })
                 genericParameters = params
                 
                 if (genericParameters.any({ !_ })) { // if any generic parameters didnt parse
-                    toss new InvalidParseException("Failed to parse all generic parameters '#contents'", (Node)this)
+                    toss new InvalidParseException("Failed to parse all generic parameters '#contents'", this)
                     
                     return false
                 } else {
