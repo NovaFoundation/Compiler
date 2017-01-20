@@ -104,7 +104,7 @@ class NovaFile extends Node {
     addClass(ClassDeclaration child) {
         classes.add(child)
         
-        if (child.isPublic && !child.name.equals(name)) {
+        if (child.isPublic && child.name != name) {
             SyntaxMessage.error("Class '#child.name' must have the same name as file '#name'", child)
         }
     }
