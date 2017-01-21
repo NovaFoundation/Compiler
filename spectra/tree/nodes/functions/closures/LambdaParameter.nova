@@ -24,6 +24,8 @@ class LambdaParameter extends Parameter {
                 
                 return sourceParameters && sourceParameters.count > index ? sourceParameters[index] : null
             }
+            
+            return null
         }
         
         no set
