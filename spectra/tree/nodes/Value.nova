@@ -63,24 +63,20 @@ class Value extends Node {
     /// require:  Whether or not to throw a syntax error if the input could not
     ///           be parsed.
     /// return:   The parsed Value node, if successful; null otherwise.
-    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value {
-        var arrayData = input.getArrayAccesses()
+    public static parse(String input, Node parent = null, Location location = Location.INVALID, Bool require = true) -> Value => null {
+        let arrayData = input.getArrayAccesses()
         
         if (arrayData.item1) {
             input = input.substring(end: arrayData.item2[0]).trim()
         }
         
-        var value = parseValue(input, parent, location, require)
-        
-        if (value) {
+        if (let value = parseValue(input, parent, location, require)) {
             if (arrayData.item1) {
                 value.arrayAccess = ArrayAccess.parse(arrayData.item1, value)
             }
             
             return value
         }
-        
-        return null
     }
     
     static parseValue(String input, Node parent, Location location, Bool require) -> Value {
