@@ -251,6 +251,18 @@ class Node implements Annotatable {
         }
     }
     
+    checkCircular() {
+        if (var current = parent) {
+            while (current = current.parent) {
+                if (current == parent) {
+                    parent = null
+                    
+                    throw new Exception("Circular reference created.........!");
+                }
+            }
+        }
+    }
+    
     /// Return a new Node containing a copy of the values of the
     /// specified node, including clones of the children.
     /// 
