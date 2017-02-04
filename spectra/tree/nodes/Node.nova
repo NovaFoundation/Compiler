@@ -271,7 +271,7 @@ class Node implements Annotatable {
     public replace(Node toReplace, Node replacement) => false
     public validateTypes() => true
     
-    public parsePlaceholders() =>
+    public parsePlaceholders() -> Bool =>
         scope ?
             scope.parsePlaceholders() :
             true
