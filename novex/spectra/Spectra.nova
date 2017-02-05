@@ -1,6 +1,6 @@
 package "novex/spectra"
 
-import "novex/arbor/tree/SyntaxTree"
+import "novex/astro/tree/SyntaxTree"
 
 class Spectra {
     public construct() {
