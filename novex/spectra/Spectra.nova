@@ -1,5 +1,13 @@
 package "novex/spectra"
 
+import "novex/arbor/tree/SyntaxTree"
+
 class Spectra {
+    public construct() {
+        
+    }
     
+    public validate(SyntaxTree tree) => true {
+        
+    }
 }
