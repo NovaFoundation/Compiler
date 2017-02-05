@@ -1,9 +1,0 @@
-package "spectra/tree/nodes/operations"
-
-import "spectra/tree/nodes/Value"
-import "spectra/tree/nodes/variables/VariableDeclaration"
-
-trait Assignable {
-    public onAssigned(Value value) {}
-    public onAssignedTo(VariableDeclaration declaration) {}
-}

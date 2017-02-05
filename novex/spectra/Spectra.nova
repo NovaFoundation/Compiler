@@ -1,0 +1,5 @@
+package "novex/spectra"
+
+class Spectra {
+    
+}
